@@ -28,7 +28,7 @@ public interface PropertyValueChange {
      * 
      * @return a globally unique id for this property value change.
      */
-    CharSequence getId();
+    String getId();
 
     /**
      * The name of the property which should be unique within the scope of the
@@ -38,7 +38,7 @@ public interface PropertyValueChange {
      * 
      * @return the property name.
      */
-    CharSequence getPropertyName();
+    String getPropertyName();
 
     /**
      * Returns the data type of the property. If not one of the reserved types,
@@ -61,7 +61,7 @@ public interface PropertyValueChange {
      * 
      * @return the old type.
      */
-    CharSequence getPropertyType();
+    String getPropertyType();
 
     /**
      * This is the old value of the property.
@@ -73,7 +73,7 @@ public interface PropertyValueChange {
      * 
      * @return old value of the property.
      */
-    CharSequence getOldValue();
+    String getOldValue();
 
     /**
      * Returns the new value of the property.
@@ -84,7 +84,7 @@ public interface PropertyValueChange {
      * 
      * @return new value of the property.
      */
-    CharSequence getNewValue();
+    String getNewValue();
 
     /**
      * Is there an old value actually specified or should the

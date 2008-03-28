@@ -34,9 +34,9 @@ public interface MembershipChangeEvent extends AuditEvent {
      * 
      * Optional. When not null, length less than or equal to 256.
      * 
-     * @return CharSequence the membership property.
+     * @return String the membership property.
      */
-    CharSequence getMembershipProperty();
+    String getMembershipProperty();
 
     /**
      * Returns the type of this membership change event.

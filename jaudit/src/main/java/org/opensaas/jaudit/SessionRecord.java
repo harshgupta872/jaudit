@@ -35,7 +35,7 @@ public interface SessionRecord {
      * 
      * @return a globally unique id for this session record.
      */
-    CharSequence getId();
+    String getId();
 
     /**
      * Returns the time at which this session was started.
@@ -82,7 +82,7 @@ public interface SessionRecord {
      * 
      * @return the address of the entity responsible for this session.
      */
-    CharSequence getResponsibleAddress();
+    String getResponsibleAddress();
 
     /**
      * The agent the responsible entity for this session is using to communicate
@@ -99,7 +99,7 @@ public interface SessionRecord {
      * 
      * @return the address of the entity responsible for this session.
      */
-    CharSequence getResponsibleAgent();
+    String getResponsibleAgent();
 
     /**
      * The system on which this session was created and is being executed.
@@ -127,7 +127,7 @@ public interface SessionRecord {
      * 
      * @return the address of the entity responsible for this session.
      */
-    CharSequence getSystemAddress();
+    String getSystemAddress();
 
     /**
      * Returns the credentials used to start this session.
@@ -136,6 +136,6 @@ public interface SessionRecord {
      * 
      * @return the credentials type.
      */
-    CharSequence getCredentialsType();
+    String getCredentialsType();
 
 }

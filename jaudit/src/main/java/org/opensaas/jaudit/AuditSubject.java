@@ -32,7 +32,7 @@ public interface AuditSubject {
      * 
      * @return the unique identifier of the audit subject.
      */
-    CharSequence getId();
+    String getId();
 
     /**
      * Returns the type of this entity.
@@ -43,6 +43,6 @@ public interface AuditSubject {
      * 
      * @return the type of the audit subject.
      */
-    CharSequence getSubjectType();
+    String getSubjectType();
 
 }

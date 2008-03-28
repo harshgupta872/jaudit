@@ -40,7 +40,7 @@ public interface AuditEvent {
      * 
      * @return a globally unique id for this audit log.
      */
-    CharSequence getId();
+    String getId();
 
     /**
      * Returns the time at which this event occured and should be accounted.

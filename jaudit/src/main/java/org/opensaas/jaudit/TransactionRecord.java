@@ -33,7 +33,7 @@ public interface TransactionRecord {
      * 
      * @return a globally unique id for this transaction record.
      */
-    CharSequence getId();
+    String getId();
 
     /**
      * Returns the id of the transaction.
@@ -42,7 +42,7 @@ public interface TransactionRecord {
      * 
      * @return the id of the transaction.
      */
-    CharSequence getTransactionId();
+    String getTransactionId();
 
     /**
      * Returns the associated {@link SessionRecord} for this transaction.
