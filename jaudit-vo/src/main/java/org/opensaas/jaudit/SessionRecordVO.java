@@ -35,21 +35,21 @@ public class SessionRecordVO implements SessionRecord {
 
     private Date _endedTs;
 
-    private CharSequence _id;
+    private String _id;
 
     private AuditSubject _responsible;
 
-    private CharSequence _responsibleAddress;
+    private String _responsibleAddress;
 
-    private CharSequence _responsibleAgent;
+    private String _responsibleAgent;
 
     private Date _startedTs;
 
     private AuditSubject _system;
 
-    private CharSequence _systemAddress;
+    private String _systemAddress;
 
-    private CharSequence _credentialsType;
+    private String _credentialsType;
 
     /**
      * {@inheritDoc}
@@ -76,7 +76,7 @@ public class SessionRecordVO implements SessionRecord {
      * {@inheritDoc}
      */
     @Id
-    public CharSequence getId() {
+    public String getId() {
         return _id;
     }
 
@@ -87,7 +87,7 @@ public class SessionRecordVO implements SessionRecord {
      * 
      * @param id
      */
-    public void setId(CharSequence id) {
+    public void setId(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Id is required.");
         }
@@ -120,7 +120,7 @@ public class SessionRecordVO implements SessionRecord {
      * {@inheritDoc}
      */
     @Column(name = "responsible_address", length=256)
-    public CharSequence getResponsibleAddress() {
+    public String getResponsibleAddress() {
         return _responsibleAddress;
     }
 
@@ -132,7 +132,7 @@ public class SessionRecordVO implements SessionRecord {
      * 
      * @param responsibleAddress
      */
-    public void setResponsibleAddress(CharSequence responsibleAddress) {
+    public void setResponsibleAddress(String responsibleAddress) {
         _responsibleAddress = responsibleAddress;
     }
 
@@ -140,7 +140,7 @@ public class SessionRecordVO implements SessionRecord {
      * {@inheritDoc}
      */
     @Column(name = "responsible_agent", length=256)
-    public CharSequence getResponsibleAgent() {
+    public String getResponsibleAgent() {
         return _responsibleAgent;
     }
 
@@ -152,7 +152,7 @@ public class SessionRecordVO implements SessionRecord {
      * @param responsibleAgent
      *            the responsible agent to set.
      */
-    public void setResponsibleAgent(CharSequence responsibleAgent) {
+    public void setResponsibleAgent(String responsibleAgent) {
         _responsibleAgent = responsibleAgent;
     }
 
@@ -203,7 +203,7 @@ public class SessionRecordVO implements SessionRecord {
      * {@inheritDoc}
      */
     @Column(name = "system_address", length=256)
-    public CharSequence getSystemAddress() {
+    public String getSystemAddress() {
         return _systemAddress;
     }
 
@@ -215,7 +215,7 @@ public class SessionRecordVO implements SessionRecord {
      * @param systemAddress
      *            the system address.
      */
-    public void setSystemAddress(CharSequence systemAddress) {
+    public void setSystemAddress(String systemAddress) {
         _systemAddress = systemAddress;
     }
 
@@ -223,7 +223,7 @@ public class SessionRecordVO implements SessionRecord {
      * {@inheritDoc}
      */
     @Column(name = "system_address", length=256)
-    public CharSequence getCredentialsType() {
+    public String getCredentialsType() {
         return _credentialsType;
     }
 
@@ -235,7 +235,7 @@ public class SessionRecordVO implements SessionRecord {
      * @param credentialsType
      *            the type to set.
      */
-    public void setCredentialsType(CharSequence credentialsType) {
+    public void setCredentialsType(String credentialsType) {
         _credentialsType = credentialsType;
     }
 

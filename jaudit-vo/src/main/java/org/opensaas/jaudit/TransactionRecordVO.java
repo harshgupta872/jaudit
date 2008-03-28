@@ -35,13 +35,13 @@ public class TransactionRecordVO implements TransactionRecord {
 
     private Date _endedTs;
 
-    private CharSequence _id;
+    private String _id;
 
     private SessionRecord _sessionRecord;
 
     private Date _startedTs;
 
-    private CharSequence _transactionId;
+    private String _transactionId;
 
     /**
      * {@inheritDoc}
@@ -67,7 +67,7 @@ public class TransactionRecordVO implements TransactionRecord {
      * {@inheritDoc}
      */
     @Id
-    public CharSequence getId() {
+    public String getId() {
         return _id;
     }
 
@@ -79,7 +79,7 @@ public class TransactionRecordVO implements TransactionRecord {
      * @param id
      *            the id to set.
      */
-    public void setId(CharSequence id) {
+    public void setId(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null.");
         }
@@ -136,7 +136,7 @@ public class TransactionRecordVO implements TransactionRecord {
      * {@inheritDoc}
      */
     @Column(name = "transaction_id", nullable = false, length=128)
-    public CharSequence getTransactionId() {
+    public String getTransactionId() {
         return _transactionId;
     }
 
@@ -148,7 +148,7 @@ public class TransactionRecordVO implements TransactionRecord {
      * @param transactionId
      *            the required id of the transaction.
      */
-    public void setTransactionId(CharSequence transactionId) {
+    public void setTransactionId(String transactionId) {
         if (transactionId == null) {
             throw new IllegalArgumentException(
                     "Transaction id must not be null.");

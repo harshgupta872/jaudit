@@ -30,7 +30,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class AuditEventVO implements AuditEvent {
 
-    private CharSequence _id;
+    private String _id;
 
     private AuditSubject _target;
 
@@ -49,7 +49,7 @@ public class AuditEventVO implements AuditEvent {
      * {@inheritDoc}
      */
     @Id
-    public CharSequence getId() {
+    public String getId() {
         return _id;
     }
 
@@ -61,7 +61,7 @@ public class AuditEventVO implements AuditEvent {
      * @param id
      *            required id to set.
      */
-    public void setId(CharSequence id) {
+    public void setId(String id) {
         if (id == null || id.length() == 0) {
             throw new IllegalArgumentException("Id must not be null.");
         }
