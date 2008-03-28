@@ -24,27 +24,27 @@ import org.opensaas.jaudit.AuditSubject;
 @Embeddable
 public class EntityVO implements AuditSubject {
 
-    private CharSequence _subjectType;
+    private String _subjectType;
 
-    private CharSequence _id;
+    private String _id;
 
     /**
      * {@inheritDoc}
      */
     @Column(name = "subject_type", length = 256)
-    public CharSequence getSubjectType() {
+    public String getSubjectType() {
         return _subjectType;
     }
 
     /**
      * Sets the subject type.
      * 
-     * @see #setId(CharSequence)
+     * @see #setId(String)
      * 
      * @param subjectType
      *            to set.
      */
-    public void setEntityType(CharSequence subjectType) {
+    public void setEntityType(String subjectType) {
         _subjectType = subjectType;
     }
 
@@ -52,7 +52,7 @@ public class EntityVO implements AuditSubject {
      * {@inheritDoc}
      */
     @Column(name = "subject_id", nullable = false)
-    public CharSequence getId() {
+    public String getId() {
         return _id;
     }
 
@@ -63,7 +63,7 @@ public class EntityVO implements AuditSubject {
      * 
      * @param id
      */
-    public void setId(CharSequence id) {
+    public void setId(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Id may not be null.");
         }

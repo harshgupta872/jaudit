@@ -31,15 +31,15 @@ import org.opensaas.jaudit.PropertyValueChange;
 @Table(name = "property_value_changes")
 public class PropertyValueChangeVO implements PropertyValueChange {
 
-    private CharSequence _id;
+    private String _id;
 
-    private CharSequence _newValue;
+    private String _newValue;
 
-    private CharSequence _oldValue;
+    private String _oldValue;
 
-    private CharSequence _propertyName;
+    private String _propertyName;
 
-    private CharSequence _propertyType;
+    private String _propertyType;
 
     private boolean _newValueSpecified = false;
 
@@ -51,7 +51,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @Id
-    public CharSequence getId() {
+    public String getId() {
         return _id;
     }
 
@@ -65,7 +65,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * @param id
      *            to set.
      */
-    public void setId(CharSequence id) {
+    public void setId(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null.");
         }
@@ -76,7 +76,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @Column(name = "new_value", length = 1024)
-    public CharSequence getNewValue() {
+    public String getNewValue() {
         return _newValue;
     }
 
@@ -89,7 +89,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * @param newValue
      *            new value to set.
      */
-    public void setNewValue(CharSequence newValue) {
+    public void setNewValue(String newValue) {
         _newValue = newValue;
         if (_newValue != null) {
             _newValueSpecified = true;
@@ -101,7 +101,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @Column(name = "old_value", length = 1024)
-    public CharSequence getOldValue() {
+    public String getOldValue() {
         return _oldValue;
     }
 
@@ -114,7 +114,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * @param oldValue
      *            old value to set.
      */
-    public void setOldValue(CharSequence oldValue) {
+    public void setOldValue(String oldValue) {
         _oldValue = oldValue;
         if (_oldValue != null) {
             _oldValueSpecified = true;
@@ -125,7 +125,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @Column(name = "property_name", length = 256, nullable = false)
-    public CharSequence getPropertyName() {
+    public String getPropertyName() {
         return _propertyName;
     }
 
@@ -137,7 +137,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * @param propertyName
      *            the name of the property changed.
      */
-    public void setPropertyName(CharSequence propertyName) {
+    public void setPropertyName(String propertyName) {
         if (propertyName == null) {
             throw new IllegalArgumentException(
                     "Property name must not be null.");
@@ -149,7 +149,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @Column(name = "property_type", length = 256, nullable = false)
-    public CharSequence getPropertyType() {
+    public String getPropertyType() {
         return _propertyType;
     }
 
@@ -161,7 +161,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * @param propertyType
      *            the property type.
      */
-    public void setPropertyType(CharSequence propertyType) {
+    public void setPropertyType(String propertyType) {
         if (propertyType == null) {
             throw new IllegalArgumentException(
                     "Property type must not be null.");

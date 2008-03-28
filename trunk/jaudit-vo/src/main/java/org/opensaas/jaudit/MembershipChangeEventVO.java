@@ -39,7 +39,7 @@ public class MembershipChangeEventVO extends AuditEventVO implements
 
     private AuditSubject _membershipGroup;
 
-    private CharSequence _membershipProperty;
+    private String _membershipProperty;
 
     /**
      * {@inheritDoc}
@@ -97,7 +97,7 @@ public class MembershipChangeEventVO extends AuditEventVO implements
      * {@inheritDoc}
      */
     @Column(name = "membership_property", length=256)
-    public CharSequence getMembershipProperty() {
+    public String getMembershipProperty() {
         return _membershipProperty;
     }
 
@@ -109,7 +109,7 @@ public class MembershipChangeEventVO extends AuditEventVO implements
      * @param membershipProperty
      *            the membership property to set.
      */
-    public void setMembershipProperty(CharSequence membershipProperty) {
+    public void setMembershipProperty(String membershipProperty) {
         _membershipProperty = membershipProperty;
     }
 
