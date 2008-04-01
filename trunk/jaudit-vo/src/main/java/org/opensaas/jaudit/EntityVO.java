@@ -44,7 +44,7 @@ public class EntityVO implements AuditSubject {
      * @param subjectType
      *            to set.
      */
-    public void setEntityType(String subjectType) {
+    public void setSubjectType(String subjectType) {
         _subjectType = subjectType;
     }
 
