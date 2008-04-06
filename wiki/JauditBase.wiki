@@ -3,10 +3,69 @@
 
 = Introduction =
 
-The base project is checked in subversion within the jaudit folder.  It has no runtime dependencies except for the 1.5 JRE.
+The base project is checked into subversion within the jaudit folder.  It has no runtime dependencies except for the 1.5 JRE.
 
 
 = Details =
+
+== The Hiearchy and Flow ==
+
+There is a minimum required set of information that you should consider when auditing within your application and a hierarchy to prevent too much duplication of information among that information.  Most applications have the following flow of interactions with (in) the system:
+
+  # Entity authenticates to the system.
+  # Entity is awarded a session with the system.
+  # Entity executes one or more pieces of work within the context of the session.
+  # Entity closes the session/session is closed by the system.
+
+In order to audit those interactions the following abstractions are defined.
+
+=== Common Concepts ===
+
+* Subject *
+
+You will find references to subjects or audit subjects through out the code and schema.  A subject is simply a uniquely identifiable entity within a system.  Subject examples include:
+  - A User
+  - A Piece of Hardware
+  - An Account
+  - A Web Service
+  - A Group
+A subject has three simple fields:
+  - Id : A globally unique identifier.
+  - Type : The type of this subject, like in the examples above.
+  - Discriminator : A grouping of subjects most often to discriminate overall groupings of subjects across types.  In SalesForce, this would be an organization.  In an online bill pay system, this would be a bank id or utility company.
+
+=== Session Record ===
+
+This is a record of the session parameters itself and a top level "container" of all of the transactions that execute within its context.  This record should be created when an entity authenticates to the system.
+
+TODO: Document internal processes.
+
+TODO: Insert a link to the javadoc/external site.
+
+
+* Example DDL (Postgresql Variant) *
+{{{
+    create table session_records (
+        id varchar(255) not null, --GUID for this session record
+        session_id varchar(255), --Session Implementation specific id.
+        system_subject_discriminator varchar(255), -- Subject grouping
+        system_subject_type varchar(255),
+        system_subject_id varchar(255),
+        ended_ts timestamp,
+        responsible_subject_discriminator varchar(255),
+        responsible_subject_type varchar(255),
+        responsible_subject_id varchar(255) not null,
+        responsible_address varchar(255),
+        responsible_agent varchar(255),
+        started_ts timestamp,
+        system_address varchar(255),
+        primary key (id)
+    );
+
+    comment on table business_audit_events is 'Top level record of a session within the system.';
+
+}}}
+
 
 == Example DDL (Postgresql Variant) == 
 
