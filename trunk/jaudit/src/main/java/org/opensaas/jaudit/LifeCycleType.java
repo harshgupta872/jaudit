@@ -18,7 +18,7 @@ package org.opensaas.jaudit;
  * @see LifeCycleAuditEvent
  * 
  */
-public enum LifeCycleEventType {
+public enum LifeCycleType {
 
     /**
      * An entity was created. Example: An account is created.

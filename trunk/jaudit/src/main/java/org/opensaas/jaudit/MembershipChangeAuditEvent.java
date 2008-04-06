@@ -16,7 +16,7 @@ package org.opensaas.jaudit;
  * This interface extends upon an AuditEvent to include information specific to
  * the change of membership.
  */
-public interface MembershipChangeEvent extends AuditEvent {
+public interface MembershipChangeAuditEvent extends AuditEvent {
 
     /**
      * This is the group that the {@link AuditEvent#getTarget()} is being added
@@ -32,7 +32,7 @@ public interface MembershipChangeEvent extends AuditEvent {
      * If this returns non-null then the group where the membership is changing
      * is actually a property of {@link #getMembershipGroup()}.
      * 
-     * Optional. When not null, length less than or equal to 256.
+     * Optional. When not null, length less than or equal to 255.
      * 
      * @return String the membership property.
      */
@@ -45,6 +45,6 @@ public interface MembershipChangeEvent extends AuditEvent {
      * 
      * @return the type of membership change event.
      */
-    MembershipChangeEventType getMembershipChangeEventType();
+    MembershipChangeType getMembershipChangeEventType();
 
 }
