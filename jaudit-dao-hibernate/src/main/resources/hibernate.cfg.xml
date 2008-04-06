@@ -1,0 +1,14 @@
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <mapping class="org.opensaas.jaudit.BusinessAuditEventVO"/>
+        <mapping class="org.opensaas.jaudit.ConsumptionAuditEventVO"/>
+        <mapping class="org.opensaas.jaudit.LifeCycleAuditEventVO"/>
+        <mapping class="org.opensaas.jaudit.MembershipChangeAuditEventVO"/>
+        <mapping class="org.opensaas.jaudit.PropertyValueChangeVO"/>
+        <mapping class="org.opensaas.jaudit.SessionRecordVO"/>
+        <mapping class="org.opensaas.jaudit.TransactionRecordVO"/>
+    </session-factory>
+</hibernate-configuration>

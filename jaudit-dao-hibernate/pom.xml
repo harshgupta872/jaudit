@@ -28,5 +28,28 @@
       <artifactId>jaudit-dao</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.opensaas.jaudit</groupId>
+      <artifactId>jaudit-vo</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>hibernate3-maven-plugin</artifactId>
+        <version>2.0-alpha-2</version>
+        <configuration>
+          <componentProperties>
+            <export>false</export>
+            <drop>true</drop>
+            <jdk5>true</jdk5>
+            <format>true</format>
+            <outputfilename>output.sql</outputfilename>
+          </componentProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
