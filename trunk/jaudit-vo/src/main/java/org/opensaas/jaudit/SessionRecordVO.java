@@ -99,8 +99,9 @@ public class SessionRecordVO implements SessionRecord {
      */
     @Embedded
     @AttributeOverrides( {
-            @AttributeOverride(name = "id", column = @Column(name = "responsible_subject_id", nullable=false)),
-            @AttributeOverride(name = "subjectType", column = @Column(name = "responsible_subject_type")) })
+            @AttributeOverride(name = "id", column = @Column(name = "responsible_subject_id", nullable = false)),
+            @AttributeOverride(name = "subjectType", column = @Column(name = "responsible_subject_type")),
+            @AttributeOverride(name = "discriminator", column = @Column(name = "responsible_subject_discriminator")) })
     public AuditSubject getResponsible() {
         return _responsible;
     }
@@ -119,7 +120,7 @@ public class SessionRecordVO implements SessionRecord {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "responsible_address", length=256)
+    @Column(name = "responsible_address", length = 255)
     public String getResponsibleAddress() {
         return _responsibleAddress;
     }
@@ -139,7 +140,7 @@ public class SessionRecordVO implements SessionRecord {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "responsible_agent", length=256)
+    @Column(name = "responsible_agent", length = 255)
     public String getResponsibleAgent() {
         return _responsibleAgent;
     }
@@ -182,7 +183,8 @@ public class SessionRecordVO implements SessionRecord {
     @Embedded
     @AttributeOverrides( {
             @AttributeOverride(name = "id", column = @Column(name = "system_subject_id")),
-            @AttributeOverride(name = "subjectType", column = @Column(name = "system_subject_type")) })
+            @AttributeOverride(name = "subjectType", column = @Column(name = "system_subject_type")),
+            @AttributeOverride(name = "discriminator", column = @Column(name = "system_subject_discriminator")) })
     public AuditSubject getSystem() {
         return _system;
     }
@@ -202,7 +204,7 @@ public class SessionRecordVO implements SessionRecord {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "system_address", length=256)
+    @Column(name = "system_address", length = 255)
     public String getSystemAddress() {
         return _systemAddress;
     }
@@ -222,7 +224,7 @@ public class SessionRecordVO implements SessionRecord {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "system_address", length=256)
+    @Column(name = "system_address", length = 255)
     public String getCredentialsType() {
         return _credentialsType;
     }

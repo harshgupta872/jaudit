@@ -124,7 +124,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "property_name", length = 256, nullable = false)
+    @Column(name = "property_name", length = 255, nullable = false)
     public String getPropertyName() {
         return _propertyName;
     }
@@ -148,7 +148,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "property_type", length = 256, nullable = false)
+    @Column(name = "property_type", length = 255, nullable = false)
     public String getPropertyType() {
         return _propertyType;
     }

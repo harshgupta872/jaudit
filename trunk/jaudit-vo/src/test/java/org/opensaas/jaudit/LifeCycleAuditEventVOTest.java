@@ -59,8 +59,8 @@ public class LifeCycleAuditEventVOTest {
     @Test
     public void testLifeCycleEventType() {
         LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        lcaeVO.setLifeCycleEventType(LifeCycleEventType.CREATE);
-        assert lcaeVO.getLifeCycleEventType().equals(LifeCycleEventType.CREATE);
+        lcaeVO.setLifeCycleEventType(LifeCycleType.CREATE);
+        assert lcaeVO.getLifeCycleEventType().equals(LifeCycleType.CREATE);
     }
 
     @Test
