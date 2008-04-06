@@ -34,7 +34,7 @@ public interface PropertyValueChange {
      * The name of the property which should be unique within the scope of the
      * entity that declares the property.
      * 
-     * Required. Length less than or equal to 256;
+     * Required. Length less than or equal to 255;
      * 
      * @return the property name.
      */
@@ -55,7 +55,7 @@ public interface PropertyValueChange {
      * <li>reference</li>
      * </ul>
      * 
-     * Required. Length is no longer than 256 characters.
+     * Required. Length is no longer than 255 characters.
      * 
      * TODO: We need to document the format of all of the above.
      * 

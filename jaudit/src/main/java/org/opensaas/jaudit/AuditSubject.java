@@ -39,10 +39,24 @@ public interface AuditSubject {
      * 
      * @see #getId()
      * 
-     * Optional. If not null, length less than or equal to 256.
+     * Optional. If not null, length less than or equal to 255.
      * 
      * @return the type of the audit subject.
      */
     String getSubjectType();
+
+    /**
+     * Returns a String which is a single level grouping for all audit subjects.
+     * 
+     * Most often, a discriminator represents an overall account that groups
+     * users together. For example, in SalesForce, this would be the
+     * organization id. Less than or equal to 255 characters in length. Can also
+     * represent datawhare house ids, departments, etc.
+     * 
+     * Optional.
+     * 
+     * @return the discriminator for this subject.
+     */
+    String getDiscriminator();
 
 }

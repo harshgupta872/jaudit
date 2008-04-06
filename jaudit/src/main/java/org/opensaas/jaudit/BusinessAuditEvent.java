@@ -41,7 +41,7 @@ public interface BusinessAuditEvent extends AuditEvent {
      * The business class is just a way of classifying like events in a very
      * generic business sense.
      * 
-     * Required. Less than or equal to 256 characters.
+     * Required. Less than or equal to 255 characters.
      * 
      * @return the business class
      */

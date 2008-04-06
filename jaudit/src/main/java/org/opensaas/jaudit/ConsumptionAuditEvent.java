@@ -25,7 +25,7 @@ package org.opensaas.jaudit;
  * <li>Network Time</li>
  * </ul>
  */
-public interface ConsumptionEvent extends AuditEvent {
+public interface ConsumptionAuditEvent extends AuditEvent {
 
     /**
      * Returns the amount of the {@link AuditEvent#getTarget()} consumed.

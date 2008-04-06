@@ -30,10 +30,10 @@ public interface LifeCycleAuditEvent extends AuditEvent {
      * 
      * @return the type of this event.
      */
-    LifeCycleEventType getLifeCycleEventType();
+    LifeCycleType getLifeCycleEventType();
 
     /**
-     * If this event is an {@link LifeCycleEventType#UPDATE} type, then this
+     * If this event is an {@link LifeCycleType#UPDATE} type, then this
      * collection should be non-null and return what properties were changed. If
      * empty or null, then no further information is available.
      * 

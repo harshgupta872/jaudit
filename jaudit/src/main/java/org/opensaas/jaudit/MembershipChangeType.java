@@ -15,10 +15,10 @@ package org.opensaas.jaudit;
 /**
  * The different types of membership change events.
  * 
- * @see MembershipChangeEvent
+ * @see MembershipChangeAuditEvent
  * 
  */
-public enum MembershipChangeEventType {
+public enum MembershipChangeType {
 
     /**
      * An entity is being added to a membership.

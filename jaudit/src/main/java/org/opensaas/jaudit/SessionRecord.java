@@ -74,7 +74,7 @@ public interface SessionRecord {
      * The address of the responsible entity that is accountable for this
      * session. An example is an IP Address.
      * 
-     * When not null, should be less than or equal to 256 characters.
+     * When not null, should be less than or equal to 255 characters.
      * 
      * @see #getResponsible()
      * 
@@ -91,7 +91,7 @@ public interface SessionRecord {
      * 
      * <tt>Mozilla/5.001 (Macintosh; N; PPC; ja) Gecko/25250101 MegaCorpBrowser/1.0 (MegaCorp, Inc.)</tt>
      * 
-     * When not null, should be less than or equal to 256 characters.
+     * When not null, should be less than or equal to 255 characters.
      * 
      * @see #getResponsible()
      * 
@@ -119,7 +119,7 @@ public interface SessionRecord {
      * The address of the system on which this session was created and is being
      * executed. For example, an ip address.
      * 
-     * When not null, should be less than or equal to 256 characters.
+     * When not null, should be less than or equal to 255 characters.
      * 
      * @see #getResponsible()
      * 
@@ -132,7 +132,7 @@ public interface SessionRecord {
     /**
      * Returns the credentials used to start this session.
      * 
-     * Optional. When not null, less than 256 characters.
+     * Optional. When not null, less than 255 characters.
      * 
      * @return the credentials type.
      */
