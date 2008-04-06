@@ -34,7 +34,14 @@ A subject has three simple fields:
   * Type : The type of this subject, like in the examples above.
   * Discriminator : A grouping of subjects most often to discriminate overall groupings of subjects across types.  In SalesForce, this would be an organization.  In an online bill pay system, this would be a bank id or utility company.
 
+* GUID *
+Globally Unique ID.  At the minimum a guid should be a unique identifier across all entities/records/logs within a system.
+
 === Session Record ===
+
+{{{
+org.opensaas.jaudit.SessionRecord
+}}}
 
 This is a record of the session parameters itself and a top level "container" of all of the transactions that execute within its context.  This record should be created when an entity authenticates to the system.
 
@@ -46,8 +53,8 @@ TODO: Insert a link to the javadoc/external site.
 * Example DDL (Postgresql Variant) *
 {{{
     create table session_records (
-        id varchar(255) not null, --GUID for this session record
-        session_id varchar(255), --Session Implementation specific id for this instance of the session.
+        id varchar(255) not null, -- GUID
+        session_id varchar(255), -- Session Implementation specific id for this instance of the session.
         system_subject_discriminator varchar(255), -- The system subject is the system where the session was created/managed.
         system_subject_type varchar(255),
         system_subject_id varchar(255),
@@ -62,9 +69,33 @@ TODO: Insert a link to the javadoc/external site.
         primary key (id) 
     );
 
-    comment on table business_audit_events is 'Top level record of a session within the system.';
+    comment on table session_records is 'Top level record of a session within the system.';
 
 }}}
+
+=== Transaction Record ===
+
+{{{
+org.opensaas.jaudit.TransactionRecord
+}}}
+
+A record of a complete set of work or "transaction" completed within a system within the context of a Session.  There can be 0..* Transaction Records associated with a Session Record.
+
+{{{
+    create table transaction_records (
+        id varchar(255) not null, -- GUID
+        ended_ts timestamp, -- When the transaction ended
+        started_ts timestamp, -- When the transaction started
+        transaction_id varchar(128) not null, -- The transaction system's unique identifier for this transaction
+        session_record_id varchar(255) not null,  -- The Session Record this transaction is associated with.
+        primary key (id)
+    );
+
+    comment on table transaction_records is 'Record of a transaction within a Session.';
+
+}}}
+
+=== ===
 
 
 == Example DDL (Postgresql Variant) == 
