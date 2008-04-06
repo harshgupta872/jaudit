@@ -1,0 +1,129 @@
+#summary This is the top page which describes the lowest level component of the JAudit project.
+#labels Featured,Phase-Requirements
+
+= Introduction =
+
+The base project is checked in subversion within the jaudit folder.  It has no runtime dependencies except for the 1.5 JRE.
+
+
+= Details =
+
+== Example DDL (Postgresql Variant) == 
+
+{{{
+    create table business_audit_events (
+        id varchar(255) not null,
+        ts timestamp not null,
+        target_subject_discriminator varchar(255),
+        target_subject_type varchar(255),
+        target_subject_id varchar(255),
+        business_class varchar(255) not null,
+        transaction_id varchar(255) not null,
+        primary key (id)
+    );
+
+    create table consumption_events (
+        id varchar(255) not null,
+        ts timestamp not null,
+        target_subject_discriminator varchar(255),
+        target_subject_type varchar(255),
+        target_subject_id varchar(255),
+        amount_consumed float8 not null,
+        scale int4,
+        transaction_id varchar(255) not null,
+        primary key (id)
+    );
+
+    create table life_cycle_audit_events (
+        id varchar(255) not null,
+        ts timestamp not null,
+        target_subject_discriminator varchar(255),
+        target_subject_type varchar(255),
+        target_subject_id varchar(255),
+        life_cycle_event_type varchar(255) not null,
+        transaction_id varchar(255) not null,
+        primary key (id)
+    );
+
+    create table membership_change_audit_events (
+        id varchar(255) not null,
+        ts timestamp not null,
+        target_subject_discriminator varchar(255),
+        target_subject_type varchar(255),
+        target_subject_id varchar(255),
+        membership_change_event_type varchar(255) not null,
+        membership_group_discriminator varchar(255),
+        membership_group_subject_type varchar(255),
+        membership_group_subject_id varchar(255) not null,
+        membership_property varchar(255),
+        transaction_id varchar(255) not null,
+        primary key (id)
+    );
+
+    create table property_value_changes (
+        id varchar(255) not null,
+        property_type varchar(255) not null,
+        new_value_specified bool,
+        old_value_specified bool,
+        new_value varchar(1024),
+        old_value varchar(1024),
+        property_name varchar(255) not null,
+        life_cycle_audit_event_id varchar(255) not null,
+        primary key (id)
+    );
+
+    create table session_records (
+        id varchar(255) not null,
+        system_subject_discriminator varchar(255),
+        system_subject_type varchar(255),
+        system_subject_id varchar(255),
+        ended_ts timestamp,
+        responsible_subject_discriminator varchar(255),
+        responsible_subject_type varchar(255),
+        responsible_subject_id varchar(255) not null,
+        responsible_address varchar(255),
+        responsible_agent varchar(255),
+        started_ts timestamp,
+        system_address varchar(255),
+        primary key (id)
+    );
+
+    create table transaction_records (
+        id varchar(255) not null,
+        ended_ts timestamp,
+        started_ts timestamp,
+        transaction_id varchar(128) not null,
+        session_record_id varchar(255) not null,
+        primary key (id)
+    );
+
+    alter table business_audit_events 
+        add constraint FK4B57881C757E421 
+        foreign key (transaction_id) 
+        references transaction_records;
+
+    alter table consumption_events 
+        add constraint FK58D4B63D757E421 
+        foreign key (transaction_id) 
+        references transaction_records;
+
+    alter table life_cycle_audit_events 
+        add constraint FKB5B11AD9757E421 
+        foreign key (transaction_id) 
+        references transaction_records;
+
+    alter table membership_change_audit_events 
+        add constraint FKE7B0E843757E421 
+        foreign key (transaction_id) 
+        references transaction_records;
+
+    alter table property_value_changes 
+        add constraint FK61FFF10BBCB2547F 
+        foreign key (life_cycle_audit_event_id) 
+        references life_cycle_audit_events;
+
+    alter table transaction_records 
+        add constraint FK631DD9E1F714C99D 
+        foreign key (session_record_id) 
+        references session_records;
+}}}
