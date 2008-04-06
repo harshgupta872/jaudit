@@ -84,6 +84,7 @@ org.opensaas.jaudit.TransactionRecord
 
 A record of a complete set of work or "transaction" completed within a system within the context of a Session.  There can be 0..* Transaction Records associated with a Session Record.
 
+* Example DDL (Postgresql Variant) *
 {{{
     create table transaction_records (
         id varchar(255) not null, -- GUID
@@ -106,8 +107,27 @@ org.opensaas.jaudit.LifeCycleAuditEventType
 org.opensaas.jaudit.PropertyValueChange
 }}}
 
-This is a record of a change made to a target entity like a property value change or state change.  Optionally a collection of Property Value Changes can be associated with a life cycle audit event to create a more granular record of what properties were changed and to what values on the target subject.
+This is a record of a change made to a target entity like a property value change or state change.  Optionally a collection of Property Value Changes (PVC) can be associated with a life cycle audit event to create a more granular record of what properties were changed and to what values on the target subject.
 
+Things that can happen as part of a life cycle (and the values that might show up in the life_cycle_event_type column:
+  * CREATE : Entity created.  Optionally associated PVCs will have the new values for all properties.
+  * UPDATE : Entity properties updated.  Optionally associated PVCs will have the new values and old values for all properties changed.
+  * DELETE : Entity deleted.
+  * STATE_CHANGE : Entity changed from a significant state to another.  For example: enabled to disabled.
+
+Property Value Change property type reserved values include:
+  * string
+  * double
+  * boolean
+  * datetime
+  * timezone
+  * locale
+  * reference
+To use your own type, you should use a name space such as:
+{{{com.yahoo.maps.GpsCoordinates}}}
+
+
+* Example DDL (Postgresql Variant) *
 {{{
     create table life_cycle_audit_events (
         id varchar(255) not null, -- GUID
@@ -122,14 +142,14 @@ This is a record of a change made to a target entity like a property value chang
     comment on table life_cycle_audit_events is 'Record of a life cycle event that happens to a target entity.';
 
     create table property_value_changes (
-        id varchar(255) not null,
-        property_type varchar(255) not null,
-        new_value_specified bool,
-        old_value_specified bool,
-        new_value varchar(1024),
-        old_value varchar(1024),
-        property_name varchar(255) not null,
-        life_cycle_audit_event varchar(255) not null,
+        id varchar(255) not null, -- GUID
+        property_type varchar(255) not null, -- Property type such as String.
+        new_value_specified bool, -- Is a new value being recorded or should it be ignored
+        old_value_specified bool,  -- Is an old value being recorded or should it be ingored
+        new_value varchar(1024),  -- The new value
+        old_value varchar(1024), -- The old value
+        property_name varchar(255) not null, -- The name of the property
+        life_cycle_audit_event varchar(255) not null, -- Reference to the life cycle audit event
         primary key (id)
     );
     comment on table property_value_changes is 'A record of a change in a property value.';
@@ -142,6 +162,7 @@ _Implementation Note_ : You should probably not record password or other securit
 
 A record of a resource being consumed in total or in part.
 
+* Example DDL (Postgresql Variant) *
 {{{
     create table consumption_events (
         id varchar(255) not null, -- GUID
