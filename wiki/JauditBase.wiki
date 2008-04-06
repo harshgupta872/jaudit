@@ -8,7 +8,7 @@ The base project is checked into subversion within the jaudit folder.  It has no
 
 = Details =
 
-== The Hiearchy and Flow ==
+== The Hierarchy and Flow ==
 
 There is a minimum required set of information that you should consider when auditing within your application and a hierarchy to prevent too much duplication of information among that information.  Most applications have the following flow of interactions with (in) the system:
 
@@ -36,6 +36,9 @@ A subject has three simple fields:
 
 * GUID *
 Globally Unique ID.  At the minimum a guid should be a unique identifier across all entities/records/logs within a system.
+
+* Time Stamps *
+All Time Stamps should be stored/displayed in the UTC timezone.
 
 === Session Record ===
 
@@ -95,8 +98,63 @@ A record of a complete set of work or "transaction" completed within a system wi
 
 }}}
 
-=== ===
+=== Life Cycle Audit Event ===
 
+{{{
+org.opensaas.jaudit.LifeCycleAuditEvent
+org.opensaas.jaudit.LifeCycleAuditEventType
+org.opensaas.jaudit.PropertyValueChange
+}}}
+
+This is a record of a change made to a target entity like a property value change or state change.  Optionally a collection of Property Value Changes can be associated with a life cycle audit event to create a more granular record of what properties were changed and to what values on the target subject.
+
+{{{
+    create table life_cycle_audit_events (
+        id varchar(255) not null, -- GUID
+        ts timestamp not null, -- When this event occurred
+        target_subject_discriminator varchar(255),  -- The target subject is the entity that experienced the life cycle event
+        target_subject_type varchar(255),
+        target_subject_id varchar(255),
+        life_cycle_event_type varchar(255) not null, -- The type of the event. See LifeCycleAuditEventType for types.
+        transaction_record varchar(255) not null, -- A reference to the associated transaction record
+        primary key (id)
+    );
+    comment on table life_cycle_audit_events is 'Record of a life cycle event that happens to a target entity.';
+
+    create table property_value_changes (
+        id varchar(255) not null,
+        property_type varchar(255) not null,
+        new_value_specified bool,
+        old_value_specified bool,
+        new_value varchar(1024),
+        old_value varchar(1024),
+        property_name varchar(255) not null,
+        life_cycle_audit_event varchar(255) not null,
+        primary key (id)
+    );
+    comment on table property_value_changes is 'A record of a change in a property value.';
+
+}}}
+
+_Implementation Note_ : You should probably not record password or other security sensitive values within a property value change unencrypted.
+
+=== Consumption Events ===
+
+A record of a resource being consumed in total or in part.
+
+{{{
+    create table consumption_events (
+        id varchar(255) not null, -- GUID
+        ts timestamp not null, -- When this event occurred
+        target_subject_discriminator varchar(255), -- The item being consumed
+        target_subject_type varchar(255),
+        target_subject_id varchar(255),
+        amount_consumed float8 not null, -- Amount consumed
+        scale int4, -- The scale to use on the amount
+        transaction varchar(255) not null, -- Associated transaction
+        primary key (id)
+    );
+}}}
 
 == Example DDL (Postgresql Variant) == 
 
@@ -112,28 +170,6 @@ A record of a complete set of work or "transaction" completed within a system wi
         primary key (id)
     );
 
-    create table consumption_events (
-        id varchar(255) not null,
-        ts timestamp not null,
-        target_subject_discriminator varchar(255),
-        target_subject_type varchar(255),
-        target_subject_id varchar(255),
-        amount_consumed float8 not null,
-        scale int4,
-        transaction_id varchar(255) not null,
-        primary key (id)
-    );
-
-    create table life_cycle_audit_events (
-        id varchar(255) not null,
-        ts timestamp not null,
-        target_subject_discriminator varchar(255),
-        target_subject_type varchar(255),
-        target_subject_id varchar(255),
-        life_cycle_event_type varchar(255) not null,
-        transaction_id varchar(255) not null,
-        primary key (id)
-    );
 
     create table membership_change_audit_events (
         id varchar(255) not null,
@@ -150,43 +186,12 @@ A record of a complete set of work or "transaction" completed within a system wi
         primary key (id)
     );
 
-    create table property_value_changes (
-        id varchar(255) not null,
-        property_type varchar(255) not null,
-        new_value_specified bool,
-        old_value_specified bool,
-        new_value varchar(1024),
-        old_value varchar(1024),
-        property_name varchar(255) not null,
-        life_cycle_audit_event_id varchar(255) not null,
-        primary key (id)
-    );
+}}}
 
-    create table session_records (
-        id varchar(255) not null,
-        system_subject_discriminator varchar(255),
-        system_subject_type varchar(255),
-        system_subject_id varchar(255),
-        ended_ts timestamp,
-        responsible_subject_discriminator varchar(255),
-        responsible_subject_type varchar(255),
-        responsible_subject_id varchar(255) not null,
-        responsible_address varchar(255),
-        responsible_agent varchar(255),
-        started_ts timestamp,
-        system_address varchar(255),
-        primary key (id)
-    );
 
-    create table transaction_records (
-        id varchar(255) not null,
-        ended_ts timestamp,
-        started_ts timestamp,
-        transaction_id varchar(128) not null,
-        session_record_id varchar(255) not null,
-        primary key (id)
-    );
+== Optional Foreign Key Constraints ==
 
+{{{
     alter table business_audit_events 
         add constraint FK4B57881C757E421 
         foreign key (transaction_id) 
