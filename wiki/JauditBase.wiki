@@ -24,15 +24,15 @@ In order to audit those interactions the following abstractions are defined.
 * Subject *
 
 You will find references to subjects or audit subjects through out the code and schema.  A subject is simply a uniquely identifiable entity within a system.  Subject examples include:
-  - A User
-  - A Piece of Hardware
-  - An Account
-  - A Web Service
-  - A Group
+  * A User
+  * A Piece of Hardware
+  * An Account
+  * A Web Service
+  * A Group
 A subject has three simple fields:
-  - Id : A globally unique identifier.
-  - Type : The type of this subject, like in the examples above.
-  - Discriminator : A grouping of subjects most often to discriminate overall groupings of subjects across types.  In SalesForce, this would be an organization.  In an online bill pay system, this would be a bank id or utility company.
+  * Id : A globally unique identifier.
+  * Type : The type of this subject, like in the examples above.
+  * Discriminator : A grouping of subjects most often to discriminate overall groupings of subjects across types.  In SalesForce, this would be an organization.  In an online bill pay system, this would be a bank id or utility company.
 
 === Session Record ===
 
@@ -47,19 +47,19 @@ TODO: Insert a link to the javadoc/external site.
 {{{
     create table session_records (
         id varchar(255) not null, --GUID for this session record
-        session_id varchar(255), --Session Implementation specific id.
-        system_subject_discriminator varchar(255), -- Subject grouping
+        session_id varchar(255), --Session Implementation specific id for this instance of the session.
+        system_subject_discriminator varchar(255), -- The system subject is the system where the session was created/managed.
         system_subject_type varchar(255),
         system_subject_id varchar(255),
-        ended_ts timestamp,
-        responsible_subject_discriminator varchar(255),
+        ended_ts timestamp, -- When the session was ended.
+        responsible_subject_discriminator varchar(255), -- The responsible subject is the user or entity which authenticated to the system
         responsible_subject_type varchar(255),
         responsible_subject_id varchar(255) not null,
-        responsible_address varchar(255),
-        responsible_agent varchar(255),
+        responsible_address varchar(255), -- From where the responsible entity is working with the system
+        responsible_agent varchar(255), -- The client UserAgent string that the responsible entity is using.
         started_ts timestamp,
-        system_address varchar(255),
-        primary key (id)
+        system_address varchar(255), -- When this session was started.
+        primary key (id) 
     );
 
     comment on table business_audit_events is 'Top level record of a session within the system.';
