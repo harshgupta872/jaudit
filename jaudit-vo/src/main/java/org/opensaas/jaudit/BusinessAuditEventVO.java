@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 /**
  * Default implementation and persistence mapping for an
- * {@link LifeCycleAuditEvent}.
+ * {@link BusinessAuditEvent}.
  */
 @Entity
 @Table(name = "business_audit_events")
@@ -30,7 +30,7 @@ public class BusinessAuditEventVO extends AuditEventVO implements
     /**
      * {@inheritDoc}
      */
-    @Column(name = "business_class", length = 256, nullable = false)
+    @Column(name = "business_class", length = 255, nullable = false)
     public String getBusinessClass() {
         return _businessClass;
     }

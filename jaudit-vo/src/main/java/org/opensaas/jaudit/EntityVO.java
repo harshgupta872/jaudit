@@ -15,8 +15,6 @@ package org.opensaas.jaudit;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.opensaas.jaudit.AuditSubject;
-
 /**
  * Default hibernate annotated implemenation of {@link AuditSubject}.
  * 
@@ -28,10 +26,12 @@ public class EntityVO implements AuditSubject {
 
     private String _id;
 
+    private String _discriminator;
+
     /**
      * {@inheritDoc}
      */
-    @Column(name = "subject_type", length = 256)
+    @Column(name = "subject_type", length = 255)
     public String getSubjectType() {
         return _subjectType;
     }
@@ -68,6 +68,26 @@ public class EntityVO implements AuditSubject {
             throw new IllegalArgumentException("Id may not be null.");
         }
         _id = id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Column(name = "discriminator")
+    public String getDiscriminator() {
+        return _discriminator;
+    }
+
+    /**
+     * Sets the optional discriminator.
+     * 
+     * @see #getDiscriminator()
+     * 
+     * @param discriminator
+     *            the optional discriminator to set.
+     */
+    public void setDiscriminator(String discriminator) {
+        _discriminator = discriminator;
     }
 
 }

@@ -74,7 +74,8 @@ public class AuditEventVO implements AuditEvent {
     @Embedded
     @AttributeOverrides( {
             @AttributeOverride(name = "id", column = @Column(name = "target_subject_id")),
-            @AttributeOverride(name = "subjectType", column = @Column(name = "target_subject_type")) })
+            @AttributeOverride(name = "subjectType", column = @Column(name = "target_subject_type")),
+            @AttributeOverride(name = "discriminator", column = @Column(name = "target_subject_discriminator"))})
     public AuditSubject getTarget() {
         return _target;
     }
@@ -124,6 +125,8 @@ public class AuditEventVO implements AuditEvent {
 
     /**
      * Sets the required date on this audit event.
+     * 
+     * @see #getTs()
      * 
      * @param ts
      *            the required date.

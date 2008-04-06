@@ -23,7 +23,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.opensaas.jaudit.LifeCycleAuditEvent;
-import org.opensaas.jaudit.LifeCycleEventType;
+import org.opensaas.jaudit.LifeCycleType;
 import org.opensaas.jaudit.PropertyValueChange;
 
 /**
@@ -36,7 +36,7 @@ import org.opensaas.jaudit.PropertyValueChange;
 public class LifeCycleAuditEventVO extends AuditEventVO implements
         LifeCycleAuditEvent {
 
-    private LifeCycleEventType _lifeCycleEventType;
+    private LifeCycleType _lifeCycleEventType;
 
     private Collection<PropertyValueChange> _propertyValueChanges = new ArrayList<PropertyValueChange>();
 
@@ -45,7 +45,7 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "life_cycle_event_type", nullable = false)
-    public LifeCycleEventType getLifeCycleEventType() {
+    public LifeCycleType getLifeCycleEventType() {
         return _lifeCycleEventType;
     }
 
@@ -57,7 +57,7 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
      * @param lifeCycleEventType
      *            the required type.
      */
-    public void setLifeCycleEventType(LifeCycleEventType lifeCycleEventType) {
+    public void setLifeCycleEventType(LifeCycleType lifeCycleEventType) {
         if (lifeCycleEventType == null) {
             throw new IllegalArgumentException(
                     "Life Cycle Event Type must not be null.");

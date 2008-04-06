@@ -16,16 +16,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.opensaas.jaudit.ConsumptionEvent;
+import org.opensaas.jaudit.ConsumptionAuditEvent;
 
 /**
- * Default implementation and peristence mapping of {@link ConsumptionEvent}.
+ * Default implementation and peristence mapping of {@link ConsumptionAuditEvent}.
  * 
  */
 @Entity
 @Table(name = "consumption_events")
-public class ConsumptionEventVO extends AuditEventVO implements
-        ConsumptionEvent {
+public class ConsumptionAuditEventVO extends AuditEventVO implements
+        ConsumptionAuditEvent {
 
     private Double _amountConsumed;
 

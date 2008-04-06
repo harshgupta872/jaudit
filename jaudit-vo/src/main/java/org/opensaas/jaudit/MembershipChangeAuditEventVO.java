@@ -22,20 +22,20 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import org.opensaas.jaudit.AuditSubject;
-import org.opensaas.jaudit.MembershipChangeEvent;
-import org.opensaas.jaudit.MembershipChangeEventType;
+import org.opensaas.jaudit.MembershipChangeAuditEvent;
+import org.opensaas.jaudit.MembershipChangeType;
 
 /**
  * The default implementation and persistence mapping of
- * {@link MembershipChangeEvent}.
+ * {@link MembershipChangeAuditEvent}.
  * 
  */
 @Entity
-@Table(name = "membership_change_events")
-public class MembershipChangeEventVO extends AuditEventVO implements
-        MembershipChangeEvent {
+@Table(name = "membership_change_audit_events")
+public class MembershipChangeAuditEventVO extends AuditEventVO implements
+        MembershipChangeAuditEvent {
 
-    private MembershipChangeEventType _membershipChangeEventType;
+    private MembershipChangeType _membershipChangeEventType;
 
     private AuditSubject _membershipGroup;
 
@@ -46,7 +46,7 @@ public class MembershipChangeEventVO extends AuditEventVO implements
      */
     @Column(name = "membership_change_event_type", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    public MembershipChangeEventType getMembershipChangeEventType() {
+    public MembershipChangeType getMembershipChangeEventType() {
         return _membershipChangeEventType;
     }
 
@@ -59,7 +59,7 @@ public class MembershipChangeEventVO extends AuditEventVO implements
      *            the type to set.
      */
     public void setMembershipChangeEventType(
-            MembershipChangeEventType membershipChangeEventType) {
+            MembershipChangeType membershipChangeEventType) {
         if (membershipChangeEventType == null) {
             throw new IllegalArgumentException(
                     "Membership change event type must not be null.");
@@ -73,7 +73,8 @@ public class MembershipChangeEventVO extends AuditEventVO implements
     @Embedded
     @AttributeOverrides( {
             @AttributeOverride(name = "id", column = @Column(name = "membership_group_subject_id", nullable = false)),
-            @AttributeOverride(name = "subjectType", column = @Column(name = "membership_group_subject_type")) })
+            @AttributeOverride(name = "subjectType", column = @Column(name = "membership_group_subject_type")),
+            @AttributeOverride(name = "discriminator", column = @Column(name = "membership_group_discriminator")) })
     public AuditSubject getMembershipGroup() {
         return _membershipGroup;
     }
@@ -96,7 +97,7 @@ public class MembershipChangeEventVO extends AuditEventVO implements
     /**
      * {@inheritDoc}
      */
-    @Column(name = "membership_property", length=256)
+    @Column(name = "membership_property", length = 255)
     public String getMembershipProperty() {
         return _membershipProperty;
     }
