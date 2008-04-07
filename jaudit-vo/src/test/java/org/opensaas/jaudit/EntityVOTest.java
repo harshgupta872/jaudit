@@ -29,22 +29,22 @@ public class EntityVOTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNullId() {
         EntityVO eVO = new EntityVO();
-        assert eVO.getId() == null;
-        eVO.setId(null);
+        assert eVO.getSubjectId() == null;
+        eVO.setSubjectId(null);
     }
 
     @Test
     public void testEmptyId() {
         EntityVO eVO = new EntityVO();
-        eVO.setId("");
-        assert eVO.getId().equals("");
+        eVO.setSubjectId("");
+        assert eVO.getSubjectId().equals("");
     }
 
     @Test
     public void testId() {
         EntityVO eVO = new EntityVO();
-        eVO.setId("a");
-        assert eVO.getId().equals("a");
+        eVO.setSubjectId("a");
+        assert eVO.getSubjectId().equals("a");
     }
 
     @Test

@@ -51,6 +51,8 @@ public class SessionRecordVO implements SessionRecord {
 
     private String _credentialsType;
 
+    private String _sessionId;
+
     /**
      * {@inheritDoc}
      */
@@ -99,9 +101,9 @@ public class SessionRecordVO implements SessionRecord {
      */
     @Embedded
     @AttributeOverrides( {
-            @AttributeOverride(name = "id", column = @Column(name = "responsible_subject_id", nullable = false)),
+            @AttributeOverride(name = "subject_id", column = @Column(name = "responsible_subject_id", nullable = false)),
             @AttributeOverride(name = "subjectType", column = @Column(name = "responsible_subject_type")),
-            @AttributeOverride(name = "discriminator", column = @Column(name = "responsible_subject_discriminator")) })
+            @AttributeOverride(name = "subjectDiscriminator", column = @Column(name = "responsible_subject_discriminator")) })
     public AuditSubject getResponsible() {
         return _responsible;
     }
@@ -182,9 +184,9 @@ public class SessionRecordVO implements SessionRecord {
      */
     @Embedded
     @AttributeOverrides( {
-            @AttributeOverride(name = "id", column = @Column(name = "system_subject_id")),
+            @AttributeOverride(name = "subjectId", column = @Column(name = "system_subject_id")),
             @AttributeOverride(name = "subjectType", column = @Column(name = "system_subject_type")),
-            @AttributeOverride(name = "discriminator", column = @Column(name = "system_subject_discriminator")) })
+            @AttributeOverride(name = "subjectDiscriminator", column = @Column(name = "system_subject_discriminator")) })
     public AuditSubject getSystem() {
         return _system;
     }
@@ -239,6 +241,26 @@ public class SessionRecordVO implements SessionRecord {
      */
     public void setCredentialsType(String credentialsType) {
         _credentialsType = credentialsType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Column(name = "session_id", length = 255)
+    public String getSessionId() {
+        return _sessionId;
+    }
+
+    /**
+     * Sets the optional session implementaiton specific id.
+     * 
+     * @see #getSessionId()
+     * 
+     * @param sessionId
+     *            optional session id.
+     */
+    public void setSessionId(String sessionId) {
+        _sessionId = sessionId;
     }
 
 }

@@ -213,7 +213,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @ManyToOne(optional = false, targetEntity = LifeCycleAuditEventVO.class)
-    @JoinColumn(name = "life_cycle_audit_event_id", nullable = false)
+    @JoinColumn(name = "life_cycle_audit_event", nullable = false)
     public LifeCycleAuditEvent getLifeCycleAuditEvent() {
         return _lifeCycleAuditEvent;
     }

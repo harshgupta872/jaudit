@@ -24,9 +24,9 @@ public class EntityVO implements AuditSubject {
 
     private String _subjectType;
 
-    private String _id;
+    private String _subjectId;
 
-    private String _discriminator;
+    private String _subjectDiscriminator;
 
     /**
      * {@inheritDoc}
@@ -52,42 +52,42 @@ public class EntityVO implements AuditSubject {
      * {@inheritDoc}
      */
     @Column(name = "subject_id", nullable = false)
-    public String getId() {
-        return _id;
+    public String getSubjectId() {
+        return _subjectId;
     }
 
     /**
      * Sets the required id.
      * 
-     * @see #getId().
+     * @see #getSubjectId().
      * 
      * @param id
      */
-    public void setId(String id) {
+    public void setSubjectId(String id) {
         if (id == null) {
             throw new IllegalArgumentException("Id may not be null.");
         }
-        _id = id;
+        _subjectId = id;
     }
 
     /**
      * {@inheritDoc}
      */
-    @Column(name = "discriminator")
-    public String getDiscriminator() {
-        return _discriminator;
+    @Column(name = "subject_discriminator")
+    public String getSubjectDiscriminator() {
+        return _subjectDiscriminator;
     }
 
     /**
      * Sets the optional discriminator.
      * 
-     * @see #getDiscriminator()
+     * @see #getSubjectDiscriminator()
      * 
      * @param discriminator
      *            the optional discriminator to set.
      */
     public void setDiscriminator(String discriminator) {
-        _discriminator = discriminator;
+        _subjectDiscriminator = discriminator;
     }
 
 }
