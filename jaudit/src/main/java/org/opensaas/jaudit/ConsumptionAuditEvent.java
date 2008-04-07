@@ -24,6 +24,10 @@ package org.opensaas.jaudit;
  * <li>Printer Time</li>
  * <li>Network Time</li>
  * </ul>
+ * 
+ * The {@link AuditEvent#getTarget()} is the item being consumed. The
+ * {@link SessionRecord#getResponsible() event's session record} is the subect
+ * consuming the target.
  */
 public interface ConsumptionAuditEvent extends AuditEvent {
 

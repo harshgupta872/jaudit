@@ -28,15 +28,6 @@ public interface MembershipChangeAuditEvent extends AuditEvent {
      */
     AuditSubject getMembershipGroup();
 
-    /**
-     * If this returns non-null then the group where the membership is changing
-     * is actually a property of {@link #getMembershipGroup()}.
-     * 
-     * Optional. When not null, length less than or equal to 255.
-     * 
-     * @return String the membership property.
-     */
-    String getMembershipProperty();
 
     /**
      * Returns the type of this membership change event.

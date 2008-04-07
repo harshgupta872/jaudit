@@ -47,4 +47,20 @@ public interface BusinessAuditEvent extends AuditEvent {
      */
     String getBusinessClass();
 
+    /**
+     * Returns the action executed. Actions might include:
+     * 
+     * <ul>
+     * <li>HIRE</li>
+     * <li>FIRE</li>
+     * <li>NEW_RELEASE</li>
+     * <li>NEW_SYSTEM_ONLINE</li>
+     * </ul>
+     * 
+     * Optional. Less than or equal to 1024 characters.
+     * 
+     * @return the action executed by the subject on the target.
+     */
+    String getBusinessAction();
+
 }
