@@ -70,7 +70,6 @@ public class ConsumptionAuditEventVOTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNegativeScale() {
         ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        assert ceVO.getScale() == 0;
         ceVO.setScale(-1);
     }
 
