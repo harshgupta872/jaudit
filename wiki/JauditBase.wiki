@@ -205,7 +205,7 @@ A record of the membership of a group being updated.  The two types of changes:
         target_subject_id varchar(255),
         description varchar(255),
         membership_change_event_type varchar(255) not null, -- ADDED OR REMOVED
-        membership_group_discriminator varchar(255), -- The group being ADDED to or REMOVED from.
+        membership_group_subject_discriminator varchar(255), -- The group being ADDED to or REMOVED from.
         membership_group_subject_type varchar(255),
         membership_group_subject_id varchar(255) not null,
         transaction varchar(255) not null, -- Associated transaction
@@ -229,10 +229,10 @@ A Business event is a generic record of an important business level event such a
 * Example DDL (Postgresql Variant) *
 {{{
     create table business_audit_events (
-        id varchar(255) not null,
-        ts timestamp not null,
+        id varchar(255) not null, -- GUID
+        ts timestamp not null, -- When this event occurred.
         target_subject_discriminator varchar(255),
-        subjectId varchar(255),
+        target_subject_id varchar(255),
         target_subject_type varchar(255),
         description varchar(255),
         business_class varchar(255) not null,
@@ -242,22 +242,6 @@ A Business event is a generic record of an important business level event such a
     );
 }}}
 
-
-== Example DDL (Postgresql Variant) == 
-
-{{{
-    create table business_audit_events (
-        id varchar(255) not null,
-        ts timestamp not null,
-        target_subject_discriminator varchar(255),
-        target_subject_type varchar(255),
-        target_subject_id varchar(255),
-        business_class varchar(255) not null,
-        transaction varchar(255) not null,
-        primary key (id)
-    );
-
-}}}
 
 
 == Optional Foreign Key Constraints ==
