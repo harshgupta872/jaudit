@@ -248,32 +248,32 @@ A Business event is a generic record of an important business level event such a
 
 {{{
     alter table business_audit_events 
-        add constraint FK4B57881C757E421 
-        foreign key (transaction) 
+        add constraint FK4B57881CAD45DAD7 
+        foreign key (transaction_record) 
         references transaction_records;
 
     alter table consumption_events 
-        add constraint FK58D4B63D757E421 
-        foreign key (transaction) 
+        add constraint FK58D4B63DAD45DAD7 
+        foreign key (transaction_record) 
         references transaction_records;
 
     alter table life_cycle_audit_events 
-        add constraint FKB5B11AD9757E421 
-        foreign key (transaction) 
+        add constraint FKB5B11AD9AD45DAD7 
+        foreign key (transaction_record) 
         references transaction_records;
 
     alter table membership_change_audit_events 
-        add constraint FKE7B0E843757E421 
-        foreign key (transaction) 
+        add constraint FKE7B0E843AD45DAD7 
+        foreign key (transaction_record) 
         references transaction_records;
 
     alter table property_value_changes 
-        add constraint FK61FFF10BBCB2547F 
+        add constraint FK61FFF10BFF0BCAB9 
         foreign key (life_cycle_audit_event) 
         references life_cycle_audit_events;
 
     alter table transaction_records 
-        add constraint FK631DD9E1F714C99D 
+        add constraint FK631DD9E151A4AA57 
         foreign key (session_record) 
         references session_records;
 }}}
