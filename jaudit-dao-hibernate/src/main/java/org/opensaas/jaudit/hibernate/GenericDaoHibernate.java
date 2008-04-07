@@ -37,7 +37,7 @@ public class GenericDaoHibernate<T, PK extends Serializable> extends
      * @param type
      *            required type of the dao's managed object
      */
-    public GenericDaoHibernate(Class<T> type) {
+    public GenericDaoHibernate(final Class<T> type) {
         if (type == null) {
             throw new IllegalArgumentException("Type is required.");
         }
@@ -47,7 +47,7 @@ public class GenericDaoHibernate<T, PK extends Serializable> extends
     /**
      * {@inheritDoc}
      */
-    public PK create(T newInstance) {
+    public PK create(final T newInstance) {
         @SuppressWarnings("unchecked")
         PK save = (PK) getSession().save(newInstance);
         return save;
@@ -56,7 +56,7 @@ public class GenericDaoHibernate<T, PK extends Serializable> extends
     /**
      * {@inheritDoc}
      */
-    public T read(PK id) {
+    public T read(final PK id) {
         @SuppressWarnings("unchecked")
         T t = (T) getSession().get(_type, id);
         return t;
