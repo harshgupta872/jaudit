@@ -21,10 +21,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
-import org.opensaas.jaudit.AuditSubject;
-import org.opensaas.jaudit.MembershipChangeAuditEvent;
-import org.opensaas.jaudit.MembershipChangeType;
-
 /**
  * The default implementation and persistence mapping of
  * {@link MembershipChangeAuditEvent}.
@@ -38,8 +34,6 @@ public class MembershipChangeAuditEventVO extends AuditEventVO implements
     private MembershipChangeType _membershipChangeEventType;
 
     private AuditSubject _membershipGroup;
-
-    private String _membershipProperty;
 
     /**
      * {@inheritDoc}
@@ -72,9 +66,9 @@ public class MembershipChangeAuditEventVO extends AuditEventVO implements
      */
     @Embedded
     @AttributeOverrides( {
-            @AttributeOverride(name = "id", column = @Column(name = "membership_group_subject_id", nullable = false)),
+            @AttributeOverride(name = "subjectId", column = @Column(name = "membership_group_subject_id", nullable = false)),
             @AttributeOverride(name = "subjectType", column = @Column(name = "membership_group_subject_type")),
-            @AttributeOverride(name = "discriminator", column = @Column(name = "membership_group_discriminator")) })
+            @AttributeOverride(name = "subjectDiscriminator", column = @Column(name = "membership_group_subject_discriminator")) })
     public AuditSubject getMembershipGroup() {
         return _membershipGroup;
     }
@@ -92,26 +86,6 @@ public class MembershipChangeAuditEventVO extends AuditEventVO implements
                     "Membership Group must not be null.");
         }
         _membershipGroup = membershipGroup;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Column(name = "membership_property", length = 255)
-    public String getMembershipProperty() {
-        return _membershipProperty;
-    }
-
-    /**
-     * Sets the optional membership property.
-     * 
-     * @see #getMembershipProperty()
-     * 
-     * @param membershipProperty
-     *            the membership property to set.
-     */
-    public void setMembershipProperty(String membershipProperty) {
-        _membershipProperty = membershipProperty;
     }
 
 }

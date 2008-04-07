@@ -34,9 +34,11 @@ public class AuditEventVO implements AuditEvent {
 
     private AuditSubject _target;
 
-    private TransactionRecord _transaction;
+    private TransactionRecord _transactionRecord;
 
     private Date _ts;
+
+    private String _description;
 
     /**
      * Defalt empty constructor.
@@ -73,9 +75,9 @@ public class AuditEventVO implements AuditEvent {
      */
     @Embedded
     @AttributeOverrides( {
-            @AttributeOverride(name = "id", column = @Column(name = "target_subject_id")),
+            @AttributeOverride(name = "subjectId", column = @Column(name = "target_subject_id")),
             @AttributeOverride(name = "subjectType", column = @Column(name = "target_subject_type")),
-            @AttributeOverride(name = "discriminator", column = @Column(name = "target_subject_discriminator"))})
+            @AttributeOverride(name = "subjectDiscriminator", column = @Column(name = "target_subject_discriminator")) })
     public AuditSubject getTarget() {
         return _target;
     }
@@ -94,9 +96,9 @@ public class AuditEventVO implements AuditEvent {
      * {@inheritDoc}
      */
     @ManyToOne(targetEntity = TransactionRecordVO.class, optional = false)
-    @JoinColumn(name = "transaction_id", nullable = false)
+    @JoinColumn(name = "transaction_record", nullable = false)
     public TransactionRecord getTransactionRecord() {
-        return _transaction;
+        return _transactionRecord;
     }
 
     /**
@@ -112,7 +114,7 @@ public class AuditEventVO implements AuditEvent {
             throw new IllegalArgumentException(
                     "Transaction record must not be null.");
         }
-        _transaction = transaction;
+        _transactionRecord = transaction;
     }
 
     /**
@@ -136,6 +138,25 @@ public class AuditEventVO implements AuditEvent {
             throw new IllegalArgumentException("Date must not be null.");
         }
         _ts = ts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Column(name = "description")
+    public String getDescription() {
+        return _description;
+    }
+
+    /**
+     * Sets the optional description.
+     * 
+     * @see #getDescription()
+     * 
+     * @param description
+     */
+    public void setDescription(String description) {
+        _description = description;
     }
 
 }

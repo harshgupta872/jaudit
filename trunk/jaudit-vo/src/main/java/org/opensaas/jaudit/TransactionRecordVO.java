@@ -90,7 +90,7 @@ public class TransactionRecordVO implements TransactionRecord {
      * {@inheritDoc}
      */
     @ManyToOne(targetEntity = SessionRecordVO.class, optional=false)
-    @JoinColumn(name = "session_record_id", nullable = false)
+    @JoinColumn(name = "session_record", nullable = false)
     public SessionRecord getSessionRecord() {
         return _sessionRecord;
     }

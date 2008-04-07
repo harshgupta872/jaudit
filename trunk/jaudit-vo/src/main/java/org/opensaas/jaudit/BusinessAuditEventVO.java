@@ -27,6 +27,8 @@ public class BusinessAuditEventVO extends AuditEventVO implements
 
     private String _businessClass;
 
+    private String _businessAction;
+
     /**
      * {@inheritDoc}
      */
@@ -49,6 +51,26 @@ public class BusinessAuditEventVO extends AuditEventVO implements
                     "Business class must not be null.");
         }
         _businessClass = businessClass;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Column(name = "business_action", length = 1024)
+    public String getBusinessAction() {
+        return _businessAction;
+    }
+
+    /**
+     * Sets the associated business action.
+     * 
+     * @see #getBusinessAction()
+     * 
+     * @param businessAction
+     *            the action to set.
+     */
+    public void setBusinessAction(String businessAction) {
+        _businessAction = businessAction;
     }
 
 }
