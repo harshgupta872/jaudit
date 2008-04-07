@@ -38,6 +38,17 @@ public interface SessionRecord {
     String getId();
 
     /**
+     * Returns the session implementation's specific id for this session. For
+     * example, a servlet container will have its own id generation mechanism
+     * and way of identifying sessions within its own context.
+     * 
+     * Optional.
+     * 
+     * @return String session id.
+     */
+    String getSessionId();
+
+    /**
      * Returns the time at which this session was started.
      * 
      * Required.

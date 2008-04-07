@@ -32,12 +32,12 @@ public interface AuditSubject {
      * 
      * @return the unique identifier of the audit subject.
      */
-    String getId();
+    String getSubjectId();
 
     /**
      * Returns the type of this entity.
      * 
-     * @see #getId()
+     * @see #getSubjectId()
      * 
      * Optional. If not null, length less than or equal to 255.
      * 
@@ -57,6 +57,6 @@ public interface AuditSubject {
      * 
      * @return the discriminator for this subject.
      */
-    String getDiscriminator();
+    String getSubjectDiscriminator();
 
 }

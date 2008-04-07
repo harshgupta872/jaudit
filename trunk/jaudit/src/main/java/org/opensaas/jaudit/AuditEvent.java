@@ -63,13 +63,19 @@ public interface AuditEvent {
     /**
      * Returns the target entity of this event.
      * 
-     * 
-     * @see #getTargetType()
-     * 
      * Optional.
      * 
      * @return the entity target of this event.
      */
     AuditSubject getTarget();
+
+    /**
+     * Gets a non-localized description of what occured.
+     * 
+     * Optional
+     * 
+     * @return a short description of what happened.
+     */
+    String getDescription();
 
 }
