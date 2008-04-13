@@ -18,30 +18,24 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.opensaas.jaudit.AuditSubject;
-import org.opensaas.jaudit.SessionRecord;
 
 /**
  * This is the default implementation and persistence definition for
  * {@link SessionRecord}.
  * 
  */
-@javax.persistence.Entity
+@Entity
 @Table(name = "session_records")
-public class SessionRecordVO implements SessionRecord {
+public class SessionRecordVO implements SessionRecordMutable {
 
     private Date _endedTs;
 
     private String _id;
-
-    private AuditSubject _responsible;
-
-    private String _responsibleAddress;
-
-    private String _responsibleAgent;
 
     private Date _startedTs;
 
@@ -49,9 +43,9 @@ public class SessionRecordVO implements SessionRecord {
 
     private String _systemAddress;
 
-    private String _credentialsType;
-
     private String _sessionId;
+
+    private ResponsibleInformation _responsibleInformation;
 
     /**
      * {@inheritDoc}
@@ -62,13 +56,7 @@ public class SessionRecordVO implements SessionRecord {
     }
 
     /**
-     * Sets the optional time this session ended.
-     * 
-     * @see #getEndedTs()
-     * 
-     * @param endedTs
-     *            time ended.
-     * 
+     * {@inheritDoc}
      */
     public void setEndedTs(Date endedTs) {
         _endedTs = endedTs;
@@ -78,6 +66,7 @@ public class SessionRecordVO implements SessionRecord {
      * {@inheritDoc}
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public String getId() {
         return _id;
     }
@@ -99,81 +88,13 @@ public class SessionRecordVO implements SessionRecord {
     /**
      * {@inheritDoc}
      */
-    @Embedded
-    @AttributeOverrides( {
-            @AttributeOverride(name = "subject_id", column = @Column(name = "responsible_subject_id", nullable = false)),
-            @AttributeOverride(name = "subjectType", column = @Column(name = "responsible_subject_type")),
-            @AttributeOverride(name = "subjectDiscriminator", column = @Column(name = "responsible_subject_discriminator")) })
-    public AuditSubject getResponsible() {
-        return _responsible;
-    }
-
-    /**
-     * Sets the subject responsible for work done from this session.
-     * 
-     * @see #getResponsible()
-     * 
-     * @param responsible
-     */
-    public void setResponsible(AuditSubject responsible) {
-        _responsible = responsible;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Column(name = "responsible_address", length = 255)
-    public String getResponsibleAddress() {
-        return _responsibleAddress;
-    }
-
-    /**
-     * Sets the address, most likely ip, of the {@link #getResponsible()}
-     * subject.
-     * 
-     * @see #getResponsibleAddress()
-     * 
-     * @param responsibleAddress
-     */
-    public void setResponsibleAddress(String responsibleAddress) {
-        _responsibleAddress = responsibleAddress;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Column(name = "responsible_agent", length = 255)
-    public String getResponsibleAgent() {
-        return _responsibleAgent;
-    }
-
-    /**
-     * Sets the optional agent string which is agent strning for the client used
-     * by the {@link #getResponsible()} subject.
-     * 
-     * @see #getResponsibleAgent()
-     * @param responsibleAgent
-     *            the responsible agent to set.
-     */
-    public void setResponsibleAgent(String responsibleAgent) {
-        _responsibleAgent = responsibleAgent;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Column(name = "started_ts")
     public Date getStartedTs() {
         return _startedTs;
     }
 
     /**
-     * Sets the optional started time for this session.
-     * 
-     * @see #getStartedTs()
-     * 
-     * @param startedTs
-     *            the started time.
+     * {@inheritDoc}
      */
     public void setStartedTs(Date startedTs) {
         _startedTs = startedTs;
@@ -192,12 +113,7 @@ public class SessionRecordVO implements SessionRecord {
     }
 
     /**
-     * Sets the optional system subject to associate with this session.
-     * 
-     * @see #getSystem()
-     * 
-     * @param system
-     *            the system to set.
+     * {@inheritDoc}
      */
     public void setSystem(AuditSubject system) {
         _system = system;
@@ -212,35 +128,10 @@ public class SessionRecordVO implements SessionRecord {
     }
 
     /**
-     * Sets the optional system address for this session.
-     * 
-     * @see #getSystemAddress()
-     * 
-     * @param systemAddress
-     *            the system address.
+     * {@inheritDoc}
      */
     public void setSystemAddress(String systemAddress) {
         _systemAddress = systemAddress;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Column(name = "system_address", length = 255)
-    public String getCredentialsType() {
-        return _credentialsType;
-    }
-
-    /**
-     * Sets the optional credentials type.
-     * 
-     * @see #getCredentialsType()
-     * 
-     * @param credentialsType
-     *            the type to set.
-     */
-    public void setCredentialsType(String credentialsType) {
-        _credentialsType = credentialsType;
     }
 
     /**
@@ -252,15 +143,26 @@ public class SessionRecordVO implements SessionRecord {
     }
 
     /**
-     * Sets the optional session implementaiton specific id.
-     * 
-     * @see #getSessionId()
-     * 
-     * @param sessionId
-     *            optional session id.
+     * {@inheritDoc}
      */
     public void setSessionId(String sessionId) {
         _sessionId = sessionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Embedded
+    public ResponsibleInformation getResponsibleInformation() {
+        return _responsibleInformation;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setResponsibleInformation(
+            ResponsibleInformation responsibleInformation) {
+        _responsibleInformation = responsibleInformation;
     }
 
 }
