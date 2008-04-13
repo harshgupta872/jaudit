@@ -10,5 +10,12 @@
   <artifactId>jaudit</artifactId>
   <packaging>jar</packaging>
   <name>jaudit</name>
-  <description>The very base jaudit libraries.  Should not have dependencies on any 3rd party libraries and will most likely only be interfaces.</description>
+  <description>The very base jaudit libraries.  Should not have dependencies on any 3rd party libraries.</description>
+  <dependencies>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+      <version>1.0</version>
+    </dependency>
+  </dependencies>
 </project>
