@@ -12,11 +12,25 @@
  */
 package org.opensaas.jaudit.dao;
 
+import java.util.Date;
+
 import org.opensaas.jaudit.SessionRecord;
+import org.opensaas.jaudit.SessionRecordMutable;
 
 /**
  * Dao interface for working with {@link SessionRecord}s.
  */
-public interface SessionRecordDao extends GenericDao<SessionRecord, String> {
+public interface SessionRecordDao extends
+        GenericDao<SessionRecordMutable, String> {
+
+    /**
+     * Updates the session record's ended time stamp to that passed in.
+     * 
+     * @param sessionRecord
+     *            The session record to update.
+     * @param endedTs
+     *            the date to update to.
+     */
+    void updateEndedTs(SessionRecordMutable sessionRecord, Date endedTs);
 
 }
