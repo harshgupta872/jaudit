@@ -15,41 +15,41 @@ package org.opensaas.jaudit;
 import org.junit.Test;
 
 /**
- * Tests {@link EntityVO}.
+ * Tests {@link AuditSubject}.
  */
-public class EntityVOTest {
+public class AuditSubjectVOTest {
 
     @Test
     public void testConstructor() {
-        EntityVO eVO = new EntityVO();
+        AuditSubject eVO = new AuditSubject();
         assert eVO != null;
         assert eVO instanceof AuditSubject;
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullId() {
-        EntityVO eVO = new EntityVO();
+        AuditSubject eVO = new AuditSubject();
         assert eVO.getSubjectId() == null;
         eVO.setSubjectId(null);
     }
 
     @Test
     public void testEmptyId() {
-        EntityVO eVO = new EntityVO();
+        AuditSubject eVO = new AuditSubject();
         eVO.setSubjectId("");
         assert eVO.getSubjectId().equals("");
     }
 
     @Test
     public void testId() {
-        EntityVO eVO = new EntityVO();
+        AuditSubject eVO = new AuditSubject();
         eVO.setSubjectId("a");
         assert eVO.getSubjectId().equals("a");
     }
 
     @Test
     public void testSubjectType() {
-        EntityVO eVO = new EntityVO();
+        AuditSubject eVO = new AuditSubject();
         eVO.setSubjectType("a");
         assert eVO.getSubjectType().equals("a");
     }
