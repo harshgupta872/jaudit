@@ -17,6 +17,8 @@
     <module>jaudit-vo</module>
     <module>jaudit-dao</module>
     <module>jaudit-dao-hibernate</module>
+    <module>jaudit-service</module>
+    <module>jaudit-service-default</module>
   </modules>
   <build>
     <pluginManagement>
