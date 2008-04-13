@@ -67,52 +67,6 @@ public interface SessionRecord {
     Date getEndedTs();
 
     /**
-     * The unique identifier of the entity which is accountable for this
-     * session. Example: a logged in user's id or a subsystem's identifier.
-     * 
-     * @see #getResponsibleType()
-     * 
-     * TODO: Document some strategies for GUID/Unique id generation. Should
-     * include the max length and content of the id. Maybe UUID?
-     * 
-     * Required.
-     * 
-     * @return the unique identifier of the entity responsible.
-     */
-    AuditSubject getResponsible();
-
-    /**
-     * The address of the responsible entity that is accountable for this
-     * session. An example is an IP Address.
-     * 
-     * When not null, should be less than or equal to 255 characters.
-     * 
-     * @see #getResponsible()
-     * 
-     * Optional.
-     * 
-     * @return the address of the entity responsible for this session.
-     */
-    String getResponsibleAddress();
-
-    /**
-     * The agent the responsible entity for this session is using to communicate
-     * with the system. For example, if a web browser is being used, it would be
-     * the user agent that the browser supplies.
-     * 
-     * <tt>Mozilla/5.001 (Macintosh; N; PPC; ja) Gecko/25250101 MegaCorpBrowser/1.0 (MegaCorp, Inc.)</tt>
-     * 
-     * When not null, should be less than or equal to 255 characters.
-     * 
-     * @see #getResponsible()
-     * 
-     * Optional.
-     * 
-     * @return the address of the entity responsible for this session.
-     */
-    String getResponsibleAgent();
-
-    /**
      * The system on which this session was created and is being executed.
      * 
      * @see #getSystemType()
@@ -141,12 +95,12 @@ public interface SessionRecord {
     String getSystemAddress();
 
     /**
-     * Returns the credentials used to start this session.
+     * Return informaiton about the entity that was responsible for the session.
      * 
-     * Optional. When not null, less than 255 characters.
+     * Optional.
      * 
-     * @return the credentials type.
+     * @return responsible information.
      */
-    String getCredentialsType();
+    ResponsibleInformation getResponsibleInformation();
 
 }

@@ -12,12 +12,21 @@
  */
 package org.opensaas.jaudit;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 /**
- * A simple representation of a uniquely identifable entity within an
- * application.
+ * Default hibernate annotated implemenation of {@link AuditSubject}.
  * 
  */
-public interface AuditSubject {
+@Embeddable
+public class AuditSubject {
+
+    private String _subjectType;
+
+    private String _subjectId;
+
+    private String _subjectDiscriminator;
 
     /**
      * The unique identifier of the entity which is accountable for whatever is
@@ -32,7 +41,10 @@ public interface AuditSubject {
      * 
      * @return the unique identifier of the audit subject.
      */
-    String getSubjectId();
+    @Column(name = "subject_type", length = 255)
+    public String getSubjectType() {
+        return _subjectType;
+    }
 
     /**
      * Returns the type of this entity.
@@ -43,7 +55,31 @@ public interface AuditSubject {
      * 
      * @return the type of the audit subject.
      */
-    String getSubjectType();
+    public void setSubjectType(String subjectType) {
+        _subjectType = subjectType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Column(name = "subject_id", nullable = false)
+    public String getSubjectId() {
+        return _subjectId;
+    }
+
+    /**
+     * Sets the required id.
+     * 
+     * @see #getSubjectId().
+     * 
+     * @param id
+     */
+    public void setSubjectId(String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id may not be null.");
+        }
+        _subjectId = id;
+    }
 
     /**
      * Returns a String which is a single level grouping for all audit subjects.
@@ -51,12 +87,27 @@ public interface AuditSubject {
      * Most often, a discriminator represents an overall account that groups
      * users together. For example, in SalesForce, this would be the
      * organization id. Less than or equal to 255 characters in length. Can also
-     * represent datawhare house ids, departments, etc.
+     * represent datawharehouse ids, departments, etc.
      * 
      * Optional.
      * 
      * @return the discriminator for this subject.
      */
-    String getSubjectDiscriminator();
+    @Column(name = "subject_discriminator")
+    public String getSubjectDiscriminator() {
+        return _subjectDiscriminator;
+    }
+
+    /**
+     * Sets the optional discriminator.
+     * 
+     * @see #getSubjectDiscriminator()
+     * 
+     * @param subjectDiscriminator
+     *            the optional discriminator to set.
+     */
+    public void setSubjectDiscriminator(String subjectDiscriminator) {
+        _subjectDiscriminator = subjectDiscriminator;
+    }
 
 }
