@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+  default-lazy-init="true">
+
+  <!-- =================================================================== -->
+  <!-- AOP: Configuration and Aspects                                      -->
+  <!-- =================================================================== -->
+  <aop:config>
+    <aop:advisor id="jauditTx" advice-ref="txAdvice"
+      pointcut="execution(* *..jaudit.service.*Service.*(..))"
+      order="3" />
+  </aop:config>
+
+  <!-- Add new DAOs here -->
+  <bean id="sessionRecordDao"
+    class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
+    autowire="byName">
+    <constructor-arg type="java.lang.Class"
+      value="org.opensaas.jaudit.SessionRecordVO" />
+  </bean>
+
+  <!-- Add new Managers here -->
+  <bean id="systemInetAddress"
+    class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="targetClass">
+      <value>java.net.InetAddress</value>
+    </property>
+    <property name="targetMethod">
+      <value>getLocalHost</value>
+    </property>
+  </bean>
+
+  <bean id="systemAddress"
+    class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="targetObject">
+      <ref local="systemInetAddress" />
+    </property>
+    <property name="targetMethod">
+      <value>toString</value>
+    </property>
+  </bean>
+
+
+  <!--  Auditing  -->
+  <bean id="auditSubjectPrototype"
+    class="org.opensaas.jaudit.AuditSubject" scope="prototype" />
+  <bean id="responsibleInformationPrototype"
+    class="org.opensaas.jaudit.ResponsibleInformation"
+    scope="prototype" />
+  <bean id="sessionRecordPrototype"
+    class="org.opensaas.jaudit.SessionRecordVO" scope="prototype" />
+
+  <bean id="auditService"
+    class="org.opensaas.jaudit.service.impl.AuditServiceImpl"
+    autowire="byName">
+    <property name="auditSystem">
+      <bean class="org.opensaas.jaudit.AuditSubject">
+        <property name="subjectType" value="exampleapp" />
+        <property name="subjectId" ref="systemAddress" />
+        <property name="subjectDiscriminator" value="org.opensass" />
+      </bean>
+    </property>
+    <property name="auditSubjectFactory">
+      <bean
+        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+          <idref local="auditSubjectPrototype" />
+        </property>
+      </bean>
+    </property>
+    <property name="responsibleInformationFactory">
+      <bean
+        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+          <idref local="responsibleInformationPrototype" />
+        </property>
+      </bean>
+    </property>
+    <property name="sessionRecordFactory">
+      <bean
+        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+          <idref local="sessionRecordPrototype" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <bean
+    class="org.opensaas.jaudit.service.integration.SessionManagementApplicationListener"
+    autowire="byName" />
+
+
+  <!-- Add new Actions here -->
+</beans>
