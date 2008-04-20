@@ -14,6 +14,7 @@ package org.opensaas.jaudit.dao;
 
 import java.util.Date;
 
+import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
 import org.opensaas.jaudit.SessionRecordMutable;
 
@@ -31,6 +32,16 @@ public interface SessionRecordDao extends
      * @param endedTs
      *            the date to update to.
      */
-    void updateEndedTs(SessionRecordMutable sessionRecord, Date endedTs);
+    SessionRecord updateEndedTs(SessionRecord sessionRecord, Date endedTs);
+
+    /**
+     * Updates who is responsible for this session. This can only be updated if
+     * the session's {@link SessionRecord#getEndedTs()} is null.
+     * 
+     * @param sessionRecord
+     * @param responsibleInformation
+     */
+    SessionRecord updateResponsibleInformation(SessionRecord sessionRecord,
+            ResponsibleInformation responsibleInformation);
 
 }

@@ -12,6 +12,8 @@
  */
 package org.opensaas.jaudit;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -20,7 +22,12 @@ import javax.persistence.Embeddable;
  * 
  */
 @Embeddable
-public class AuditSubject {
+public class AuditSubject implements Serializable {
+
+    /**
+     * Generated Serial Id.
+     */
+    private static final long serialVersionUID = -4164685657333782449L;
 
     private String _subjectType;
 
@@ -108,6 +115,66 @@ public class AuditSubject {
      */
     public void setSubjectDiscriminator(String subjectDiscriminator) {
         _subjectDiscriminator = subjectDiscriminator;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        int code = 0;
+        if (_subjectDiscriminator != null) {
+            code += _subjectDiscriminator.hashCode();
+        }
+        if (_subjectType != null) {
+            code += _subjectType.hashCode();
+        }
+        if (_subjectId != null) {
+            code += _subjectId.hashCode();
+        }
+
+        return code;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof AuditSubject)) {
+            return false;
+        }
+
+        AuditSubject other = (AuditSubject) o;
+        return equals(other._subjectDiscriminator, _subjectDiscriminator)
+                && equals(other._subjectId, _subjectId)
+                && equals(other._subjectType, _subjectType);
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(255);
+        sb.append("AuditSubject[");
+        sb.append("discriminator=");
+        sb.append(_subjectDiscriminator);
+        sb.append(", type=");
+        sb.append(_subjectType);
+        sb.append(", id=");
+        sb.append(_subjectId);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    static private boolean equals(Object one, Object two) {
+        if (one == null && two == null) {
+            return true;
+        }
+        if (one == null) {
+            return false;
+        }
+
+        return one.equals(two);
     }
 
 }

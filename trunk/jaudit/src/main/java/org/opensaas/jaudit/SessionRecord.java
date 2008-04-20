@@ -12,6 +12,7 @@
  */
 package org.opensaas.jaudit;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Date;
  * record.
  * 
  */
-public interface SessionRecord {
+public interface SessionRecord extends Serializable {
 
     /**
      * Returns the globally unique id of this audit record. Implementors and
@@ -86,7 +87,7 @@ public interface SessionRecord {
      * 
      * When not null, should be less than or equal to 255 characters.
      * 
-     * @see #getResponsible()
+     * @see #getResponsibleInformation()
      * 
      * Optional.
      * 

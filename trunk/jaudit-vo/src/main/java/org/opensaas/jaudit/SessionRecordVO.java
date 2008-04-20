@@ -33,6 +33,11 @@ import javax.persistence.Table;
 @Table(name = "session_records")
 public class SessionRecordVO implements SessionRecordMutable {
 
+    /**
+     * Generated serial id.
+     */
+    private static final long serialVersionUID = 3453183849964023803L;
+
     private Date _endedTs;
 
     private String _id;

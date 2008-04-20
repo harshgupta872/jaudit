@@ -39,11 +39,6 @@ public class AuditServiceImpl implements AuditService {
     private SessionRecordDao _sessionRecordDao;
 
     /**
-     * Will return new {@link AuditSubject} objects.
-     */
-    private ObjectFactory _auditSubjectFactory;
-
-    /**
      * Will return new {@link ResponsibleInformation} objects.
      */
     private ObjectFactory _responsibleInformationFactory;
@@ -67,10 +62,6 @@ public class AuditServiceImpl implements AuditService {
     /**
      * {@inheritDoc}
      */
-    public AuditSubject newAuditSubjectMutable() {
-        return (AuditSubject) _auditSubjectFactory.getObject();
-    }
-
     public ResponsibleInformation newResponsibleInformation() {
         return (ResponsibleInformation) _responsibleInformationFactory
                 .getObject();
@@ -105,10 +96,17 @@ public class AuditServiceImpl implements AuditService {
     /**
      * {@inheritDoc}
      */
-    public void sessionEnded(SessionRecord sessionRecord) {
-        SessionRecordMutable srm = _sessionRecordDao
-                .read(sessionRecord.getId());
-        _sessionRecordDao.updateEndedTs(srm, new Date());
+    public SessionRecord sessionEnded(SessionRecord sessionRecord) {
+        return _sessionRecordDao.updateEndedTs(sessionRecord, new Date());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public SessionRecord updateResponsible(SessionRecord sessionRecord,
+            ResponsibleInformation responsibleInformation) {
+        return _sessionRecordDao.updateResponsibleInformation(sessionRecord,
+                responsibleInformation);
     }
 
     /**
@@ -162,16 +160,6 @@ public class AuditServiceImpl implements AuditService {
      */
     public void setAuditSystemAddress(String auditSystemAddress) {
         _auditSystemAddress = auditSystemAddress;
-    }
-
-    /**
-     * Sets the required audit subject factory.
-     * 
-     * @param auditSubjectFactory
-     */
-    @Required
-    public void setAuditSubjectFactory(ObjectFactory auditSubjectFactory) {
-        _auditSubjectFactory = auditSubjectFactory;
     }
 
 }

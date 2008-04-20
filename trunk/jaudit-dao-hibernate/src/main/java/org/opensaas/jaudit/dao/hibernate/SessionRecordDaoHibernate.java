@@ -14,6 +14,8 @@ package org.opensaas.jaudit.dao.hibernate;
 
 import java.util.Date;
 
+import org.opensaas.jaudit.ResponsibleInformation;
+import org.opensaas.jaudit.SessionRecord;
 import org.opensaas.jaudit.SessionRecordMutable;
 import org.opensaas.jaudit.dao.SessionRecordDao;
 
@@ -37,7 +39,7 @@ public class SessionRecordDaoHibernate extends
     /**
      * {@inheritDoc}
      */
-    public void updateEndedTs(SessionRecordMutable sessionRecord, Date endedTs) {
+    public SessionRecord updateEndedTs(SessionRecord sessionRecord, Date endedTs) {
         if (sessionRecord == null) {
             throw new IllegalArgumentException(
                     "Session record must not be null.");
@@ -52,5 +54,38 @@ public class SessionRecordDaoHibernate extends
         sr.setEndedTs(endedTs);
 
         getSession().save(sr);
+
+        return sr;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public SessionRecord updateResponsibleInformation(
+            SessionRecord sessionRecord,
+            ResponsibleInformation responsibleInformation) {
+        if (sessionRecord == null) {
+            throw new IllegalArgumentException(
+                    "Session record must not be null.");
+        }
+
+        SessionRecordMutable sr = read(sessionRecord.getId());
+        if (sr == null) {
+            throw new IllegalArgumentException(
+                    "Session record does not exist in persistence.");
+        }
+
+        if (sr.getEndedTs() != null) {
+            throw new IllegalArgumentException(
+                    "Session record has already been ended at: "
+                            + sr.getEndedTs());
+        }
+
+        sr.setResponsibleInformation(responsibleInformation);
+
+        getSession().save(sr);
+
+        return sr;
+
     }
 }
