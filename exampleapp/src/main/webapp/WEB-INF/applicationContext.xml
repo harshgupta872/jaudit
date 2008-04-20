@@ -45,11 +45,9 @@
 
 
   <!--  Auditing  -->
-  <bean id="auditSubjectPrototype"
-    class="org.opensaas.jaudit.AuditSubject" scope="prototype" />
   <bean id="responsibleInformationPrototype"
     class="org.opensaas.jaudit.ResponsibleInformation"
-    scope="prototype" />
+    scope="prototype"/>
   <bean id="sessionRecordPrototype"
     class="org.opensaas.jaudit.SessionRecordVO" scope="prototype" />
 
@@ -61,14 +59,6 @@
         <property name="subjectType" value="exampleapp" />
         <property name="subjectId" ref="systemAddress" />
         <property name="subjectDiscriminator" value="org.opensass" />
-      </bean>
-    </property>
-    <property name="auditSubjectFactory">
-      <bean
-        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-        <property name="targetBeanName">
-          <idref local="auditSubjectPrototype" />
-        </property>
       </bean>
     </property>
     <property name="responsibleInformationFactory">
@@ -89,9 +79,8 @@
     </property>
   </bean>
 
-  <bean
-    class="org.opensaas.jaudit.service.integration.SessionManagementApplicationListener"
-    autowire="byName" />
+  <bean id="responsibleFactory"
+    class="org.opensaas.exampleapp.AcegiResponsibleFactory" />
 
 
   <!-- Add new Actions here -->

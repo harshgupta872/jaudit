@@ -40,6 +40,8 @@ public class AuditEventVO implements AuditEvent {
 
     private String _description;
 
+    private SessionRecord _sessionRecord;
+
     /**
      * Defalt empty constructor.
      */
@@ -95,8 +97,8 @@ public class AuditEventVO implements AuditEvent {
     /**
      * {@inheritDoc}
      */
-    @ManyToOne(targetEntity = TransactionRecordVO.class, optional = false)
-    @JoinColumn(name = "transaction_record", nullable = false)
+    @ManyToOne(targetEntity = TransactionRecordVO.class)
+    @JoinColumn(name = "transaction_record")
     public TransactionRecord getTransactionRecord() {
         return _transactionRecord;
     }
@@ -107,13 +109,9 @@ public class AuditEventVO implements AuditEvent {
      * @see #getTransactionRecord()
      * 
      * @param transaction
-     *            non-null transaction record to set.
+     *            transaction record to set.
      */
     public void setTransactionRecord(TransactionRecord transaction) {
-        if (transaction == null) {
-            throw new IllegalArgumentException(
-                    "Transaction record must not be null.");
-        }
         _transactionRecord = transaction;
     }
 
@@ -157,6 +155,27 @@ public class AuditEventVO implements AuditEvent {
      */
     public void setDescription(String description) {
         _description = description;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @ManyToOne(targetEntity = SessionRecordVO.class)
+    @JoinColumn(name = "session_record")
+    public SessionRecord getSessionRecord() {
+        return _sessionRecord;
+    }
+
+    /**
+     * Sets the optional session record.
+     * 
+     * @see #getSessionRecord()
+     * 
+     * @param sessionRecord
+     *            the sessionRecord to set
+     */
+    public void setSessionRecord(SessionRecord sessionRecord) {
+        _sessionRecord = sessionRecord;
     }
 
 }

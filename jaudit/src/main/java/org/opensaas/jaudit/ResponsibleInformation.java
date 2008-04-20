@@ -12,6 +12,8 @@
  */
 package org.opensaas.jaudit;
 
+import java.io.Serializable;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -22,9 +24,14 @@ import javax.persistence.Embedded;
  * Default VO impelmentaiton of {@link ResponsibleInformation}.
  */
 @Embeddable
-public class ResponsibleInformation {
+public class ResponsibleInformation implements Serializable {
 
-    private AuditSubject _responsible;
+    /**
+     * Generated Serial Id.
+     */
+    private static final long serialVersionUID = 4231837012502324838L;
+
+    private AuditSubject _responsible = new AuditSubject();
 
     private String _responsibleAddress;
 
@@ -146,6 +153,24 @@ public class ResponsibleInformation {
      */
     public void setCredentialsType(String credentialsType) {
         _credentialsType = credentialsType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(255);
+        sb.append("ResponsibleInformation[");
+        sb.append("responsible=");
+        sb.append(_responsible);
+        sb.append(", agent=");
+        sb.append(_responsibleAgent);
+        sb.append(", address=");
+        sb.append(_responsibleAddress);
+        sb.append(", credentialsType=");
+        sb.append(_credentialsType);
+        sb.append("]");
+        return sb.toString();
     }
 
 }

@@ -393,6 +393,11 @@
             <artifactId>jaudit-vo</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.opensaas.jaudit</groupId>
+            <artifactId>jaudit-webapp</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!-- Dependencies with scope=provided aren't picked up from dependent JARs -->
         <dependency>
             <groupId>javax.servlet</groupId>

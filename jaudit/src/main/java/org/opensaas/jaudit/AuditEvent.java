@@ -54,11 +54,20 @@ public interface AuditEvent {
     /**
      * Returns the {@link TransactionRecord} associated with this audit event.
      * 
-     * Required.
+     * Optional.
      * 
      * @return the transaction record associated with this audit event.
      */
     TransactionRecord getTransactionRecord();
+
+    /**
+     * Returns the {@link SessionRecord} associated with this audit event.
+     * 
+     * Optional.
+     * 
+     * @return the session record associated with this audit event.
+     */
+    SessionRecord getSessionRecord();
 
     /**
      * Returns the target entity of this event.

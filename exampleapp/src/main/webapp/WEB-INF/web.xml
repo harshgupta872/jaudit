@@ -114,6 +114,11 @@
             <param-value>org.opensaas.exampleapp.webapp.action</param-value>
         </init-param>
     </filter>
+    
+    <filter>
+        <filter-name>audit-session-filter</filter-name>
+        <filter-class>org.opensaas.jaudit.webapp.AuditSessionFilter</filter-class>
+    </filter>
 
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
@@ -122,7 +127,11 @@
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping> 
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>audit-session-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>  
     <!-- Commented out for 2 reasons: 1) it's a pain when developing JSPs, and
                                       2) it causes the Signup webtest to fail -->
     <!--filter-mapping>

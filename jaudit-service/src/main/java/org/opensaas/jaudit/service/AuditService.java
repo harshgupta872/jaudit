@@ -12,7 +12,6 @@
  */
 package org.opensaas.jaudit.service;
 
-import org.opensaas.jaudit.AuditSubject;
 import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
 
@@ -20,14 +19,6 @@ import org.opensaas.jaudit.SessionRecord;
  * The default interface for working with the audit framework.
  */
 public interface AuditService {
-
-    /**
-     * Create a new mutable audit subject. This instance is NOT persisted by may
-     * be associated with a {@link ResponsibleInformation} or other such object.
-     * 
-     * @return AuditSubjectMutable
-     */
-    AuditSubject newAuditSubjectMutable();
 
     /**
      * Returns a new empty responsible information object. This instance is NOT
@@ -66,6 +57,15 @@ public interface AuditService {
      * @param sessionRecord=
      * 
      */
-    void sessionEnded(SessionRecord sessionRecord);
+    SessionRecord sessionEnded(SessionRecord sessionRecord);
+
+    /**
+     * Updates the SessionRecord with a new responsible subject.
+     * 
+     * @param sessionRecord
+     * @param responsibleInformation
+     */
+    SessionRecord updateResponsible(SessionRecord sessionRecord,
+            ResponsibleInformation responsibleInformation);
 
 }
