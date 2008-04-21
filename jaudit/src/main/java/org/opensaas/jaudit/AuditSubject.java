@@ -82,9 +82,6 @@ public class AuditSubject implements Serializable {
      * @param id
      */
     public void setSubjectId(String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id may not be null.");
-        }
         _subjectId = id;
     }
 

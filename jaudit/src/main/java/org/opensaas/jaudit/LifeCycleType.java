@@ -36,6 +36,11 @@ public enum LifeCycleType {
     DELETE,
 
     /**
+     * This represents that the entity was either created or updated.
+     */
+    SAVE,
+
+    /**
      * An entity's state is changed. Example: a system is shut down.
      */
     STATE_CHANGE
