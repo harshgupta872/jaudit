@@ -26,13 +26,6 @@ public class AuditSubjectVOTest {
         assert eVO instanceof AuditSubject;
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullId() {
-        AuditSubject eVO = new AuditSubject();
-        assert eVO.getSubjectId() == null;
-        eVO.setSubjectId(null);
-    }
-
     @Test
     public void testEmptyId() {
         AuditSubject eVO = new AuditSubject();
