@@ -15,14 +15,19 @@
   </aop:config>
 
   <!-- Add new DAOs here -->
-  <bean id="sessionRecordDao"
-    class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
-    autowire="byName">
-    <constructor-arg type="java.lang.Class"
-      value="org.opensaas.jaudit.SessionRecordVO" />
-  </bean>
+
 
   <!-- Add new Managers here -->
+  <bean id="fooBarManager"
+    class="org.opensaas.exampleapp.manager.FooBarManagerImpl">
+    <constructor-arg>
+      <bean class="org.appfuse.dao.hibernate.GenericDaoHibernate"
+        autowire="byType">
+        <constructor-arg value="org.opensaas.exampleapp.model.FooBarVO" />
+      </bean>
+    </constructor-arg>
+  </bean>
+
   <bean id="systemInetAddress"
     class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
     <property name="targetClass">
@@ -47,13 +52,22 @@
   <!--  Auditing  -->
   <bean id="responsibleInformationPrototype"
     class="org.opensaas.jaudit.ResponsibleInformation"
-    scope="prototype"/>
+    scope="prototype" />
   <bean id="sessionRecordPrototype"
     class="org.opensaas.jaudit.SessionRecordVO" scope="prototype" />
 
   <bean id="auditService"
     class="org.opensaas.jaudit.service.impl.AuditServiceImpl"
     autowire="byName">
+    <property name="sessionRecordDao">
+      <bean
+        class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
+        autowire="byName">
+        <constructor-arg type="java.lang.Class"
+          value="org.opensaas.jaudit.SessionRecordVO" />
+      </bean>
+    </property>
+
     <property name="auditSystem">
       <bean class="org.opensaas.jaudit.AuditSubject">
         <property name="subjectType" value="exampleapp" />
