@@ -109,6 +109,9 @@
         </action>
 
         <!-- Add additional actions here -->
+        <action name="fooBars" class="org.opensaas.exampleapp.action.FooBarAction" method="list"> 
+          <result>/WEB-INF/pages/fooBarList.jsp</result> 
+        </action>
       </package>
 
     <!-- Actions in this package will be prefixed with /admin/ -->
@@ -133,4 +136,6 @@
             <result name="success">/WEB-INF/pages/admin/userList.jsp</result>
         </action>
     </package>
+    
+
 </struts>
