@@ -17,8 +17,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * AuditTarget is an annotation...
+ */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuditTarget {
-
+    // tag annotation only; no parameters
 }

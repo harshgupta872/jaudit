@@ -19,5 +19,5 @@ import org.opensaas.jaudit.TransactionRecord;
  */
 public interface TransactionRecordDao extends
         GenericDao<TransactionRecord, String> {
-
+// no added behavior
 }

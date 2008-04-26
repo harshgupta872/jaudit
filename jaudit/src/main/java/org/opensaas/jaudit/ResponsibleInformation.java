@@ -21,7 +21,9 @@ import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
 /**
- * Default VO impelmentaiton of {@link ResponsibleInformation}.
+ * Object that represents the entity responsible for the audit record being
+ * created (i.e., the object making the change). Suitable for embedding in other
+ * Hibernate-enabled objects.
  */
 @Embeddable
 public class ResponsibleInformation implements Serializable {
@@ -66,7 +68,7 @@ public class ResponsibleInformation implements Serializable {
      * 
      * @param responsible
      */
-    public void setResponsible(AuditSubject responsible) {
+    public void setResponsible(final AuditSubject responsible) {
         _responsible = responsible;
     }
 
@@ -95,7 +97,7 @@ public class ResponsibleInformation implements Serializable {
      * 
      * @param responsibleAddress
      */
-    public void setResponsibleAddress(String responsibleAddress) {
+    public void setResponsibleAddress(final String responsibleAddress) {
         _responsibleAddress = responsibleAddress;
     }
 
@@ -127,7 +129,7 @@ public class ResponsibleInformation implements Serializable {
      * @param responsibleAgent
      *            the responsible agent to set.
      */
-    public void setResponsibleAgent(String responsibleAgent) {
+    public void setResponsibleAgent(final String responsibleAgent) {
         _responsibleAgent = responsibleAgent;
     }
 
@@ -151,13 +153,14 @@ public class ResponsibleInformation implements Serializable {
      * @param credentialsType
      *            the type to set.
      */
-    public void setCredentialsType(String credentialsType) {
+    public void setCredentialsType(final String credentialsType) {
         _credentialsType = credentialsType;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(255);
         sb.append("ResponsibleInformation[");
@@ -171,6 +174,63 @@ public class ResponsibleInformation implements Serializable {
         sb.append(_credentialsType);
         sb.append("]");
         return sb.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = ResponsibleInformation.class.hashCode();
+        result *= prime;
+        result += ((_credentialsType == null) ? String.class.hashCode()
+                : _credentialsType.hashCode());
+        result *= prime;
+        result += ((_responsible == null) ? AuditSubject.class.hashCode()
+                : _responsible.hashCode());
+        result *= prime;
+        result += ((_responsibleAddress == null) ? String.class.hashCode()
+                : _responsibleAddress.hashCode());
+        result *= prime;
+        result += ((_responsibleAgent == null) ? String.class.hashCode()
+                : _responsibleAgent.hashCode());
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final ResponsibleInformation other = (ResponsibleInformation) obj;
+        if (_credentialsType == null) {
+            if (other._credentialsType != null)
+                return false;
+        } else if (!_credentialsType.equals(other._credentialsType))
+            return false;
+        if (_responsible == null) {
+            if (other._responsible != null)
+                return false;
+        } else if (!_responsible.equals(other._responsible))
+            return false;
+        if (_responsibleAddress == null) {
+            if (other._responsibleAddress != null)
+                return false;
+        } else if (!_responsibleAddress.equals(other._responsibleAddress))
+            return false;
+        if (_responsibleAgent == null) {
+            if (other._responsibleAgent != null)
+                return false;
+        } else if (!_responsibleAgent.equals(other._responsibleAgent))
+            return false;
+        return true;
     }
 
 }

@@ -43,7 +43,7 @@ public interface AuditEvent {
     String getId();
 
     /**
-     * Returns the time at which this event occured and should be accounted.
+     * Returns the time at which this event occurred and should be accounted.
      * 
      * Required.
      * 
