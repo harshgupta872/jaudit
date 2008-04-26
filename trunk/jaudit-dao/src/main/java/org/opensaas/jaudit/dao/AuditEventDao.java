@@ -18,5 +18,5 @@ import org.opensaas.jaudit.AuditEvent;
  * Dao interface for working with {@link AuditEvent}s.
  */
 public interface AuditEventDao extends GenericDao<AuditEvent, String> {
-
+    // no added behavior
 }

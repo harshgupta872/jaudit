@@ -18,8 +18,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
- * Default hibernate annotated implemenation of {@link AuditSubject}.
- * 
+ * Object that represents the entity being audited. Suitable for embedding in
+ * other Hibernate-enabled objects.
  */
 @Embeddable
 public class AuditSubject implements Serializable {
@@ -36,6 +36,37 @@ public class AuditSubject implements Serializable {
     private String _subjectDiscriminator;
 
     /**
+     * Constructor.
+     */
+    public AuditSubject() {
+        super();
+    }
+
+    /**
+     * Returns the type of this entity.
+     * 
+     * @see #getSubjectId()
+     * 
+     * @return the type of the audit subject.
+     */
+    @Column(name = "subject_type", length = 255)
+    public String getSubjectType() {
+        return _subjectType;
+    }
+
+    /**
+     * Changes the type of this entity.
+     * 
+     * Optional. If not null, length less than or equal to 255.
+     * 
+     * @param subjectType
+     *            the type of this entity.
+     */
+    public void setSubjectType(final String subjectType) {
+        _subjectType = subjectType;
+    }
+
+    /**
      * The unique identifier of the entity which is accountable for whatever is
      * being audited. Usually the actor.
      * 
@@ -48,27 +79,6 @@ public class AuditSubject implements Serializable {
      * 
      * @return the unique identifier of the audit subject.
      */
-    @Column(name = "subject_type", length = 255)
-    public String getSubjectType() {
-        return _subjectType;
-    }
-
-    /**
-     * Returns the type of this entity.
-     * 
-     * @see #getSubjectId()
-     * 
-     * Optional. If not null, length less than or equal to 255.
-     * 
-     * @return the type of the audit subject.
-     */
-    public void setSubjectType(String subjectType) {
-        _subjectType = subjectType;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Column(name = "subject_id", nullable = false)
     public String getSubjectId() {
         return _subjectId;
@@ -77,11 +87,12 @@ public class AuditSubject implements Serializable {
     /**
      * Sets the required id.
      * 
-     * @see #getSubjectId().
+     * @see #getSubjectId()
      * 
      * @param id
+     *            the id.
      */
-    public void setSubjectId(String id) {
+    public void setSubjectId(final String id) {
         _subjectId = id;
     }
 
@@ -91,7 +102,7 @@ public class AuditSubject implements Serializable {
      * Most often, a discriminator represents an overall account that groups
      * users together. For example, in SalesForce, this would be the
      * organization id. Less than or equal to 255 characters in length. Can also
-     * represent datawharehouse ids, departments, etc.
+     * represent data warehouse ids, departments, etc.
      * 
      * Optional.
      * 
@@ -110,13 +121,14 @@ public class AuditSubject implements Serializable {
      * @param subjectDiscriminator
      *            the optional discriminator to set.
      */
-    public void setSubjectDiscriminator(String subjectDiscriminator) {
+    public void setSubjectDiscriminator(final String subjectDiscriminator) {
         _subjectDiscriminator = subjectDiscriminator;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         int code = 0;
         if (_subjectDiscriminator != null) {
@@ -135,12 +147,13 @@ public class AuditSubject implements Serializable {
     /**
      * {@inheritDoc}
      */
-    public boolean equals(Object o) {
+    @Override
+    public boolean equals(final Object o) {
         if (o == null || !(o instanceof AuditSubject)) {
             return false;
         }
 
-        AuditSubject other = (AuditSubject) o;
+        final AuditSubject other = (AuditSubject) o;
         return equals(other._subjectDiscriminator, _subjectDiscriminator)
                 && equals(other._subjectId, _subjectId)
                 && equals(other._subjectType, _subjectType);
@@ -150,6 +163,7 @@ public class AuditSubject implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(255);
         sb.append("AuditSubject[");
@@ -163,7 +177,7 @@ public class AuditSubject implements Serializable {
         return sb.toString();
     }
 
-    static private boolean equals(Object one, Object two) {
+    static private boolean equals(final Object one, final Object two) {
         if (one == null && two == null) {
             return true;
         }
