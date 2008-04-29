@@ -20,17 +20,21 @@ import org.opensaas.jaudit.SessionRecordMutable;
 
 /**
  * Dao interface for working with {@link SessionRecord}s.
+ * 
+ * @param <T>
+ *            the specific type of {@link SessionRecordMutable} in use.
  */
-public interface SessionRecordDao extends
-        GenericDao<SessionRecordMutable, String> {
+public interface SessionRecordDao<T extends SessionRecordMutable> extends
+        GenericDao<T, String> {
 
     /**
      * Updates the session record's ended time stamp to that passed in.
      * 
      * @param sessionRecord
-     *            The session record to update.
+     *            the session record to update.
      * @param endedTs
      *            the date to update to.
+     * @return the modified session record.
      */
     SessionRecord updateEndedTs(SessionRecord sessionRecord, Date endedTs);
 
@@ -39,7 +43,10 @@ public interface SessionRecordDao extends
      * the session's {@link SessionRecord#getEndedTs()} is null.
      * 
      * @param sessionRecord
+     *            the session record to update.
      * @param responsibleInformation
+     *            the entity responsible for the given session.
+     * @return the modified session record.
      */
     SessionRecord updateResponsibleInformation(SessionRecord sessionRecord,
             ResponsibleInformation responsibleInformation);

@@ -15,6 +15,8 @@ package org.opensaas.jaudit.test;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Assert;
+
 /**
  * A base class useful for tests that need to do many iterations when executing.
  */
@@ -35,7 +37,7 @@ public abstract class LoopingTester {
      *            The logger to use for reporting status.
      */
     protected static void checkLoops(final Logger logger) {
-        assert LOOPS > 0 : createInvalidLoopCountMessage();
+        Assert.assertTrue(createInvalidLoopCountMessage(), LOOPS > 0);
         if (logger != null) {
             if (LOOPS < MIN_LOOPS) {
                 logger

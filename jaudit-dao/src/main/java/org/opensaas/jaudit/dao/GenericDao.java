@@ -23,7 +23,6 @@ import java.io.Serializable;
  *            The type of primary key for the type being managed by this dao.
  */
 public interface GenericDao<T, PK extends Serializable> {
-
     /**
      * Save an unsaved instance of the type managed by this dao.
      * 

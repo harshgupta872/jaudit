@@ -21,10 +21,12 @@ import org.opensaas.jaudit.dao.SessionRecordDao;
 
 /**
  * Default hibernate implementation of {@link SessionRecordDao}.
+ * 
+ * @param <T>
+ *            the specific type of {@link SessionRecordMutable} in use.
  */
-public class SessionRecordDaoHibernate extends
-        GenericDaoHibernate<SessionRecordMutable, String> implements
-        SessionRecordDao {
+public class SessionRecordDaoHibernate<T extends SessionRecordMutable> extends
+        GenericDaoHibernate<T, String> implements SessionRecordDao<T> {
 
     /**
      * Required constructor.
@@ -32,20 +34,21 @@ public class SessionRecordDaoHibernate extends
      * @param type
      *            the type we are managing.
      */
-    public SessionRecordDaoHibernate(Class<SessionRecordMutable> type) {
+    public SessionRecordDaoHibernate(final Class<T> type) {
         super(type);
     }
 
     /**
      * {@inheritDoc}
      */
-    public SessionRecord updateEndedTs(SessionRecord sessionRecord, Date endedTs) {
+    public SessionRecord updateEndedTs(final SessionRecord sessionRecord,
+            final Date endedTs) {
         if (sessionRecord == null) {
             throw new IllegalArgumentException(
                     "Session record must not be null.");
         }
 
-        SessionRecordMutable sr = read(sessionRecord.getId());
+        final SessionRecordMutable sr = read(sessionRecord.getId());
         if (sr == null) {
             throw new IllegalArgumentException(
                     "Session record does not exist in persistence.");
@@ -53,23 +56,21 @@ public class SessionRecordDaoHibernate extends
 
         sr.setEndedTs(endedTs);
 
-        getSession().save(sr);
-
-        return sr;
+        return (SessionRecord) getMySession().save(sr);
     }
 
     /**
      * {@inheritDoc}
      */
     public SessionRecord updateResponsibleInformation(
-            SessionRecord sessionRecord,
-            ResponsibleInformation responsibleInformation) {
+            final SessionRecord sessionRecord,
+            final ResponsibleInformation responsibleInformation) {
         if (sessionRecord == null) {
             throw new IllegalArgumentException(
                     "Session record must not be null.");
         }
 
-        SessionRecordMutable sr = read(sessionRecord.getId());
+        final SessionRecordMutable sr = read(sessionRecord.getId());
         if (sr == null) {
             throw new IllegalArgumentException(
                     "Session record does not exist in persistence.");
@@ -83,9 +84,6 @@ public class SessionRecordDaoHibernate extends
 
         sr.setResponsibleInformation(responsibleInformation);
 
-        getSession().save(sr);
-
-        return sr;
-
+        return (SessionRecord) getMySession().save(sr);
     }
 }

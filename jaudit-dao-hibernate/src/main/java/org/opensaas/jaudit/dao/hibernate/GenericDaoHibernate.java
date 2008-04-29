@@ -14,7 +14,9 @@ package org.opensaas.jaudit.dao.hibernate;
 
 import java.io.Serializable;
 
+import org.hibernate.Session;
 import org.opensaas.jaudit.dao.GenericDao;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -29,7 +31,21 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class GenericDaoHibernate<T, PK extends Serializable> extends
         HibernateDaoSupport implements GenericDao<T, PK> {
 
+    /**
+     * A factory that uses the dao's own {@link #getSession()} method to provide
+     * a session.
+     */
+    private final static SessionFactory SESSION_FACTORY = new SessionFactory() {
+        public <T, PK extends Serializable> Session getSession(
+                GenericDaoHibernate<T, PK> dao) {
+            return dao.getSession();
+        }
+
+    };
+
     private final Class<T> _type;
+
+    private SessionFactory _sessionFactory = SESSION_FACTORY;
 
     /**
      * Default constructor with required type passed in.
@@ -49,7 +65,7 @@ public class GenericDaoHibernate<T, PK extends Serializable> extends
      */
     public PK create(final T newInstance) {
         @SuppressWarnings("unchecked")
-        PK save = (PK) getSession().save(newInstance);
+        final PK save = (PK) getMySession().save(newInstance);
         return save;
     }
 
@@ -58,7 +74,58 @@ public class GenericDaoHibernate<T, PK extends Serializable> extends
      */
     public T read(final PK id) {
         @SuppressWarnings("unchecked")
-        T t = (T) getSession().get(_type, id);
+        final T t = (T) getMySession().get(_type, id);
         return t;
+    }
+
+    /**
+     * Return the type.
+     * 
+     * @return the type.
+     */
+    public final Class<T> getType() {
+        return _type;
+    }
+
+    /**
+     * Return the session factory currently in use.
+     * 
+     * @return the session factory currently in use.
+     */
+    public final SessionFactory getHibernateSessionFactory() {
+        return _sessionFactory;
+    }
+
+    /**
+     * Set the session factory to the given value. Used for testing.
+     * 
+     * @param sessionFactory
+     *            the session factory to set
+     */
+    public final void setHibernateSessionFactory(
+            final SessionFactory sessionFactory) {
+        if (sessionFactory == null) {
+            throw new IllegalArgumentException("factor cannot be null");
+        }
+        _sessionFactory = sessionFactory;
+    }
+
+    /**
+     * Reset the session factory to the initial value. Used for testing.
+     */
+    public final void resetHibernateSessionFactory() {
+        _sessionFactory = SESSION_FACTORY;
+    }
+
+    /**
+     * Because {@link HibernateDaoSupport#getSession()} is declared
+     * <tt>final</tt>, we supply a non-final version we can override for
+     * testing.
+     * 
+     * @return The {@link Session} this instance should use.
+     */
+    /* package */Session getMySession()
+            throws DataAccessResourceFailureException, IllegalStateException {
+        return getHibernateSessionFactory().getSession(this);
     }
 }

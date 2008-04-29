@@ -23,16 +23,56 @@ import org.junit.Test;
  */
 public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
-    static final ObjectFactory<String> VALID_FACTORY = new ObjectFactory<String>() {
+    static class CountingStringFactory implements ObjectFactory<String> {
+        private long equivCalls = 0L;
+
         private BigInteger counter = BigInteger.ZERO;
 
+        /**
+         * Return the number of times {@link #createEquivalent()} has been
+         * called..
+         * 
+         * @return the call counter.
+         * @see #resetCalls()
+         */
+        public final long getCalls() {
+            return equivCalls;
+        }
+
+        /**
+         * Reset the call counter to zero;
+         */
+        public void resetCalls() {
+            equivCalls = 0L;
+        }
+
+        /**
+         * ${@inheritDoc}
+         */
         public String createEquivalent() {
+            ++equivCalls;
             return new String(toString());
         }
 
+        /**
+         * ${@inheritDoc}
+         */
         public String createUnique() {
             counter = counter.add(BigInteger.ONE);
             return String.format("%s:%s", this, counter);
+        }
+    }
+
+    static final CountingStringFactory VALID_FACTORY = new CountingStringFactory();
+
+    private static final ObjectFactory<Exception> EXCEPTION_FACTORY = new ObjectFactory<Exception>() {
+        public Exception createEquivalent() {
+            throw new UnsupportedOperationException(
+                    "Exception does not support equals()");
+        }
+
+        public Exception createUnique() {
+            return new Exception();
         }
     };
 
@@ -107,14 +147,16 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
         int counter = 0;
 
         public Object createEquivalent() {
-            if (counter % 2 == 1)
+            if (counter % 2 == 1) {
                 return new Long(0L);
+            }
             return new Integer(0);
         }
 
         public Object createUnique() {
-            if (++counter % 2 == 0)
+            if (++counter % 2 == 0) {
                 return new Long(counter);
+            }
             return new Integer(counter);
         }
     };
@@ -138,6 +180,15 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertEquivalentContract() {
         ObjectFactoryAssert.assertEquivalentContract(VALID_FACTORY);
+    }
+
+    /**
+     * Test method for
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertEquivalentContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testAssertEquivalentContractUnsupported() {
+        ObjectFactoryAssert.assertEquivalentContract(EXCEPTION_FACTORY);
     }
 
     /**
@@ -238,7 +289,14 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
      */
     @Test
     public void testAssertUniqueContract() {
-        ObjectFactoryAssert.assertUniqueContract(VALID_FACTORY);
+        ObjectFactoryAssert.assertUniqueContract(VALID_FACTORY, true);
+        ObjectFactoryAssert.assertUniqueContract(EXCEPTION_FACTORY, false);
+
+        VALID_FACTORY.resetCalls();
+        ObjectFactoryAssert.assertUniqueContract(VALID_FACTORY, false);
+        Assert.assertEquals(
+                "createEquivalent() should not have been called at all", 0L,
+                VALID_FACTORY.getCalls());
     }
 
     /**
@@ -249,7 +307,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertUniqueContractNull() {
         try {
-            ObjectFactoryAssert.assertUniqueContract(NULL_FACTORY);
+            ObjectFactoryAssert.assertUniqueContract(NULL_FACTORY, true);
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertThat("Caught " + error, error.getMessage(), Matchers
@@ -267,7 +325,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertUniqueContractSame() {
         try {
-            ObjectFactoryAssert.assertUniqueContract(SAME_FACTORY);
+            ObjectFactoryAssert.assertUniqueContract(SAME_FACTORY, true);
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertThat("Caught " + error, error.getMessage(), Matchers
@@ -285,7 +343,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertUniqueContractEquals() {
         try {
-            ObjectFactoryAssert.assertUniqueContract(UNIQUE_DUP_FACTORY);
+            ObjectFactoryAssert.assertUniqueContract(UNIQUE_DUP_FACTORY, true);
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertThat("Caught " + error, error.getMessage(), Matchers
@@ -304,7 +362,8 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertUniqueContractConsistentClass() {
         try {
-            ObjectFactoryAssert.assertUniqueContract(ROTATING_CLASS_FACTORY);
+            ObjectFactoryAssert.assertUniqueContract(ROTATING_CLASS_FACTORY,
+                    true);
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertThat("Caught " + error, error.getMessage(), Matchers
@@ -323,7 +382,8 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertUniqueContractMismatchedClass() {
         try {
-            ObjectFactoryAssert.assertUniqueContract(MISMATCHED_CLASS_FACTORY);
+            ObjectFactoryAssert.assertUniqueContract(MISMATCHED_CLASS_FACTORY,
+                    true);
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertThat("Caught " + error, error.getMessage(), Matchers
@@ -341,7 +401,8 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
     @Test
     public void testAssertUniqueContractDupPointer() {
         try {
-            ObjectFactoryAssert.assertUniqueContract(UNIQUE_POINTER_FACTORY);
+            ObjectFactoryAssert.assertUniqueContract(UNIQUE_POINTER_FACTORY,
+                    true);
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertThat("Caught " + error, error.getMessage(), Matchers
@@ -353,6 +414,16 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertObjectFactoryContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     */
+    @Test
+    public void testAssertObjectFactoryContract() {
+        ObjectFactoryAssert.assertObjectFactoryContract(VALID_FACTORY);
+        ObjectFactoryAssert.assertObjectFactoryContract(EXCEPTION_FACTORY);
+    }
+
+    /**
+     * Test method for
      * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#checkLoops()}.
      */
     @Test
@@ -360,6 +431,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
         // still runs with just 1 loop, but isn't interesting
         LoopingTester.LOOPS = 1;
         ObjectFactoryAssert.assertObjectFactoryContract(VALID_FACTORY);
+        ObjectFactoryAssert.assertObjectFactoryContract(EXCEPTION_FACTORY);
     }
 
     /**

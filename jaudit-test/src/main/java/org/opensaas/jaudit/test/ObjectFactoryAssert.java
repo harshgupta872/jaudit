@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.junit.Assert;
@@ -41,8 +42,11 @@ public final class ObjectFactoryAssert extends LoopingTester {
     public static void assertObjectFactoryContract(
             final ObjectFactory<?> factory) {
         checkLoops(LOGGER);
-        assertUniqueContract(factory);
-        assertEquivalentContract(factory);
+        final boolean supportsEquiv = discoverEquivalenceSupport(factory);
+        assertUniqueContract(factory, supportsEquiv);
+        if (supportsEquiv) {
+            assertEquivalentContract(factory);
+        }
     }
 
     /* package */static void assertEquivalentContract(
@@ -89,9 +93,9 @@ public final class ObjectFactoryAssert extends LoopingTester {
     }
 
     /* package */static void assertUniqueContract(
-            final ObjectFactory<?> factory) {
+            final ObjectFactory<?> factory, final boolean supportsEquiv) {
         // for comparison
-        final Object equiv = factory.createEquivalent();
+        final Object equiv = supportsEquiv ? factory.createEquivalent() : null;
 
         final Set<Object> unique = new HashSet<Object>(LOOPS);
         // IdentityHashMap uses == instead of .equals(); too bad there isn't an
@@ -108,10 +112,6 @@ public final class ObjectFactoryAssert extends LoopingTester {
             // createUnique() != null
             Assert.assertNotNull("Unexpected null in loop " + i, x);
 
-            // !createEquivalent().equals(createUnique())
-            Assert.assertFalse("Unexpected equivalent match in loop " + i,
-                    equiv.equals(x));
-
             // createUnique() != createUnique()
             Assert.assertNull("Unexpected duplicate pointer in loop " + i,
                     allObjs.put(x, i));
@@ -124,10 +124,29 @@ public final class ObjectFactoryAssert extends LoopingTester {
                     "Unexpected class [%s] in loop %d", x.getClass().getName(),
                     i), first.getClass(), x.getClass());
 
-            // createEquivalent().getClass().equals(createUnique().getClass())
-            Assert.assertEquals("Unexpected mismatched class in loop " + i, x
-                    .getClass(), equiv.getClass());
+            if (supportsEquiv) {
+                // !createEquivalent().equals(createUnique())
+                Assert.assertFalse("Unexpected equivalent match in loop " + i,
+                        equiv.equals(x));
+
+                // createEquivalent().getClass().equals(createUnique().getClass())
+                Assert.assertEquals("Unexpected mismatched class in loop " + i,
+                        x.getClass(), equiv.getClass());
+            }
         }
+    }
+
+    private static boolean discoverEquivalenceSupport(
+            final ObjectFactory<?> factory) {
+        try {
+            factory.createEquivalent();
+            return true;
+        } catch (final UnsupportedOperationException ex) {
+            LOGGER.log(Level.FINER,
+                    "{0} does not generate objects that support equivalence.",
+                    factory);
+        }
+        return false;
     }
 
     /**

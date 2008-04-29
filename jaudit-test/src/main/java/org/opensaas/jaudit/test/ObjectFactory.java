@@ -36,6 +36,10 @@ public interface ObjectFactory<T> {
      * </ul>
      * 
      * @return a new instance of type T.
+     * @throws UnsupportedOperationException
+     *             if equivalent instances can't be created for T (e.g.,
+     *             {@link Exception} doesn't override
+     *             {@link Object#equals(Object)}).
      */
     T createEquivalent();
 
