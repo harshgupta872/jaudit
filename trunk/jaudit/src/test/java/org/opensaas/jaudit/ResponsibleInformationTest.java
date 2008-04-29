@@ -57,6 +57,9 @@ public class ResponsibleInformationTest {
             }
             if ((counter & 2) != 2) {
                 info.setResponsible(AUDIT_SUBJECT_FACTORY.createUnique());
+            } else {
+                // not null by default, so force it for a more complete test
+                info.setResponsible(null);
             }
             if ((counter & 4) != 4) {
                 info.setResponsibleAddress(STRING_FACTORY.createUnique());

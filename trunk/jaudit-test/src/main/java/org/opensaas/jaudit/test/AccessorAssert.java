@@ -61,8 +61,8 @@ public final class AccessorAssert {
             final String getterName, final X expectedValue)
             throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {
-        assert target != null : "target cannot be null";
-        assert getterName != null : "getterName cannot be null";
+        Assert.assertNotNull("target cannot be null", target);
+        Assert.assertNotNull("getterName cannot be null", getterName);
 
         final Method getterMethod = findGetterMethod(target, getterName);
         testGetter(target, getterMethod, expectedValue);
@@ -101,10 +101,10 @@ public final class AccessorAssert {
             final String setterName, final Class<X> valueType,
             final X... values) throws IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
-        assert target != null : "target cannot be null";
-        assert setterName != null : "setterName cannot be null";
-        assert valueType != null : "valueType cannot be null";
-        assert values != null : "values cannot be null";
+        Assert.assertNotNull("target cannot be null", target);
+        Assert.assertNotNull("setterName cannot be null", setterName);
+        Assert.assertNotNull("valueType cannot be null", valueType);
+        Assert.assertNotNull("values cannot be null", values);
 
         if (values.length == 0) {
             LOGGER

@@ -36,7 +36,7 @@ public class AuditServiceImpl implements AuditService {
     /**
      * For interacting with the persistence layer.
      */
-    private SessionRecordDao _sessionRecordDao;
+    private SessionRecordDao<SessionRecordMutable> _sessionRecordDao;
 
     /**
      * Will return new {@link ResponsibleInformation} objects.
@@ -70,9 +70,9 @@ public class AuditServiceImpl implements AuditService {
     /**
      * {@inheritDoc}
      */
-    public SessionRecord createSessionRecord(String sessionId,
-            ResponsibleInformation responsibleInformation) {
-        SessionRecordMutable sessionRecord = (SessionRecordMutable) _sessionRecordFactory
+    public SessionRecord createSessionRecord(final String sessionId,
+            final ResponsibleInformation responsibleInformation) {
+        final SessionRecordMutable sessionRecord = (SessionRecordMutable) _sessionRecordFactory
                 .getObject();
 
         sessionRecord.setSessionId(sessionId);
@@ -81,7 +81,7 @@ public class AuditServiceImpl implements AuditService {
         sessionRecord.setSystem(_auditSystem);
         sessionRecord.setSystemAddress(_auditSystemAddress);
 
-        String id = _sessionRecordDao.create(sessionRecord);
+        final String id = _sessionRecordDao.create(sessionRecord);
         LOGGER.log(Level.FINE, "Created new session record with id {0}.", id);
         return sessionRecord;
     }
@@ -96,15 +96,15 @@ public class AuditServiceImpl implements AuditService {
     /**
      * {@inheritDoc}
      */
-    public SessionRecord sessionEnded(SessionRecord sessionRecord) {
+    public SessionRecord sessionEnded(final SessionRecord sessionRecord) {
         return _sessionRecordDao.updateEndedTs(sessionRecord, new Date());
     }
 
     /**
      * {@inheritDoc}
      */
-    public SessionRecord updateResponsible(SessionRecord sessionRecord,
-            ResponsibleInformation responsibleInformation) {
+    public SessionRecord updateResponsible(final SessionRecord sessionRecord,
+            final ResponsibleInformation responsibleInformation) {
         return _sessionRecordDao.updateResponsibleInformation(sessionRecord,
                 responsibleInformation);
     }
@@ -116,7 +116,7 @@ public class AuditServiceImpl implements AuditService {
      */
     @Required
     public void setResponsibleInformationFactory(
-            ObjectFactory responsibleInformationFactory) {
+            final ObjectFactory responsibleInformationFactory) {
         _responsibleInformationFactory = responsibleInformationFactory;
     }
 
@@ -128,7 +128,8 @@ public class AuditServiceImpl implements AuditService {
      *            SessionRecordDao to set.
      */
     @Required
-    public void setSessionRecordDao(SessionRecordDao sessionRecordDao) {
+    public void setSessionRecordDao(
+            final SessionRecordDao<SessionRecordMutable> sessionRecordDao) {
         _sessionRecordDao = sessionRecordDao;
     }
 
@@ -140,7 +141,7 @@ public class AuditServiceImpl implements AuditService {
      *            SessionRecordFactory to set.
      */
     @Required
-    public void setSessionRecordFactory(ObjectFactory sessionRecordFactory) {
+    public void setSessionRecordFactory(final ObjectFactory sessionRecordFactory) {
         _sessionRecordFactory = sessionRecordFactory;
     }
 
@@ -149,16 +150,16 @@ public class AuditServiceImpl implements AuditService {
      * 
      * @param auditSystem
      */
-    public void setAuditSystem(AuditSubject auditSystem) {
+    public void setAuditSystem(final AuditSubject auditSystem) {
         _auditSystem = auditSystem;
     }
 
     /**
      * Sets the optional audit system address.
      * 
-     * @param auditySystemAddress
+     * @param auditSystemAddress
      */
-    public void setAuditSystemAddress(String auditSystemAddress) {
+    public void setAuditSystemAddress(final String auditSystemAddress) {
         _auditSystemAddress = auditSystemAddress;
     }
 
