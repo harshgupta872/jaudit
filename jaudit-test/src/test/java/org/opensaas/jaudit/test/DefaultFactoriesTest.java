@@ -14,6 +14,7 @@ package org.opensaas.jaudit.test;
 
 import java.util.NoSuchElementException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -52,6 +53,52 @@ public class DefaultFactoriesTest {
         for (int i = 0; i < 3; ++i) {
             factory.createUnique();
         }
+    }
+
+    /**
+     * Test method for
+     * {@link org.opensaas.jaudit.test.DefaultFactories#IntegerFactory}.
+     */
+    @Test
+    public void testIntegerFactoryWrap() {
+        final DefaultFactories.IntegerFactory factory = new DefaultFactories.IntegerFactory();
+        factory.counter = Integer.MAX_VALUE;
+        Assert.assertEquals(Integer.MIN_VALUE, factory.createUnique()
+                .intValue());
+    }
+
+    /**
+     * Test method for
+     * {@link org.opensaas.jaudit.test.DefaultFactories#LongFactory}.
+     */
+    @Test
+    public void testLongFactory() {
+        final DefaultFactories.LongFactory factory = new DefaultFactories.LongFactory();
+        ObjectFactoryAssert.assertObjectFactoryContract(factory);
+    }
+
+    /**
+     * Test method for
+     * {@link org.opensaas.jaudit.test.DefaultFactories#LongFactory}.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void testLongFactoryLimits() {
+        final DefaultFactories.LongFactory factory = new DefaultFactories.LongFactory();
+        factory.counter = -2; // short-circuit or this will take forever!
+        for (int i = 0; i < 3; ++i) {
+            factory.createUnique();
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link org.opensaas.jaudit.test.DefaultFactories#LongFactory}.
+     */
+    @Test
+    public void testLongFactoryWrap() {
+        final DefaultFactories.LongFactory factory = new DefaultFactories.LongFactory();
+        factory.counter = Long.MAX_VALUE;
+        Assert.assertEquals(Long.MIN_VALUE, factory.createUnique().longValue());
     }
 
     /**

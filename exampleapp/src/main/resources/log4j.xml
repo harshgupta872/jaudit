@@ -27,13 +27,34 @@
         <level value="WARN"/>
     </logger>
 
-    <logger name="org.hibernate">
-        <level value="WARN"/>
-    </logger>
-  
-    <!--logger name="org.hibernate.SQL">
-        <level value="DEBUG"/>
-    </logger-->
+   <!-- Limit the org.hibernate category to INFO since logging to DEBUG affects performance badly -->
+   <category name="org.hibernate">
+      <priority value="INFO"/>
+   </category>
+   
+   <!-- Log SQL statements-->
+   <category name="org.hibernate.SQL">
+      <priority value="DEBUG"/>
+   </category>
+    
+   <!-- Log the values assigned to the SQL parameters and results -->
+   <category name="org.hibernate.type">
+      <priority value="DEBUG"/>
+   </category>
+
+   <!-- Log transaction event/JTA -->
+   <category name="org.hibernate.transaction">
+      <priority value="DEBUG"/>
+   </category>
+   <category name="org.hibernate.event.def.AbstractFlushingEventListener">
+      <priority value="DEBUG"/>
+   </category>
+
+   <!-- Show SQL Logs for Hibernate Schema Export -->
+   <category name="org.hibernate.tool.hbm2ddl.SchemaExport">
+      <priority value="DEBUG" />
+   </category>  
+
 
     <logger name="org.springframework">
         <level value="WARN"/>

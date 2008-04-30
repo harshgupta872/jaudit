@@ -81,7 +81,7 @@ public class AuditServiceImpl implements AuditService {
         sessionRecord.setSystem(_auditSystem);
         sessionRecord.setSystemAddress(_auditSystemAddress);
 
-        final String id = _sessionRecordDao.create(sessionRecord);
+        final long id = _sessionRecordDao.create(sessionRecord);
         LOGGER.log(Level.FINE, "Created new session record with id {0}.", id);
         return sessionRecord;
     }

@@ -49,9 +49,8 @@ public final class DefaultFactories {
      * A factory for generating integer objects.
      */
     public static final class IntegerFactory implements ObjectFactory<Integer> {
-        /* package */int counter = 0; // package protected instead of private
-
-        // for testing
+        // package protected instead of private for testing
+        /* package */int counter = 0;
 
         /**
          * {@inheritDoc}
@@ -67,7 +66,34 @@ public final class DefaultFactories {
         public Integer createUnique() {
             if (counter + 1 == 0) {
                 throw new NoSuchElementException(
-                        "Every possible integer object has already been returned by this factory");
+                        "Every possible integer value has already been returned by this factory");
+            }
+            return ++counter;
+        }
+    }
+
+    /**
+     * A factory for generating long objects.
+     */
+    public static final class LongFactory implements ObjectFactory<Long> {
+        // package protected instead of private for testing
+        /* package */long counter = 0;
+
+        /**
+         * {@inheritDoc}
+         */
+        public Long createEquivalent() {
+            // explicitly create an entirely new copy with each call
+            return new Long(0);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public Long createUnique() {
+            if (counter + 1L == 0L) {
+                throw new NoSuchElementException(
+                        "Every possible long value has already been returned by this factory");
             }
             return ++counter;
         }
