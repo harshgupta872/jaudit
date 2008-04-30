@@ -40,7 +40,7 @@ public class SessionRecordVO implements SessionRecordMutable {
 
     private Date _endedTs;
 
-    private String _id;
+    private long _id;
 
     private Date _startedTs;
 
@@ -63,7 +63,7 @@ public class SessionRecordVO implements SessionRecordMutable {
     /**
      * {@inheritDoc}
      */
-    public void setEndedTs(Date endedTs) {
+    public void setEndedTs(final Date endedTs) {
         _endedTs = endedTs;
     }
 
@@ -72,7 +72,7 @@ public class SessionRecordVO implements SessionRecordMutable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public String getId() {
+    public long getId() {
         return _id;
     }
 
@@ -83,7 +83,7 @@ public class SessionRecordVO implements SessionRecordMutable {
      * 
      * @param id
      */
-    public void setId(String id) {
+    public void setId(final Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id is required.");
         }
@@ -101,7 +101,7 @@ public class SessionRecordVO implements SessionRecordMutable {
     /**
      * {@inheritDoc}
      */
-    public void setStartedTs(Date startedTs) {
+    public void setStartedTs(final Date startedTs) {
         _startedTs = startedTs;
     }
 
@@ -120,7 +120,7 @@ public class SessionRecordVO implements SessionRecordMutable {
     /**
      * {@inheritDoc}
      */
-    public void setSystem(AuditSubject system) {
+    public void setSystem(final AuditSubject system) {
         _system = system;
     }
 
@@ -135,7 +135,7 @@ public class SessionRecordVO implements SessionRecordMutable {
     /**
      * {@inheritDoc}
      */
-    public void setSystemAddress(String systemAddress) {
+    public void setSystemAddress(final String systemAddress) {
         _systemAddress = systemAddress;
     }
 
@@ -150,7 +150,7 @@ public class SessionRecordVO implements SessionRecordMutable {
     /**
      * {@inheritDoc}
      */
-    public void setSessionId(String sessionId) {
+    public void setSessionId(final String sessionId) {
         _sessionId = sessionId;
     }
 
@@ -166,7 +166,7 @@ public class SessionRecordVO implements SessionRecordMutable {
      * {@inheritDoc}
      */
     public void setResponsibleInformation(
-            ResponsibleInformation responsibleInformation) {
+            final ResponsibleInformation responsibleInformation) {
         _responsibleInformation = responsibleInformation;
     }
 

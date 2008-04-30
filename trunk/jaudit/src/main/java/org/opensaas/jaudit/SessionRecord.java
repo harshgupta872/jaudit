@@ -32,11 +32,13 @@ public interface SessionRecord extends Serializable {
      * Required.
      * 
      * TODO: Document some strategies for GUID/Unique id generation. Should
-     * include the max length and content of the id. Maybe UUID?
+     * include the max length and content of the id. Maybe UUID? TODO: Had to
+     * change this from a String to a long to make JPA and MySQL happy. Get
+     * someone smarter than me to figure this out.
      * 
      * @return a globally unique id for this session record.
      */
-    String getId();
+    long getId();
 
     /**
      * Returns the session implementation's specific id for this session. For
