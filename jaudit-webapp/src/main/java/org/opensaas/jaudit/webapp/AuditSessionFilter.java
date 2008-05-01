@@ -13,6 +13,7 @@
 package org.opensaas.jaudit.webapp;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -33,11 +34,26 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * populating it and setting the context.
  */
 public class AuditSessionFilter extends OncePerRequestFilter {
+    @SuppressWarnings("unused")
+    private static final Logger LOGGER = Logger
+            .getLogger(AuditSessionFilter.class.getName());
 
+    /**
+     * Default attribute key for storing the {@link AuditSession} in the
+     * {@link javax.servlet.http.HttpSession}.
+     */
     public static final String AUDIT_SESSION_NAME = "org.opensaas.jaudit.auditsession";
 
+    /**
+     * Default bean name for storing the {@link AuditService} in the
+     * {@link javax.servlet.ServletContext}.
+     */
     public static final String AUDIT_SERVICE_NAME = "auditService";
 
+    /**
+     * Default bean name for storing the {@link ResponsibleFactory} in the
+     * {@link javax.servlet.ServletContext}.
+     */
     public static final String RESPONSIBLE_FACTORY_NAME = "responsibleFactory";
 
     private String _auditServiceName = AUDIT_SERVICE_NAME;
@@ -50,8 +66,8 @@ public class AuditSessionFilter extends OncePerRequestFilter {
      * {@inheritDoc}
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(final HttpServletRequest request,
+            final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
         final HttpSession session = request.getSession();
@@ -61,38 +77,46 @@ public class AuditSessionFilter extends OncePerRequestFilter {
         final AuditService auditService = lookupAuditService();
         final ResponsibleFactory responsibleFactory = lookupResponsibleFactory();
 
-        if (auditSession == null) {
-            final ResponsibleInformation ri = auditService
-                    .newResponsibleInformation();
-
-            responsibleFactory.fillInResponsible(ri, request);
-
-            SessionRecord sessionRecord = auditService.createSessionRecord(
-                    session.getId(), ri);
-
-            auditSession = AuditSession.createAuditSession(sessionRecord);
-
+        if (request.getRequestURI().endsWith("/logout.jsp")) {
+            // logging out; end session
+            if (auditSession != null) {
+                final SessionRecord sr = auditSession.getSessionRecord();
+                auditService.sessionEnded(sr);
+                session.removeAttribute(_auditSessionName);
+            }
         } else {
+            if (auditSession == null) {
+                // no session; probably a login
+                final ResponsibleInformation ri = auditService
+                        .newResponsibleInformation();
 
-            // now check if the responsible information is set.
-            SessionRecord sr = auditSession.getSessionRecord();
-            ResponsibleInformation ri = sr.getResponsibleInformation();
-
-            if (ri == null) {
-                ri = auditService.newResponsibleInformation();
                 responsibleFactory.fillInResponsible(ri, request);
-                sr = auditService.updateResponsible(sr, ri);
+
+                final SessionRecord sessionRecord = auditService
+                        .createSessionRecord(session.getId(), ri);
+
+                auditSession = AuditSession.createAuditSession(sessionRecord);
 
             } else {
-                if (responsibleFactory.updateResponsible(ri, request)) {
+                // session exists; update with credentials if we have them
+                SessionRecord sr = auditSession.getSessionRecord();
+                ResponsibleInformation ri = sr.getResponsibleInformation();
+
+                if (ri == null) {
+                    ri = auditService.newResponsibleInformation();
+                    responsibleFactory.fillInResponsible(ri, request);
                     sr = auditService.updateResponsible(sr, ri);
+
+                } else {
+                    if (responsibleFactory.updateResponsible(ri, request)) {
+                        sr = auditService.updateResponsible(sr, ri);
+                    }
                 }
+
             }
 
+            session.setAttribute(_auditSessionName, auditSession);
         }
-
-        session.setAttribute(_auditSessionName, auditSession);
-
         try {
             filterChain.doFilter(request, response);
         } finally {
@@ -107,7 +131,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
      * @param auditSessionName
      *            the auditSessionName to set
      */
-    public void setAuditSessionName(String auditSessionName) {
+    public void setAuditSessionName(final String auditSessionName) {
         _auditSessionName = auditSessionName;
     }
 
@@ -118,7 +142,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
      * @param responsibleFactoryName
      *            the responsibleFactoryName to set
      */
-    public void setResponsibleFactoryName(String responsibleFactoryName) {
+    public void setResponsibleFactoryName(final String responsibleFactoryName) {
         _responsibleFactoryName = responsibleFactoryName;
     }
 
@@ -126,7 +150,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
      * @param auditServiceName
      *            the auditServiceName to set
      */
-    public void setAuditServiceName(String auditServiceName) {
+    public void setAuditServiceName(final String auditServiceName) {
         _auditServiceName = auditServiceName;
     }
 
@@ -137,7 +161,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
      */
     private AuditService lookupAuditService() {
 
-        WebApplicationContext wac = WebApplicationContextUtils
+        final WebApplicationContext wac = WebApplicationContextUtils
                 .getRequiredWebApplicationContext(getServletContext());
         return (AuditService) wac
                 .getBean(_auditServiceName, AuditService.class);
@@ -150,7 +174,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
      */
     private ResponsibleFactory lookupResponsibleFactory() {
 
-        WebApplicationContext wac = WebApplicationContextUtils
+        final WebApplicationContext wac = WebApplicationContextUtils
                 .getRequiredWebApplicationContext(getServletContext());
         return (ResponsibleFactory) wac.getBean(_responsibleFactoryName,
                 ResponsibleFactory.class);
