@@ -15,17 +15,16 @@
   </aop:config>
 
   <!-- Add new DAOs here -->
+  <bean id="fooBarDao" class="org.appfuse.dao.hibernate.GenericDaoHibernate">
+    <constructor-arg value="org.opensaas.exampleapp.model.FooBar"/> 
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean> 
 
 
   <!-- Add new Managers here -->
   <bean id="fooBarManager"
     class="org.opensaas.exampleapp.manager.FooBarManagerImpl">
-    <constructor-arg>
-      <bean class="org.appfuse.dao.hibernate.GenericDaoHibernate"
-        autowire="byType">
-        <constructor-arg value="org.opensaas.exampleapp.model.FooBarVO" />
-      </bean>
-    </constructor-arg>
+    <constructor-arg ref="fooBarDao"/>
   </bean>
 
   <bean id="systemInetAddress"

@@ -5,7 +5,7 @@
     <session-factory>
         <mapping class="org.appfuse.model.User"/>
         <mapping class="org.appfuse.model.Role"/>
-        <mapping class="org.opensaas.exampleapp.model.FooBarVO"/>
+        <mapping class="org.opensaas.exampleapp.model.FooBar"/>
         <mapping class="org.opensaas.jaudit.SessionRecordVO"/>
     </session-factory>
 </hibernate-configuration>

@@ -112,6 +112,17 @@
         <action name="fooBars" class="org.opensaas.exampleapp.action.FooBarAction" method="list"> 
           <result>/WEB-INF/pages/fooBarList.jsp</result> 
         </action>
+
+        <action name="editFooBar" class="org.opensaas.exampleapp.action.FooBarAction" method="edit"> 
+          <result>/WEB-INF/pages/fooBarForm.jsp</result>
+          <result name="error">/WEB-INF/pages/fooBarList.jsp</result>
+        </action>
+
+        <action name="saveFooBar" class="org.opensaas.exampleapp.action.FooBarAction" method="save">
+          <result name="cancel" type="redirect">fooBars.html</result>
+          <result name="delete" type="redirect">fooBars.html</result>
+          <result name="success" type="redirect">fooBars.html</result>
+        </action>
       </package>
 
     <!-- Actions in this package will be prefixed with /admin/ -->

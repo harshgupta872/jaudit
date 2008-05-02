@@ -13,47 +13,94 @@
 package org.opensaas.exampleapp.model;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-public interface FooBar {
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.appfuse.model.BaseObject;
 
-    /**
-     * @return the id
-     */
+@SuppressWarnings("serial")
+@Entity
+@Table(name = "foobar")
+public class FooBar extends BaseObject {
+
+    private Long _id;
+
+    private String _name;
+
+    private String _description;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long getId();
+    public Long getId() {
+        return _id;
+    }
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    void setId(Long id);
+    public void setId(final Long id) {
+        _id = id;
+    }
 
-    /**
-     * @return the name
-     */
     @Column(name = "name", unique = true, nullable = false, length = 256)
-    String getName();
+    public String getName() {
+        return _name;
+    }
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    void setName(String name);
+    public void setName(final String name) {
+        _name = name;
+    }
 
-    /**
-     * @return the description
-     */
     @Column(name = "description", length = 1024)
-    String getDescription();
+    public String getDescription() {
+        return _description;
+    }
+
+    public void setDescription(final String description) {
+        _description = description;
+    }
 
     /**
-     * @param description
-     *            the description to set
+     * ${@inheritDoc}
      */
-    void setDescription(String description);
+    @Override
+    public int hashCode() {
+        return 31 * ((_name == null) ? FooBar.class.hashCode() : _name
+                .hashCode());
+    }
+
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FooBar other = (FooBar) obj;
+        if (_name == null) {
+            if (other._name != null) {
+                return false;
+            }
+        } else if (!_name.equals(other._name)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 
 }
