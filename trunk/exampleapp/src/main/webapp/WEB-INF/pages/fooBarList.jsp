@@ -17,14 +17,14 @@
 <c:out value="${buttons}" escapeXml="false" />
 
 <s:set name="fooBars" value="fooBars" scope="request"/>
-<display:table name="fooBars" class="table" requestURI="" id="fooBarList" export="true" pagesize="25">
+<display:table name="fooBars" class="table" requestURI="" id="fooBarList" export="true" pagesize="10">
     <display:column property="id" sortable="true" href="editFooBar.html" 
         paramId="id" paramProperty="id" titleKey="fooBar.id"/>
     <display:column property="name" sortable="true" titleKey="fooBar.name"/>
     <display:column property="description" sortable="true" titleKey="fooBar.description"/>
 
     <display:setProperty name="paging.banner.item_name" value="fooBar"/>
-    <display:setProperty name="paging.banner.items_name" value="people"/>
+    <display:setProperty name="paging.banner.items_name" value="fooBars"/>
 
     <display:setProperty name="export.excel.filename" value="FooBar List.xls"/>
     <display:setProperty name="export.csv.filename" value="FooBar List.csv"/>

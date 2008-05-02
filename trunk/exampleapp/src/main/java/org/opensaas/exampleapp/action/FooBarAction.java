@@ -14,23 +14,20 @@ package org.opensaas.exampleapp.action;
 
 import java.util.List;
 
-import org.appfuse.service.GenericManager;
 import org.appfuse.webapp.action.BaseAction;
+import org.opensaas.exampleapp.manager.FooBarManager;
 import org.opensaas.exampleapp.model.FooBar;
-import org.opensaas.exampleapp.model.FooBarVO;
 import org.springframework.beans.factory.annotation.Required;
 
+/**
+ * FooBarAction is the Struts2 action class for working with {@link FooBar}s.
+ */
+@SuppressWarnings("serial")
 public class FooBarAction extends BaseAction {
 
-    /**
-     * Generated Serial Id.
-     */
-    private static final long serialVersionUID = -4962888146356198754L;
+    private FooBarManager _fooBarManager;
 
-    private GenericManager<FooBar, Long> _fooBarManager;
-
-    @SuppressWarnings("unchecked")
-    private List fooBars;
+    private List<FooBar> fooBars;
 
     private FooBar fooBar;
 
@@ -39,8 +36,7 @@ public class FooBarAction extends BaseAction {
     /**
      * @return the fooBars
      */
-    @SuppressWarnings("unchecked")
-    public List getFooBars() {
+    public List<FooBar> getFooBars() {
         return fooBars;
     }
 
@@ -54,7 +50,7 @@ public class FooBarAction extends BaseAction {
      *            the fooBarManager to set
      */
     @Required
-    public void setFooBarManager(GenericManager<FooBar, Long> fooBarManager) {
+    public void setFooBarManager(final FooBarManager fooBarManager) {
         _fooBarManager = fooBarManager;
     }
 
@@ -69,7 +65,7 @@ public class FooBarAction extends BaseAction {
      * @param fooBar
      *            the fooBar to set
      */
-    public void setFooBar(FooBar fooBar) {
+    public void setFooBar(final FooBar fooBar) {
         this.fooBar = fooBar;
     }
 
@@ -77,7 +73,7 @@ public class FooBarAction extends BaseAction {
      * @param id
      *            the id to set
      */
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -92,7 +88,7 @@ public class FooBarAction extends BaseAction {
         if (id != null) {
             fooBar = _fooBarManager.get(id);
         } else {
-            fooBar = new FooBarVO();
+            fooBar = new FooBar();
         }
 
         return SUCCESS;
@@ -107,18 +103,14 @@ public class FooBarAction extends BaseAction {
             return delete();
         }
 
-        boolean isNew = (fooBar.getId() == null);
+        final boolean isNew = (fooBar.getId() == null);
 
         fooBar = _fooBarManager.save(fooBar);
 
-        String key = (isNew) ? "fooBar.added" : "fooBar.updated";
+        final String key = (isNew) ? "fooBar.added" : "fooBar.updated";
         saveMessage(getText(key));
 
-        if (!isNew) {
-            return INPUT;
-        } else {
-            return SUCCESS;
-        }
+        return SUCCESS;
     }
 
 }
