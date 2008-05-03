@@ -260,7 +260,7 @@
           <id>jaudit.website</id>
           <name>Jaudit Website</name>
           <url>
-            file://var/www/html/jaudit
+            file:///var/www/html/jaudit
           </url>
         </site>
       </distributionManagement>
