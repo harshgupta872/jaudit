@@ -20,6 +20,20 @@
     <name>OpenSaaS.org</name>
     <url>http://www.opensaas.org</url>
   </organization>
+  <contributors>
+    <contributor>
+      <name>Matthew Kinman</name>
+      <email>mwkinman@gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Michael Klobe</name>
+      <email>klobetime@gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>George Qiao</name>
+      <email>george.qiao@gmail.com</email>
+    </contributor>
+  </contributors>
 
   <licenses>
     <license>
