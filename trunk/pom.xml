@@ -248,6 +248,9 @@
       </plugin>
     </plugins>
   </reporting>
+  <properties>
+    <spring.version>2.5.3</spring.version>
+  </properties>
 
   <profiles>
     <profile>

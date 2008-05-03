@@ -10,7 +10,7 @@
   <artifactId>jaudit</artifactId>
   <packaging>jar</packaging>
   <name>jaudit</name>
-  <description>The very base jaudit libraries.  Should not have dependencies on any 3rd party libraries.</description>
+  <description>The very base jaudit libraries.  Should not have dependencies on any 3rd party/non standard java libraries.</description>
   <dependencies>
     <dependency>
       <artifactId>jaudit-test</artifactId>
