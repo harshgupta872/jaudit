@@ -12,38 +12,77 @@
  */
 package org.opensaas.jaudit;
 
-import org.junit.Test;
+import org.opensaas.jaudit.test.BeanTest;
+import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
- * Tests {@link AuditEventVO}.
+ * Tests {@link AuditEventVO} based VO objects.
  */
-public class AuditEventVOTest {
+public abstract class AuditEventVOTest<T extends AuditEvent> extends
+        BeanTest<T> {
 
-    @Test
-    public void testConstructor() {
-        AuditEventVO aeVO = new AuditEventVO();
-        assert aeVO != null;
-        assert aeVO instanceof AuditEvent;
+    /**
+     * {@inheritDoc}
+     */
+    protected Object[] getTestValues(final Class<?> valueType) {
+        if (TransactionRecord.class.isAssignableFrom(valueType)) {
+            return new Object[] {
+                    TransactionRecordVOTest.FACTORY.createUnique(),
+                    TransactionRecordVOTest.FACTORY.createUnique(), null };
+        }
+        if (AuditSubject.class.isAssignableFrom(valueType)) {
+            return new Object[] { new AuditSubject(), null };
+        }
+
+        if (SessionRecord.class.isAssignableFrom(valueType)) {
+            return new Object[] { SessionRecordVOTest.FACTORY.createUnique(),
+                    SessionRecordVOTest.FACTORY.createUnique(), null };
+        }
+
+        return super.getTestValues(valueType);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullId() {
-        AuditEventVO aeVO = new AuditEventVO();
-        assert aeVO.getId() == null;
-        aeVO.setId(null);
-    }
+    /**
+     * A default implementation which just uses the {@link Class#newInstance()}
+     * methods for new instances.
+     */
+    protected static <X extends AuditEventVO> ObjectFactory<X> newFactory(
+            final Class<X> type) {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyId() {
-        AuditEventVO aeVO = new AuditEventVO();
-        aeVO.setId("");
-    }
+        return new ObjectFactory<X>() {
 
-    @Test
-    public void testId() {
-        AuditEventVO aeVO = new AuditEventVO();
-        aeVO.setId("a");
-        assert aeVO.getId().equals("a");
+            /**
+             * {@inheritDoc}
+             */
+            public X createEquivalent() {
+                try {
+                    X newInstance = type.newInstance();
+                    AuditEventVO ae = (AuditEventVO) newInstance;
+                    ae.setId(STRING_FACTORY.createEquivalent());
+                    return newInstance;
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                            "Cannot instantiate a new class of type " + type);
+                }
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            public X createUnique() {
+                try {
+                    X newInstance = type.newInstance();
+                    AuditEventVO ae = (AuditEventVO) newInstance;
+                    ae.setId(STRING_FACTORY.createUnique());
+                    return newInstance;
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                            "Cannot instantiate a new class of type " + type);
+                }
+            }
+
+        };
+
     }
 
 }

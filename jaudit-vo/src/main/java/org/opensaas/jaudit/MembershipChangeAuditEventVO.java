@@ -81,10 +81,6 @@ public class MembershipChangeAuditEventVO extends AuditEventVO implements
      * @param membershipGroup
      */
     public void setMembershipGroup(AuditSubject membershipGroup) {
-        if (membershipGroup == null) {
-            throw new IllegalArgumentException(
-                    "Membership Group must not be null.");
-        }
         _membershipGroup = membershipGroup;
     }
 

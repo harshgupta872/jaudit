@@ -18,6 +18,8 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -53,6 +55,7 @@ public class AuditEventVO implements AuditEvent {
      * {@inheritDoc}
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public String getId() {
         return _id;
     }
@@ -66,9 +69,6 @@ public class AuditEventVO implements AuditEvent {
      *            required id to set.
      */
     public void setId(String id) {
-        if (id == null || id.length() == 0) {
-            throw new IllegalArgumentException("Id must not be null.");
-        }
         _id = id;
     }
 
@@ -132,9 +132,6 @@ public class AuditEventVO implements AuditEvent {
      *            the required date.
      */
     public void setTs(Date ts) {
-        if (ts == null) {
-            throw new IllegalArgumentException("Date must not be null.");
-        }
         _ts = ts;
     }
 
@@ -176,6 +173,61 @@ public class AuditEventVO implements AuditEvent {
      */
     public void setSessionRecord(SessionRecord sessionRecord) {
         _sessionRecord = sessionRecord;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        if (_id == null) {
+            return super.hashCode();
+        }
+        return _id.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null || !(getClass().equals(o.getClass()))) {
+            return false;
+        }
+
+        AuditEvent ae = (AuditEvent) o;
+
+        if (_id == null || ae.getId() == null) {
+            return false;
+        }
+
+        return _id.equals(ae.getId());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        final StringBuilder buff = new StringBuilder(255);
+        buff.append(getClass().getSimpleName());
+        buff.append("[id=");
+        buff.append(_id);
+        buff.append(", ts=");
+        buff.append(_ts);
+        buff.append(", target=");
+        buff.append(_target);
+        if (_sessionRecord != null) {
+            buff.append(", sessionRecord=");
+            buff.append(_sessionRecord.getSessionId());
+        }
+        if (_transactionRecord != null) {
+            buff.append(", transactionRecord=");
+            buff.append(_transactionRecord.getTransactionId());
+        }
+
+        return buff.toString();
+
     }
 
 }

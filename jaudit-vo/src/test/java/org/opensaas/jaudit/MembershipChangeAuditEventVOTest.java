@@ -12,52 +12,22 @@
  */
 package org.opensaas.jaudit;
 
-import org.junit.Test;
+import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
  * Tests {@link MembershipChangeAuditEventVO}.
  */
-public class MembershipChangeAuditEventVOTest {
+public class MembershipChangeAuditEventVOTest extends
+        AuditEventVOTest<MembershipChangeAuditEventVO> {
 
-    @Test
-    public void testConstructor() {
-        MembershipChangeAuditEventVO vo = new MembershipChangeAuditEventVO();
-        assert vo != null;
-        assert vo instanceof AuditEvent;
+    static final ObjectFactory<MembershipChangeAuditEventVO> FACTORY = newFactory(MembershipChangeAuditEventVO.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ObjectFactory<MembershipChangeAuditEventVO> getObjectFactory() {
+        return FACTORY;
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullId() {
-        MembershipChangeAuditEventVO vo = new MembershipChangeAuditEventVO();
-        assert vo.getId() == null;
-        vo.setId(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyId() {
-        MembershipChangeAuditEventVO vo = new MembershipChangeAuditEventVO();
-        vo.setId("");
-    }
-
-    @Test
-    public void testId() {
-        MembershipChangeAuditEventVO vo = new MembershipChangeAuditEventVO();
-        vo.setId("a");
-        assert vo.getId().equals("a");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullMembershipChangeEventType() {
-        MembershipChangeAuditEventVO vo = new MembershipChangeAuditEventVO();
-        assert vo.getMembershipChangeEventType() == null;
-        vo.setMembershipChangeEventType(null);
-    }
-
-    @Test
-    public void testMembershipChangeEventType() {
-        MembershipChangeAuditEventVO vo = new MembershipChangeAuditEventVO();
-        assert vo.getMembershipChangeEventType() == null;
-        vo.setMembershipChangeEventType(MembershipChangeType.ADDED);
-        assert vo.getMembershipChangeEventType().equals(MembershipChangeType.ADDED);
-    }
 }

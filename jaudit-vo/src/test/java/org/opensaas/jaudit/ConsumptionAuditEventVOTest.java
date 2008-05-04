@@ -12,71 +12,38 @@
  */
 package org.opensaas.jaudit;
 
-import org.junit.Test;
+import java.beans.PropertyDescriptor;
+
+import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
  * Tests {@link ConsumptionAuditEventVO}.
  */
-public class ConsumptionAuditEventVOTest {
+public class ConsumptionAuditEventVOTest extends
+        AuditEventVOTest<ConsumptionAuditEventVO> {
 
-    @Test
-    public void testConstructor() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        assert ceVO != null;
-        assert ceVO instanceof ConsumptionAuditEvent;
+    static final ObjectFactory<ConsumptionAuditEventVO> FACTORY = newFactory(ConsumptionAuditEventVO.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ObjectFactory<ConsumptionAuditEventVO> getObjectFactory() {
+        return FACTORY;
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullId() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        assert ceVO.getId() == null;
-        ceVO.setId(null);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Object[] getTestValues(final PropertyDescriptor pd) {
+
+        if (pd.getName().equals("scale")) {
+            return new Object[] { 0, Integer.MAX_VALUE, null };
+        }
+
+        return super.getTestValues(pd);
+
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyId() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        ceVO.setId("");
-    }
-
-    @Test
-    public void testId() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        ceVO.setId("a");
-        assert ceVO.getId().equals("a");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullAmountConsumed() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        assert ceVO.getAmountConsumed() == null;
-        ceVO.setAmountConsumed(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeAmountConsumed() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        assert ceVO.getAmountConsumed() == null;
-        ceVO.setAmountConsumed(-1.0);
-    }
-
-    @Test
-    public void testAmountConsumed() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        ceVO.setAmountConsumed(1.0);
-        assert ceVO.getAmountConsumed().equals(1.0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeScale() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        ceVO.setScale(-1);
-    }
-
-    @Test
-    public void testScale() {
-        ConsumptionAuditEventVO ceVO = new ConsumptionAuditEventVO();
-        ceVO.setScale(1);
-        assert ceVO.getScale().equals(1);
-    }
 }

@@ -16,10 +16,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.opensaas.jaudit.ConsumptionAuditEvent;
-
 /**
- * Default implementation and peristence mapping of {@link ConsumptionAuditEvent}.
+ * Default implementation and peristence mapping of
+ * {@link ConsumptionAuditEvent}.
  * 
  */
 @Entity
@@ -48,12 +47,7 @@ public class ConsumptionAuditEventVO extends AuditEventVO implements
      *            to set.
      */
     public void setAmountConsumed(Double amountConsumed) {
-        if (amountConsumed == null) {
-            throw new IllegalArgumentException(
-                    "Amount consumed can not be null.");
-        }
-
-        if (amountConsumed < 0) {
+        if (amountConsumed != null && amountConsumed < 0) {
             throw new IllegalArgumentException(
                     "Amount consumed can not be negative.");
         }

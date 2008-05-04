@@ -46,10 +46,6 @@ public class BusinessAuditEventVO extends AuditEventVO implements
      *            the class to set.
      */
     public void setBusinessClass(String businessClass) {
-        if (businessClass == null) {
-            throw new IllegalArgumentException(
-                    "Business class must not be null.");
-        }
         _businessClass = businessClass;
     }
 

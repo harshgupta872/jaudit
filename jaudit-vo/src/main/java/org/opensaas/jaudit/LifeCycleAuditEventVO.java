@@ -22,10 +22,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.opensaas.jaudit.LifeCycleAuditEvent;
-import org.opensaas.jaudit.LifeCycleType;
-import org.opensaas.jaudit.PropertyValueChange;
-
 /**
  * Default implementation and persistence mapping for an
  * {@link LifeCycleAuditEvent}.
@@ -84,7 +80,11 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
             Collection<PropertyValueChange> propertyValueChanges) {
 
         if (propertyValueChanges == null) {
-            _propertyValueChanges.clear();
+            try {
+                _propertyValueChanges.clear();
+            } catch (UnsupportedOperationException e) {
+                _propertyValueChanges = new ArrayList<PropertyValueChange>();
+            }
         } else {
             for (PropertyValueChange pvc : propertyValueChanges) {
                 if (pvc instanceof PropertyValueChangeVO) {

@@ -142,7 +142,7 @@ public class SessionRecordVO implements SessionRecordMutable {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "session_id", length = 255)
+    @Column(name = "session_id", length = 255, nullable = false, unique = true)
     public String getSessionId() {
         return _sessionId;
     }
@@ -170,4 +170,55 @@ public class SessionRecordVO implements SessionRecordMutable {
         _responsibleInformation = responsibleInformation;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        if (_sessionId == null) {
+            return super.hashCode();
+        }
+        return _sessionId.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null || !(o instanceof SessionRecord)) {
+            return false;
+        }
+
+        SessionRecord sr = (SessionRecord) o;
+        if (_sessionId == null || sr.getSessionId() == null) {
+            return false;
+        }
+
+        return _sessionId.equals(sr.getSessionId());
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder buff = new StringBuilder(255);
+        buff.append( "SessionRecord[sessionId=" );
+        buff.append(_sessionId );
+        buff.append( ", started=");
+        buff.append( _startedTs );
+        buff.append( ", ended=");
+        buff.append( _endedTs );
+        buff.append( ", system=");
+        buff.append( _systemAddress );
+        buff.append( ", id=");
+        buff.append( _id );
+        buff.append( "]");
+        return buff.toString();
+    }
 }
