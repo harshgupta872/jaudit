@@ -16,13 +16,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.opensaas.jaudit.SessionRecord;
-import org.opensaas.jaudit.TransactionRecord;
 
 /**
  * The default implementation and persistence mapping of a
@@ -30,7 +29,7 @@ import org.opensaas.jaudit.TransactionRecord;
  * 
  */
 @Entity
-@Table(name="transaction_records")
+@Table(name = "transaction_records")
 public class TransactionRecordVO implements TransactionRecord {
 
     private Date _endedTs;
@@ -67,6 +66,7 @@ public class TransactionRecordVO implements TransactionRecord {
      * {@inheritDoc}
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public String getId() {
         return _id;
     }
@@ -80,17 +80,14 @@ public class TransactionRecordVO implements TransactionRecord {
      *            the id to set.
      */
     public void setId(String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id must not be null.");
-        }
         _id = id;
     }
 
     /**
      * {@inheritDoc}
      */
-    @ManyToOne(targetEntity = SessionRecordVO.class, optional=false)
-    @JoinColumn(name = "session_record", nullable = false)
+    @ManyToOne(targetEntity = SessionRecordVO.class, optional = true)
+    @JoinColumn(name = "session_record", nullable = true)
     public SessionRecord getSessionRecord() {
         return _sessionRecord;
     }
@@ -105,10 +102,6 @@ public class TransactionRecordVO implements TransactionRecord {
      *            required session record.
      */
     public void setSessionRecord(SessionRecord sessionRecord) {
-        if (sessionRecord == null) {
-            throw new IllegalArgumentException(
-                    "Session record must not be null.");
-        }
         _sessionRecord = sessionRecord;
     }
 
@@ -135,7 +128,7 @@ public class TransactionRecordVO implements TransactionRecord {
     /**
      * {@inheritDoc}
      */
-    @Column(name = "transaction_id", nullable = false, length=128)
+    @Column(name = "transaction_id", nullable = false, length = 256, unique = true)
     public String getTransactionId() {
         return _transactionId;
     }
@@ -149,11 +142,66 @@ public class TransactionRecordVO implements TransactionRecord {
      *            the required id of the transaction.
      */
     public void setTransactionId(String transactionId) {
-        if (transactionId == null) {
-            throw new IllegalArgumentException(
-                    "Transaction id must not be null.");
-        }
         _transactionId = transactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(255);
+        sb.append("TransactionRecord[");
+        sb.append("transactionId=");
+        sb.append(_transactionId);
+        sb.append(", startedTs=");
+        sb.append(_startedTs);
+        sb.append(", endedTs=");
+        sb.append(_endedTs);
+        sb.append(", id=");
+        sb.append(_id);
+        if (_sessionRecord != null) {
+            sb.append(", sessionRecordId=");
+            sb.append(_sessionRecord.getId());
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null || !(o instanceof TransactionRecord)) {
+            return false;
+        }
+
+        final TransactionRecord otherTr = (TransactionRecord) o;
+        final String otherId = otherTr.getTransactionId();
+        if (otherId == null && _transactionId == null) {
+            return true;
+        }
+
+        if (_transactionId == null) {
+            return false;
+        }
+
+        return _transactionId.equals(otherId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        if (_transactionId == null) {
+            return 0;
+        }
+        return _transactionId.hashCode();
     }
 
 }

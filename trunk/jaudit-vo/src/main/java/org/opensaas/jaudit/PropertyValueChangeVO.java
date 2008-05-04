@@ -14,13 +14,12 @@ package org.opensaas.jaudit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.opensaas.jaudit.LifeCycleAuditEvent;
-import org.opensaas.jaudit.PropertyValueChange;
 
 /**
  * A defuault implementation and persistence mapping for
@@ -51,6 +50,7 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      * {@inheritDoc}
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public String getId() {
         return _id;
     }
@@ -66,9 +66,6 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      *            to set.
      */
     public void setId(String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id must not be null.");
-        }
         _id = id;
     }
 
@@ -138,10 +135,6 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      *            the name of the property changed.
      */
     public void setPropertyName(String propertyName) {
-        if (propertyName == null) {
-            throw new IllegalArgumentException(
-                    "Property name must not be null.");
-        }
         _propertyName = propertyName;
     }
 
@@ -162,10 +155,6 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      *            the property type.
      */
     public void setPropertyType(String propertyType) {
-        if (propertyType == null) {
-            throw new IllegalArgumentException(
-                    "Property type must not be null.");
-        }
         _propertyType = propertyType;
     }
 
@@ -227,11 +216,60 @@ public class PropertyValueChangeVO implements PropertyValueChange {
      *            the new event.
      */
     public void setLifeCycleAuditEvent(LifeCycleAuditEvent lifeCycleAuditEvent) {
-        if (lifeCycleAuditEvent == null) {
-            throw new IllegalArgumentException(
-                    "Life Cycle Audit Event must not be null.");
-        }
         _lifeCycleAuditEvent = lifeCycleAuditEvent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        if (_id == null) {
+            return super.hashCode();
+        }
+        return _id.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o == null || !(o instanceof PropertyValueChange)) {
+            return false;
+        }
+
+        PropertyValueChange pvc = (PropertyValueChange) o;
+        if (_id == null || pvc.getId() == null) {
+            return false;
+        }
+
+        return _id.equals(pvc.getId());
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder buff = new StringBuilder(255);
+        buff.append("PropertyValueChange[property=");
+        buff.append(_propertyName);
+        buff.append(", type=");
+        buff.append(_propertyType);
+        if (_lifeCycleAuditEvent != null) {
+            buff.append(", lifeCycleAuditEvent=");
+
+            buff.append(_lifeCycleAuditEvent.getId());
+        }
+        buff.append(", id=");
+        buff.append(_id);
+        buff.append("]");
+        return buff.toString();
     }
 
 }

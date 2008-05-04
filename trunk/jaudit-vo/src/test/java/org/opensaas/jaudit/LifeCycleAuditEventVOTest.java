@@ -12,86 +12,46 @@
  */
 package org.opensaas.jaudit;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
+import java.util.Collections;
 
-import org.junit.Test;
+import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
  * Tests {@link LifeCycleAuditEventVO}.
  */
-public class LifeCycleAuditEventVOTest {
+public class LifeCycleAuditEventVOTest extends
+        AuditEventVOTest<LifeCycleAuditEventVO> {
 
-    @Test
-    public void testConstructor() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        assert lcaeVO != null;
-        assert lcaeVO instanceof LifeCycleAuditEvent;
-    }
+    static final ObjectFactory<LifeCycleAuditEventVO> FACTORY = newFactory(LifeCycleAuditEventVO.class);
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullId() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        assert lcaeVO.getId() == null;
-        lcaeVO.setId(null);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ObjectFactory<LifeCycleAuditEventVO> getObjectFactory() {
+        return FACTORY;
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyId() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        lcaeVO.setId("");
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Object[] getTestValues(final PropertyDescriptor pd) {
+
+        if (pd.getName().equals("propertyValueChanges")) {
+            return new Object[] {
+                    Collections.EMPTY_LIST,
+                    Collections.singletonList(PropertyValueChangeVOTest.FACTORY
+                            .createEquivalent()),
+                    Arrays.asList(new Object[] {
+                            PropertyValueChangeVOTest.FACTORY.createUnique(),
+                            PropertyValueChangeVOTest.FACTORY.createUnique() }) };
+        }
+
+        return super.getTestValues(pd);
+
     }
 
-    @Test
-    public void testId() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        lcaeVO.setId("a");
-        assert lcaeVO.getId().equals("a");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullLifeCycleEventType() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        assert lcaeVO.getLifeCycleEventType() == null;
-        lcaeVO.setLifeCycleEventType(null);
-    }
-
-    @Test
-    public void testLifeCycleEventType() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        lcaeVO.setLifeCycleEventType(LifeCycleType.CREATE);
-        assert lcaeVO.getLifeCycleEventType().equals(LifeCycleType.CREATE);
-    }
-
-    @Test
-    public void testDefaultEmptyPropertyValueChanges() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        assert lcaeVO.getPropertyValueChanges().isEmpty();
-    }
-
-    @Test
-    public void testPropertyValueChanges() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        List<PropertyValueChange> propertyValueChanges = new ArrayList<PropertyValueChange>();
-        PropertyValueChange pvc = new PropertyValueChangeVO();
-        propertyValueChanges.add(pvc);
-        lcaeVO.setPropertyValueChanges(propertyValueChanges);
-        assert lcaeVO.getPropertyValueChanges().equals(propertyValueChanges);
-        LifeCycleAuditEvent lcae = lcaeVO.getPropertyValueChanges().iterator().next().getLifeCycleAuditEvent();
-        assert lcaeVO.equals(lcae);
-    }
-    
-    @Test
-    public void testNullPropertyValueChanges() {
-        LifeCycleAuditEventVO lcaeVO = new LifeCycleAuditEventVO();
-        List<PropertyValueChange> propertyValueChanges = new ArrayList<PropertyValueChange>();
-        PropertyValueChange pvc = new PropertyValueChangeVO();
-        propertyValueChanges.add(pvc);
-        lcaeVO.setPropertyValueChanges(propertyValueChanges);
-        assert !lcaeVO.getPropertyValueChanges().isEmpty();
-        
-        lcaeVO.setPropertyValueChanges(null);
-        assert lcaeVO.getPropertyValueChanges().isEmpty();
-    }
 }
-

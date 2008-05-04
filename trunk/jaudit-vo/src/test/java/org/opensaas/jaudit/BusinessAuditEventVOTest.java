@@ -12,51 +12,22 @@
  */
 package org.opensaas.jaudit;
 
-import org.junit.Test;
+import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
  * Tests {@link BusinessBusinessAuditEventVO}.
  */
-public class BusinessAuditEventVOTest {
+public class BusinessAuditEventVOTest extends
+        AuditEventVOTest<BusinessAuditEventVO> {
 
-    @Test
-    public void testConstructor() {
-        BusinessAuditEventVO baeVO = new BusinessAuditEventVO();
-        assert baeVO != null;
-        assert baeVO instanceof AuditEvent;
+    static final ObjectFactory<BusinessAuditEventVO> FACTORY = newFactory(BusinessAuditEventVO.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ObjectFactory<BusinessAuditEventVO> getObjectFactory() {
+        return FACTORY;
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullId() {
-        BusinessAuditEventVO baeVO = new BusinessAuditEventVO();
-        assert baeVO.getId() == null;
-        baeVO.setId(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyId() {
-        BusinessAuditEventVO baeVO = new BusinessAuditEventVO();
-        baeVO.setId("");
-    }
-
-    @Test
-    public void testId() {
-        BusinessAuditEventVO baeVO = new BusinessAuditEventVO();
-        baeVO.setId("a");
-        assert baeVO.getId().equals("a");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullBusinessClass() {
-        BusinessAuditEventVO baeVO = new BusinessAuditEventVO();
-        assert baeVO.getBusinessClass() == null;
-        baeVO.setBusinessClass(null);
-    }
-
-    @Test
-    public void testBusinessClass() {
-        BusinessAuditEventVO baeVO = new BusinessAuditEventVO();
-        baeVO.setBusinessClass("a");
-        assert baeVO.getBusinessClass().equals("a");
-    }
 }
