@@ -101,6 +101,7 @@ public final class AccessorAssert {
             final String setterName, final Class<X> valueType,
             final X... values) throws IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
+
         Assert.assertNotNull("target cannot be null", target);
         Assert.assertNotNull("setterName cannot be null", setterName);
         Assert.assertNotNull("valueType cannot be null", valueType);
@@ -123,8 +124,27 @@ public final class AccessorAssert {
         final Method getterMethod = findGetterMethod(target, buildGetterName(
                 setterName, valueType));
 
+        if (values.length > 0) {
+            assertGetterAndSetter(target, setterMethod, getterMethod, values);
+        }
+
+    }
+
+    public static void assertGetterAndSetter(final Object target,
+            final Method setterMethod, final Method getterMethod,
+            Object[] values) throws IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
+        Assert.assertNotNull("target cannot be null", target);
+        Assert.assertNotNull("setter cannot be null. target=" + target,
+                setterMethod);
+        Assert.assertNotNull("getter cannot be null", getterMethod);
+        Assert.assertNotNull("values cannot be null", values);
+        Assert.assertTrue("values must have at least one value.  target="
+                + target + " setter=" + setterMethod.getName(),
+                values.length > 0);
+
         // invoke set/get pairs for each passed value
-        for (final X value : values) {
+        for (final Object value : values) {
             setterMethod.invoke(target, value);
             testGetter(target, getterMethod, value);
         }
