@@ -36,9 +36,10 @@ public interface TransactionRecord {
     String getId();
 
     /**
-     * Returns the id of the transaction.
+     * Returns the id of the transaction. This transaction id should be globally
+     * unique if possible.
      * 
-     * Required.  Length is less than or equal to 128.
+     * Required. Length is less than or equal to 256.
      * 
      * @return the id of the transaction.
      */
@@ -47,7 +48,7 @@ public interface TransactionRecord {
     /**
      * Returns the associated {@link SessionRecord} for this transaction.
      * 
-     * Required.
+     * Optional.
      * 
      * @return the associated SessionRecord.
      */

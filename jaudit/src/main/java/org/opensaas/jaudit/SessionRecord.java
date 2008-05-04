@@ -43,9 +43,11 @@ public interface SessionRecord extends Serializable {
     /**
      * Returns the session implementation's specific id for this session. For
      * example, a servlet container will have its own id generation mechanism
-     * and way of identifying sessions within its own context.
+     * and way of identifying sessions within its own context. This session id
+     * should be globally unique so you may want to modify the implementations
+     * returned session id to add more uniqueness to it.
      * 
-     * Optional.
+     * Required.
      * 
      * @return String session id.
      */
