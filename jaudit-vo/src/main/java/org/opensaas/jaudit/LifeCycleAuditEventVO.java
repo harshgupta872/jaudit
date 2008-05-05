@@ -54,10 +54,6 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
      *            the required type.
      */
     public void setLifeCycleEventType(LifeCycleType lifeCycleEventType) {
-        if (lifeCycleEventType == null) {
-            throw new IllegalArgumentException(
-                    "Life Cycle Event Type must not be null.");
-        }
         _lifeCycleEventType = lifeCycleEventType;
     }
 

@@ -45,9 +45,9 @@ public class LifeCycleAuditEventVOTest extends
                     Collections.EMPTY_LIST,
                     Collections.singletonList(PropertyValueChangeVOTest.FACTORY
                             .createEquivalent()),
-                    Arrays.asList(new Object[] {
-                            PropertyValueChangeVOTest.FACTORY.createUnique(),
-                            PropertyValueChangeVOTest.FACTORY.createUnique() }) };
+                    Arrays.asList(PropertyValueChangeVOTest.FACTORY
+                            .createUnique(), PropertyValueChangeVOTest.FACTORY
+                            .createUnique()) };
         }
 
         return super.getTestValues(pd);
