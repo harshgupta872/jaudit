@@ -12,6 +12,9 @@
  */
 package org.opensaas.jaudit;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
 import org.opensaas.jaudit.test.BeanTest;
 import org.opensaas.jaudit.test.ObjectFactory;
 
@@ -75,6 +78,27 @@ public class SessionRecordVOTest extends BeanTest<SessionRecordVO> {
 
         return super.getTestValues(valueType);
 
+    }
+
+    /**
+     * Test null session id hashcode.
+     */
+    @Test
+    public void testNullSessionId() {
+        final SessionRecordVO sr = new SessionRecordVO();
+        sr.hashCode();
+    }
+
+    /**
+     * Test null session id hashcode.
+     */
+    @Test
+    public void testNullSessionEquals() {
+        final SessionRecordVO sr = new SessionRecordVO();
+        final SessionRecordVO sr2 = new SessionRecordVO();
+        Assert.assertTrue(
+                "Null session ids of records should produce not equals.", !sr
+                        .equals(sr2));
     }
 
 }

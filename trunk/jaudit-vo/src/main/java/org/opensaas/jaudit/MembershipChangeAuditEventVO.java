@@ -54,10 +54,6 @@ public class MembershipChangeAuditEventVO extends AuditEventVO implements
      */
     public void setMembershipChangeEventType(
             MembershipChangeType membershipChangeEventType) {
-        if (membershipChangeEventType == null) {
-            throw new IllegalArgumentException(
-                    "Membership change event type must not be null.");
-        }
         _membershipChangeEventType = membershipChangeEventType;
     }
 

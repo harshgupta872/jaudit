@@ -83,10 +83,7 @@ public class SessionRecordVO implements SessionRecordMutable {
      * 
      * @param id
      */
-    public void setId(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id is required.");
-        }
+    public void setId(final long id) {
         _id = id;
     }
 
@@ -208,17 +205,17 @@ public class SessionRecordVO implements SessionRecordMutable {
     @Override
     public String toString() {
         final StringBuilder buff = new StringBuilder(255);
-        buff.append( "SessionRecord[sessionId=" );
-        buff.append(_sessionId );
-        buff.append( ", started=");
-        buff.append( _startedTs );
-        buff.append( ", ended=");
-        buff.append( _endedTs );
-        buff.append( ", system=");
-        buff.append( _systemAddress );
-        buff.append( ", id=");
-        buff.append( _id );
-        buff.append( "]");
+        buff.append("SessionRecord[sessionId=");
+        buff.append(_sessionId);
+        buff.append(", started=");
+        buff.append(_startedTs);
+        buff.append(", ended=");
+        buff.append(_endedTs);
+        buff.append(", system=");
+        buff.append(_systemAddress);
+        buff.append(", id=");
+        buff.append(_id);
+        buff.append("]");
         return buff.toString();
     }
 }
