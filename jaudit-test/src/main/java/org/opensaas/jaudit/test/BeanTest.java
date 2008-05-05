@@ -14,9 +14,12 @@ package org.opensaas.jaudit.test;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -153,7 +156,12 @@ public abstract class BeanTest<T> {
 
             // check if enum
             if (valueType.isEnum()) {
-                return valueType.getEnumConstants();
+                final Object[] enumConsts = valueType.getEnumConstants();
+                final List<Object> consts = new ArrayList<Object>(
+                        enumConsts.length + 1);
+                consts.addAll(Arrays.asList(enumConsts));
+                consts.add(null);
+                return consts.toArray();
             }
 
             return EMPTY_ARRAY;
@@ -183,6 +191,10 @@ public abstract class BeanTest<T> {
                 Integer.MIN_VALUE, null });
         ctov.put(Integer.TYPE, new Object[] { 0, Integer.MAX_VALUE,
                 Integer.MIN_VALUE });
+        ctov.put(Long.class, new Object[] { 0L, Long.MAX_VALUE,
+            Long.MIN_VALUE, null });
+        ctov.put(Long.TYPE, new Object[] { 0L, Long.MAX_VALUE,
+                Long.MIN_VALUE });
         ctov.put(String.class, new Object[] { "", " ", "Texas Fight!",
                 UUID.randomUUID().toString(), null });
 
