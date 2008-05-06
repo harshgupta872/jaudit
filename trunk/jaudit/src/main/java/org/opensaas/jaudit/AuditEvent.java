@@ -79,7 +79,7 @@ public interface AuditEvent {
     AuditSubject getTarget();
 
     /**
-     * Gets a non-localized description of what occured.
+     * Gets a non-localized description of what occurred.
      * 
      * Optional
      * 

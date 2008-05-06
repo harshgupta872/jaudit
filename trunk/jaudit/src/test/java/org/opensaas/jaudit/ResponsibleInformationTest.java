@@ -14,7 +14,6 @@ package org.opensaas.jaudit;
 
 import org.opensaas.jaudit.AuditSubjectTest.AuditSubjectFactory;
 import org.opensaas.jaudit.test.BeanTest;
-import org.opensaas.jaudit.test.DefaultFactories;
 import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
@@ -22,8 +21,6 @@ import org.opensaas.jaudit.test.ObjectFactory;
  */
 public class ResponsibleInformationTest extends
         BeanTest<ResponsibleInformation> {
-
-    private static final DefaultFactories.StringFactory STRING_FACTORY = new DefaultFactories.StringFactory();
 
     private static final AuditSubjectFactory AUDIT_SUBJECT_FACTORY = new AuditSubjectFactory();
 

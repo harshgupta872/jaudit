@@ -205,7 +205,7 @@
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.6</version>
+        <version>6.1.9</version>
         <configuration>
           <connectors>
             <connector
@@ -380,6 +380,15 @@
           <groupId>org.appfuse</groupId>
           <artifactId>appfuse-hibernate</artifactId>
         </exclusion>
+        <!-- we want the aspectj version included with Spring, not with Appfuse -->
+        <exclusion>
+          <groupId>aspectj</groupId>
+          <artifactId>aspectjweaver</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>aspectj</groupId>
+          <artifactId>aspectjrt</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -411,6 +420,12 @@
       <groupId>org.opensaas.jaudit</groupId>
       <artifactId>jaudit-webapp</artifactId>
       <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.opensaas.jaudit</groupId>
+      <artifactId>jaudit-test</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>test</scope>
     </dependency>
     <!-- Dependencies with scope=provided aren't picked up from dependent JARs -->
     <dependency>

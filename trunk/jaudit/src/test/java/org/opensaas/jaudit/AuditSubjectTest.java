@@ -13,22 +13,18 @@
 package org.opensaas.jaudit;
 
 import org.opensaas.jaudit.test.BeanTest;
-import org.opensaas.jaudit.test.DefaultFactories;
 import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
  * Test class for {@link org.opensaas.jaudit.AuditSubject}.
  */
 public class AuditSubjectTest extends BeanTest<AuditSubject> {
-    private static final DefaultFactories.StringFactory STRING_FACTORY = new DefaultFactories.StringFactory();
-
     private static final AuditSubjectFactory AUDIT_SUBJECT_FACTORY = new AuditSubjectFactory();
 
     /**
      * An {@link ObjectFactory} for {@link AuditSubject}s.
      */
-    static class AuditSubjectFactory implements
-            ObjectFactory<AuditSubject> {
+    static class AuditSubjectFactory implements ObjectFactory<AuditSubject> {
         private int counter = 0;
 
         /**

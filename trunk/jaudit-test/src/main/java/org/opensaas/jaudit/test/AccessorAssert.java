@@ -130,9 +130,28 @@ public final class AccessorAssert {
 
     }
 
+    /**
+     * Ensure that when a setter method is called on the target object, a call
+     * to the expected companion getter method returns the same value.
+     * 
+     * @param target
+     *            The object under test.
+     * @param setterMethod
+     *            The setter method to test.
+     * @param getterMethod
+     *            The getter method to test.
+     * @param values
+     *            The values to set and then expected by the getter. When more
+     *            than one exists they will be each used in sequence.
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     *             if a method is inaccessible by the current class loader.
+     * @throws InvocationTargetException
+     *             if a called method throws an exception.
+     */
     public static void assertGetterAndSetter(final Object target,
             final Method setterMethod, final Method getterMethod,
-            Object[] values) throws IllegalArgumentException,
+            final Object[] values) throws IllegalArgumentException,
             IllegalAccessException, InvocationTargetException {
         Assert.assertNotNull("target cannot be null", target);
         Assert.assertNotNull("setter cannot be null. target=" + target,
