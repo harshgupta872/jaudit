@@ -81,7 +81,7 @@ public class SessionRecordVOTest extends BeanTest<SessionRecordVO> {
     }
 
     /**
-     * Test null session id hashcode.
+     * Test null session id hashCode.
      */
     @Test
     public void testNullSessionId() {
@@ -90,7 +90,7 @@ public class SessionRecordVOTest extends BeanTest<SessionRecordVO> {
     }
 
     /**
-     * Test null session id hashcode.
+     * Test null session id hashCode.
      */
     @Test
     public void testNullSessionEquals() {

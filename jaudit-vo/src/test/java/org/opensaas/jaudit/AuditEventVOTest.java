@@ -17,6 +17,9 @@ import org.opensaas.jaudit.test.ObjectFactory;
 
 /**
  * Tests {@link AuditEventVO} based VO objects.
+ * 
+ * @param <T>
+ *            The specific subclass of {@link AuditEvent} under test.
  */
 public abstract class AuditEventVOTest<T extends AuditEvent> extends
         BeanTest<T> {
@@ -24,6 +27,7 @@ public abstract class AuditEventVOTest<T extends AuditEvent> extends
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Object[] getTestValues(final Class<?> valueType) {
         if (TransactionRecord.class.isAssignableFrom(valueType)) {
             return new Object[] {
@@ -45,6 +49,14 @@ public abstract class AuditEventVOTest<T extends AuditEvent> extends
     /**
      * A default implementation which just uses the {@link Class#newInstance()}
      * methods for new instances.
+     * 
+     * @param type
+     *            The class for which to generate an {@link ObjectFactory}.
+     * @param <X>
+     *            The type of class for which to generate an
+     *            {@link ObjectFactory}.
+     * @return An {@link ObjectFactory} that uses {@link Class#newInstance()} to
+     *         generate objects.
      */
     protected static <X extends AuditEventVO> ObjectFactory<X> newFactory(
             final Class<X> type) {
@@ -56,11 +68,11 @@ public abstract class AuditEventVOTest<T extends AuditEvent> extends
              */
             public X createEquivalent() {
                 try {
-                    X newInstance = type.newInstance();
-                    AuditEventVO ae = (AuditEventVO) newInstance;
+                    final X newInstance = type.newInstance();
+                    final AuditEventVO ae = newInstance;
                     ae.setId(STRING_FACTORY.createEquivalent());
                     return newInstance;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new RuntimeException(
                             "Cannot instantiate a new class of type " + type);
                 }
@@ -71,11 +83,11 @@ public abstract class AuditEventVOTest<T extends AuditEvent> extends
              */
             public X createUnique() {
                 try {
-                    X newInstance = type.newInstance();
-                    AuditEventVO ae = (AuditEventVO) newInstance;
+                    final X newInstance = type.newInstance();
+                    final AuditEventVO ae = newInstance;
                     ae.setId(STRING_FACTORY.createUnique());
                     return newInstance;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new RuntimeException(
                             "Cannot instantiate a new class of type " + type);
                 }

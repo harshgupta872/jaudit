@@ -52,7 +52,7 @@ public interface AuditService {
 
     /**
      * The audit service will handle finishing the session information. Mainly
-     * the ended timestmap.
+     * the ended timestamp.
      * 
      * @param sessionRecord=
      * 

@@ -31,7 +31,7 @@ public enum LifeCycleType {
     UPDATE,
 
     /**
-     * An entity was deleted. Example: An account is delted.
+     * An entity was deleted. Example: An account is deleted.
      */
     DELETE,
 

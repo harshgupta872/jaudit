@@ -31,14 +31,24 @@ import org.opensaas.jaudit.test.DefaultFactories.StringFactory;
  * A basic abstract class for testing simple bean functionality of an object.
  * 
  * @param <T>
+ *            The type of object under test.
  */
 public abstract class BeanTest<T> {
 
+    /**
+     * A collection of useful instances for common class types.
+     * 
+     * @see AccessorAssert#assertGetterAndSetter(Object, String, Class,
+     *      Object...)
+     * @see AccessorAssert#assertGetterAndSetter(Object,
+     *      java.lang.reflect.Method, java.lang.reflect.Method, Object[])
+     */
     protected static final Map<Class<?>, Object[]> CLASS_TO_VALUES = newClassToValues();
 
+    /**
+     * An {@link ObjectFactory} used for generating {@link String} objects.
+     */
     protected static final StringFactory STRING_FACTORY = new DefaultFactories.StringFactory();
-
-    protected abstract ObjectFactory<T> getObjectFactory();
 
     private static final Object[] EMPTY_ARRAY = new Object[] {};
 
@@ -58,6 +68,7 @@ public abstract class BeanTest<T> {
      * getters.
      * 
      * @throws Exception
+     *             when an unexpected error occurs.
      */
     @Test
     public final void verifyGetterSetters() throws Exception {
@@ -66,7 +77,7 @@ public abstract class BeanTest<T> {
 
         final PropertyDescriptor[] properties = PropertyUtils
                 .getPropertyDescriptors(bean);
-        for (PropertyDescriptor pd : properties) {
+        for (final PropertyDescriptor pd : properties) {
             if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
                 continue;
             }
@@ -103,8 +114,7 @@ public abstract class BeanTest<T> {
     }
 
     /**
-     * Test that {@link org.opensaas.jaudit.AuditSubject} is properly
-     * {@link Serializable}.
+     * Test that the object under test is properly {@link Serializable}.
      * 
      * @throws Exception
      *             if something bad happens.
@@ -114,14 +124,22 @@ public abstract class BeanTest<T> {
         final T bean = getObjectFactory().createEquivalent();
         if (Serializable.class.isAssignableFrom(bean.getClass())) {
             @SuppressWarnings("unchecked")
-            ObjectFactory<? extends Serializable> objectFactory = (ObjectFactory<? extends Serializable>) getObjectFactory();
+            final ObjectFactory<? extends Serializable> objectFactory = (ObjectFactory<? extends Serializable>) getObjectFactory();
             SerializableAssert.testSerialization(objectFactory);
         }
     }
 
     /**
+     * Return an {@link ObjectFactory} for the type of object currently under
+     * test.
+     * 
+     * @return an ObjectFactory.
+     */
+    protected abstract ObjectFactory<T> getObjectFactory();
+
+    /**
      * Will look up test values based on the PropertyDescriptor's read method's
-     * return type. This implementation may be overriden but it currently
+     * return type. This implementation may be overridden but it currently
      * delegates to {@link #getTestValues(Class)} to determine what to return.
      * 
      * @param pd
@@ -132,7 +150,7 @@ public abstract class BeanTest<T> {
     protected Object[] getTestValues(final PropertyDescriptor pd) {
         final Class<?> returnType = pd.getReadMethod().getReturnType();
 
-        Object[] values = getTestValues(returnType);
+        final Object[] values = getTestValues(returnType);
         if (values == null) {
             return EMPTY_ARRAY;
         }
@@ -141,7 +159,7 @@ public abstract class BeanTest<T> {
 
     /**
      * Returns test values based on the passed in value type. This method may be
-     * overriden for types the base BeanTest class does not support. Currently
+     * overridden for types the base BeanTest class does not support. Currently
      * delegates to the Map returned by {@link #newClassToValues()}.
      * 
      * @param valueType
@@ -191,50 +209,14 @@ public abstract class BeanTest<T> {
                 Integer.MIN_VALUE, null });
         ctov.put(Integer.TYPE, new Object[] { 0, Integer.MAX_VALUE,
                 Integer.MIN_VALUE });
-        ctov.put(Long.class, new Object[] { 0L, Long.MAX_VALUE,
-            Long.MIN_VALUE, null });
-        ctov.put(Long.TYPE, new Object[] { 0L, Long.MAX_VALUE,
-                Long.MIN_VALUE });
+        ctov.put(Long.class, new Object[] { 0L, Long.MAX_VALUE, Long.MIN_VALUE,
+                null });
+        ctov
+                .put(Long.TYPE, new Object[] { 0L, Long.MAX_VALUE,
+                        Long.MIN_VALUE });
         ctov.put(String.class, new Object[] { "", " ", "Texas Fight!",
                 UUID.randomUUID().toString(), null });
 
         return Collections.unmodifiableMap(ctov);
     }
-
-    /**
-     * A default implementation which just uses the {@link Class#newInstance()}
-     * methods for new instances.
-     */
-    protected static <X> ObjectFactory<X> newFactory(final Class<X> type) {
-
-        return new ObjectFactory<X>() {
-
-            /**
-             * {@inheritDoc}
-             */
-            public X createEquivalent() {
-                try {
-                    return type.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(
-                            "Cannot instantiate a new class of type " + type);
-                }
-            }
-
-            /**
-             * {@inheritDoc}
-             */
-            public X createUnique() {
-                try {
-                    return type.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(
-                            "Cannot instantiate a new class of type " + type);
-                }
-            }
-
-        };
-
-    }
-
 }
