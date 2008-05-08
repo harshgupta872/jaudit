@@ -8,10 +8,21 @@
   <!-- =================================================================== -->
   <!-- AOP: Configuration and Aspects                                      -->
   <!-- =================================================================== -->
+  <bean id="auditExecutor" class="org.opensaas.exampleapp.audit.AuditExecutor">
+    <property name="auditService" ref="auditService" />
+  </bean>
+
   <aop:config>
     <aop:advisor id="jauditTx" advice-ref="txAdvice"
       pointcut="execution(* *..jaudit.service.*Service.*(..))"
       order="3" />
+
+    <aop:aspect id="auditSaveAspect" ref="auditExecutor">
+      <aop:after-returning pointcut="args(foobar) &amp;&amp; @annotation(annotation))" method="recordSave" />
+    </aop:aspect>
+    <aop:aspect id="auditDeleteAspect" ref="auditExecutor">
+      <aop:after-returning pointcut="args(id) &amp;&amp; @annotation(annotation))" method="recordDelete" />
+    </aop:aspect>
   </aop:config>
 
   <!-- Add new DAOs here -->

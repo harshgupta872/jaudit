@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Test class for {@link org.opensaas.jaudit.test.ObjectFactoryAssert}.
  */
-public class ObjectFactoryAssertTest extends LoopingTesterTester {
+public class ObjectFactoryAssertTest {
 
     static class CountingStringFactory implements ObjectFactory<String> {
         private long equivCalls = 0L;
@@ -285,7 +285,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      */
     @Test
     public void testAssertUniqueContract() {
@@ -301,7 +301,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      * Fails <code>createUnique() != null</code>.
      */
     @Test
@@ -319,7 +319,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      * Fails <code>!createEquivalent().equals(createUnique())</code>.
      */
     @Test
@@ -337,7 +337,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      * Fails <code>createUnique().equals(createUnique())</code>.
      */
     @Test
@@ -355,7 +355,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      * Fails
      * <code>createUnique().getClass().equals(createUnique().getClass())</code>.
      */
@@ -375,7 +375,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      * Fails
      * <code>createEquivalent().getClass().equals(createUnique().getClass())</code>.
      */
@@ -395,7 +395,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory)}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertUniqueContract(org.opensaas.jaudit.test.ObjectFactory,boolean)}.
      * Fails <code>createUnique() != createUnique()</code>.
      */
     @Test
@@ -424,7 +424,7 @@ public class ObjectFactoryAssertTest extends LoopingTesterTester {
 
     /**
      * Test method for
-     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#checkLoops()}.
+     * {@link org.opensaas.jaudit.test.ObjectFactoryAssert#assertObjectFactoryContract(org.opensaas.jaudit.test.ObjectFactory)}.
      */
     @Test
     public void testLoopsSmall() {

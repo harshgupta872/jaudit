@@ -13,6 +13,7 @@
 package org.opensaas.jaudit.webapp;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.FilterChain;
@@ -39,10 +40,10 @@ public class AuditSessionFilter extends OncePerRequestFilter {
             .getLogger(AuditSessionFilter.class.getName());
 
     /**
-     * Default attribute key for storing the {@link AuditSession} in the
+     * Default attribute key for storing the {@link SessionRecord} in the
      * {@link javax.servlet.http.HttpSession}.
      */
-    public static final String AUDIT_SESSION_NAME = "org.opensaas.jaudit.auditsession";
+    public static final String SESSION_RECORD_NAME = "org.opensaas.jaudit.SessionRecord";
 
     /**
      * Default bean name for storing the {@link AuditService} in the
@@ -60,7 +61,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
 
     private String _responsibleFactoryName = RESPONSIBLE_FACTORY_NAME;
 
-    private String _auditSessionName = AUDIT_SESSION_NAME;
+    private String _sessionRecordName = SESSION_RECORD_NAME;
 
     /**
      * {@inheritDoc}
@@ -70,69 +71,81 @@ public class AuditSessionFilter extends OncePerRequestFilter {
             final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
 
+        // load the current session if available
         final HttpSession session = request.getSession();
-        AuditSession auditSession = (AuditSession) session
-                .getAttribute(_auditSessionName);
+        SessionRecord sessionRecord = (SessionRecord) session
+                .getAttribute(_sessionRecordName);
 
         final AuditService auditService = lookupAuditService();
         final ResponsibleFactory responsibleFactory = lookupResponsibleFactory();
 
         if (request.getRequestURI().endsWith("/logout.jsp")) {
             // logging out; end session
-            if (auditSession != null) {
-                final SessionRecord sr = auditSession.getSessionRecord();
-                auditService.sessionEnded(sr);
-                session.removeAttribute(_auditSessionName);
+            if (sessionRecord != null) {
+                auditService.sessionEnded(sessionRecord);
+                session.removeAttribute(_sessionRecordName);
+                sessionRecord = null;
             }
+
         } else {
-            if (auditSession == null) {
+            // every url except for logout
+
+            if (sessionRecord == null) {
                 // no session; probably a login
                 final ResponsibleInformation ri = auditService
                         .newResponsibleInformation();
 
                 responsibleFactory.fillInResponsible(ri, request);
 
-                final SessionRecord sessionRecord = auditService
-                        .createSessionRecord(session.getId(), ri);
-
-                auditSession = AuditSession.createAuditSession(sessionRecord);
-
+                sessionRecord = auditService.createSessionRecord(session
+                        .getId(), ri);
             } else {
                 // session exists; update with credentials if we have them
-                SessionRecord sr = auditSession.getSessionRecord();
-                ResponsibleInformation ri = sr.getResponsibleInformation();
-
+                ResponsibleInformation ri = sessionRecord
+                        .getResponsibleInformation();
                 if (ri == null) {
                     ri = auditService.newResponsibleInformation();
                     responsibleFactory.fillInResponsible(ri, request);
-                    sr = auditService.updateResponsible(sr, ri);
-
+                    sessionRecord = auditService.updateResponsible(
+                            sessionRecord, ri);
                 } else {
                     if (responsibleFactory.updateResponsible(ri, request)) {
-                        sr = auditService.updateResponsible(sr, ri);
+                        sessionRecord = auditService.updateResponsible(
+                                sessionRecord, ri);
                     }
                 }
-
             }
 
-            session.setAttribute(_auditSessionName, auditSession);
+            // install session into current thread
+            final AuditSession auditSession = AuditSession
+                    .createAuditSession(sessionRecord);
+            session.setAttribute(_sessionRecordName, sessionRecord);
+            LOGGER.log(Level.FINEST,
+                    "Installing session [{0}] into thread [{1}]", new Object[] {
+                            auditSession, Thread.currentThread() });
         }
+
+        // continue on with filter chain
         try {
             filterChain.doFilter(request, response);
         } finally {
-            AuditSession.removeAuditSession(auditSession);
+            // remove session from current thread
+            LOGGER.log(Level.FINEST, "Removing session from thread [{1}]",
+                    Thread.currentThread());
+            AuditSession.removeAuditSession();
         }
 
     }
 
     /**
-     * Sets the audit session name as an override to {@link #AUDIT_SESSION_NAME}.
+     * Sets the audit session name as an override to
+     * {@link #SESSION_RECORD_NAME}.
      * 
      * @param auditSessionName
      *            the auditSessionName to set
      */
     public void setAuditSessionName(final String auditSessionName) {
-        _auditSessionName = auditSessionName;
+        _sessionRecordName = auditSessionName;
     }
 
     /**
