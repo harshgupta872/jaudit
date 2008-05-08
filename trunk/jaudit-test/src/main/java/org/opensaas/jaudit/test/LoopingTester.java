@@ -12,9 +12,13 @@
  */
 package org.opensaas.jaudit.test;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.After;
 import org.junit.Assert;
 
 /**
@@ -25,9 +29,21 @@ public abstract class LoopingTester {
     private static final int MIN_LOOPS = 128;
 
     /**
-     * The number of iterations to use when looping.
+     * The number of iterations to use when looping. This can be altered by test
+     * methods, but {@link #resetLoops()} will ensure that it is reset between
+     * every test.
      */
     protected static int LOOPS = Integer.rotateLeft(MIN_LOOPS, 8);
+
+    private static final int ORIGINAL_LOOPS = LOOPS;
+
+    /**
+     * Ensure the loop count stays the same between tests.
+     */
+    @After
+    public void resetLoops() {
+        LOOPS = ORIGINAL_LOOPS;
+    }
 
     /**
      * Verify that the number of loops is at a valid setting. In other words,
@@ -51,15 +67,42 @@ public abstract class LoopingTester {
         }
     }
 
+    /**
+     * Execute {@link Runnable} {@link #LOOPS} times concurrently using multiple
+     * threads, returning when all threads are complete. The poolSize variable
+     * controls how many threads will run concurrently.
+     * 
+     * @param run
+     *            The code to execute concurrently.
+     * @param timeoutInSeconds
+     *            How long to wait before aborting.
+     * @param poolSize
+     *            The number of threads to use.
+     * @throws InterruptedException
+     *             if a thread is interrupted.
+     */
+    protected static void runInThreads(final Runnable run,
+            final long timeoutInSeconds, final int poolSize)
+            throws InterruptedException {
+        Assert.assertTrue("timeout must be positive; was " + timeoutInSeconds,
+                timeoutInSeconds > 0L);
+        Assert.assertTrue("poolSize must be positive; was " + poolSize,
+                poolSize > 0);
+
+        final ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+        for (int i = 0; i < LOOPS; ++i) {
+            executor.execute(run);
+        }
+        executor.shutdown();
+        Assert.assertTrue(createUnexpectedTimeoutMessage(), executor
+                .awaitTermination(timeoutInSeconds, TimeUnit.SECONDS));
+    }
+
+    /* package */static String createUnexpectedTimeoutMessage() {
+        return "Unexpected timeout";
+    }
+
     /* package */static String createInvalidLoopCountMessage() {
         return "Test is meaningless without looping";
     }
-
-    /**
-     * 
-     */
-    public LoopingTester() {
-        super();
-    }
-
 }

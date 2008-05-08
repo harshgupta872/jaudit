@@ -14,17 +14,6 @@ package org.opensaas.exampleapp.manager;
 
 import org.appfuse.service.GenericManager;
 import org.opensaas.exampleapp.model.FooBar;
-import org.opensaas.jaudit.AuditTargetId;
-import org.opensaas.jaudit.LifeCycleAudit;
-import org.opensaas.jaudit.LifeCycleType;
 
 public interface FooBarManager extends GenericManager<FooBar, Long> {
-
-    /**
-     * {@inheritDoc}
-     */
-    @LifeCycleAudit(type = LifeCycleType.DELETE)
-    void remove(@AuditTargetId(targetTypeClass = FooBar.class)
-    Long id);
-
 }

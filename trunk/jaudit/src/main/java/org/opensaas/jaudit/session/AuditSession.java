@@ -17,9 +17,9 @@ import java.io.Serializable;
 import org.opensaas.jaudit.SessionRecord;
 
 /**
- * 
+ * Keeps track of {@link SessionRecord}s on a per-thread basis.
  */
-public class AuditSession implements Serializable {
+final public class AuditSession implements Serializable {
 
     /**
      * Generated Serial Id.
@@ -30,7 +30,8 @@ public class AuditSession implements Serializable {
 
     private static final ThreadLocal<AuditSession> AUDIT_SESSION_CONTEXT = new ThreadLocal<AuditSession>();
 
-    private AuditSession(SessionRecord sessionRecord) {
+    /* Not private for testing only. */
+    /* package */AuditSession(final SessionRecord sessionRecord) {
         if (sessionRecord == null) {
             throw new IllegalArgumentException("Session record is required.");
         }
@@ -47,29 +48,34 @@ public class AuditSession implements Serializable {
      *         immediately be associated into context and available via
      *         {@link #getAuditSession()}.
      */
-    static public AuditSession createAuditSession(SessionRecord sessionRecord) {
-        if (sessionRecord == null) {
-            throw new IllegalArgumentException("Session record is required.");
-        }
-        AuditSession auditSession = new AuditSession(sessionRecord);
-
-        AuditSession oldSession = AUDIT_SESSION_CONTEXT.get();
+    static public AuditSession createAuditSession(
+            final SessionRecord sessionRecord) {
+        final AuditSession oldSession = AUDIT_SESSION_CONTEXT.get();
         if (oldSession != null) {
             throw new IllegalStateException(
                     "Audit Session is already registered.  Old session="
-                            + oldSession + " new session record="
-                            + sessionRecord);
+                            + oldSession + "; new session=" + sessionRecord);
         }
 
+        final AuditSession auditSession = new AuditSession(sessionRecord);
         AUDIT_SESSION_CONTEXT.set(auditSession);
         return auditSession;
     }
 
+    /**
+     * Return the AuditSession associated with the current thread, or null if
+     * {@link #createAuditSession(SessionRecord)} has not yet been called.
+     * 
+     * @return the AuditSession associated with the current thread.
+     */
     static public AuditSession getAuditSession() {
         return AUDIT_SESSION_CONTEXT.get();
     }
 
-    static public void removeAuditSession(AuditSession auditSession) {
+    /**
+     * Remove the AuditSession currently associated with the current thread.
+     */
+    static public void removeAuditSession() {
         AUDIT_SESSION_CONTEXT.remove();
     }
 
@@ -85,8 +91,9 @@ public class AuditSession implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(255);
+        final StringBuilder sb = new StringBuilder(255);
         sb.append("AuditSession[");
         sb.append("_sessionRecord=");
         sb.append(_sessionRecord);
@@ -94,4 +101,31 @@ public class AuditSession implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        // sessionRecord can't be null
+        return 37 * _sessionRecord.hashCode();
+    }
+
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuditSession other = (AuditSession) obj;
+        // sessionRecord can't be null
+        return _sessionRecord.equals(other._sessionRecord);
+    }
 }

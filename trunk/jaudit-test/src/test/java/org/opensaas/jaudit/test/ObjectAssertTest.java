@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * Test class for {@link org.opensaas.jaudit.test.ObjectAssert}.
  */
-public class ObjectAssertTest extends LoopingTesterTester {
+public class ObjectAssertTest {
     static Random RANDOMIZER = new Random();
 
     private static final ObjectFactory<String> STRING_FACTORY = new DefaultFactories.StringFactory();
@@ -58,15 +58,19 @@ public class ObjectAssertTest extends LoopingTesterTester {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return false;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 final RandomHash other = (RandomHash) obj;
-                if (x != other.x)
+                if (x != other.x) {
                     return false;
+                }
                 return true;
             }
         }
@@ -104,15 +108,19 @@ public class ObjectAssertTest extends LoopingTesterTester {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return false;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 final ConstantHash other = (ConstantHash) obj;
-                if (x != other.x)
+                if (x != other.x) {
                     return false;
+                }
                 return true;
             }
         }
@@ -150,15 +158,19 @@ public class ObjectAssertTest extends LoopingTesterTester {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return true;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 final EqualsAllowsNull other = (EqualsAllowsNull) obj;
-                if (x != other.x)
+                if (x != other.x) {
                     return false;
+                }
                 return true;
             }
         }
@@ -240,12 +252,15 @@ public class ObjectAssertTest extends LoopingTesterTester {
 
             @Override
             public boolean equals(Object obj) {
-                if (this == obj)
+                if (this == obj) {
                     return true;
-                if (obj == null)
+                }
+                if (obj == null) {
                     return true;
-                if (getClass() != obj.getClass())
+                }
+                if (getClass() != obj.getClass()) {
                     return false;
+                }
                 final BadTransitive other = (BadTransitive) obj;
                 return x < other.x;
             }
