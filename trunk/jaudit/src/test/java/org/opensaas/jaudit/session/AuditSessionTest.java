@@ -174,7 +174,7 @@ public class AuditSessionTest extends LoopingTester {
                 strings.add(session.toString());
                 AuditSession.removeAuditSession();
             }
-        }, 60L, 25);
+        }, 300L, 25);
 
         // all session strings should be unique, so...
         Assert.assertEquals(LOOPS, strings.size());
