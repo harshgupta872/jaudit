@@ -58,7 +58,6 @@ public final class ObjectAssert extends LoopingTester {
      *            the factory used to generate objects for this test.
      */
     public static void assertEqualsContract(final ObjectFactory<?> factory) {
-        checkLoops(LOGGER);
         assertEqualsReflexive(factory);
         assertEqualsSymmetric(factory);
         assertEqualsSymmetricInequality(factory);
@@ -94,7 +93,6 @@ public final class ObjectAssert extends LoopingTester {
      *            the factory used to generate objects for this test.
      */
     public static void assertToStringContract(final ObjectFactory<?> factory) {
-        checkLoops(LOGGER);
         assertToString(factory.createEquivalent());
         for (int i = 0; i < LOOPS; ++i) {
             assertToString(factory.createUnique());
@@ -113,7 +111,6 @@ public final class ObjectAssert extends LoopingTester {
      *            the factory used to generate objects for this test.
      */
     public static void assertHashCodeContract(final ObjectFactory<?> factory) {
-        checkLoops(LOGGER);
         final Set<Integer> hashes = new HashSet<Integer>(LOOPS);
         for (int i = 0; i < LOOPS; ++i) {
             hashes.add(factory.createUnique().hashCode());
@@ -225,5 +222,13 @@ public final class ObjectAssert extends LoopingTester {
     /* package */ObjectAssert() {
         throw new UnsupportedOperationException(
                 "Cannot construct utility class.");
+    }
+
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    protected Logger getLogger() {
+        return LOGGER;
     }
 }

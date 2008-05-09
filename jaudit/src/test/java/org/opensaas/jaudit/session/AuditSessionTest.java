@@ -164,7 +164,6 @@ public class AuditSessionTest extends LoopingTester {
      */
     @Test
     public void testCreateAuditSession() throws Exception {
-        checkLoops(LOGGER);
         final Set<String> strings = new HashSet<String>();
 
         // create a bunch of sessions in multiple threads
@@ -273,4 +272,11 @@ public class AuditSessionTest extends LoopingTester {
         ObjectFactoryAssert.assertObjectFactoryContract(SESSION_FACTORY);
     }
 
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    protected Logger getLogger() {
+        return LOGGER;
+    }
 }

@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -96,7 +97,7 @@ public class LoopingTesterTest extends LoopingTester {
     @Test
     public void testCheckLoopsSmall() {
         LOOPS = 1;
-        checkLoops(null);
+        checkLoops();
     }
 
     /**
@@ -107,7 +108,7 @@ public class LoopingTesterTest extends LoopingTester {
     public void testCheckLoopsFail() {
         LOOPS = 0;
         try {
-            checkLoops(null);
+            checkLoops();
         } catch (final AssertionError error) {
             // make sure this is the error we were expecting!
             Assert.assertEquals(createInvalidLoopCountMessage(), error
@@ -170,8 +171,8 @@ public class LoopingTesterTest extends LoopingTester {
             final long finish = System.currentTimeMillis() / 1000L;
 
             // make sure this is the error we were expecting!
-            Assert.assertEquals(createUnexpectedTimeoutMessage(), error
-                    .getMessage());
+            Assert.assertThat(error.getMessage(), Matchers
+                    .startsWith(createUnexpectedTimeoutMessage()));
 
             // guess that elapsed time is roughly correct
             final long lowerBound = timeoutInSeconds
@@ -218,5 +219,13 @@ public class LoopingTesterTest extends LoopingTester {
         // number of threads
         Assert.assertEquals(poolSize, threadIds.size());
         Assert.assertEquals(LOOPS, counter.get());
+    }
+
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    protected Logger getLogger() {
+        return LOGGER;
     }
 }
