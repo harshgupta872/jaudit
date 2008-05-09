@@ -77,7 +77,7 @@ public class LoopingTesterTest extends LoopingTester {
 
     private static final Runnable NOOP = new Runnable() {
         public void run() {
-            // no-op
+            Thread.yield();
         }
     };
 
@@ -174,9 +174,9 @@ public class LoopingTesterTest extends LoopingTester {
                     .getMessage());
 
             // guess that elapsed time is roughly correct
-            final long errorBand = Math.max(1L, timeoutInSeconds / 5L); // 20%
-            final long lowerBound = timeoutInSeconds - errorBand;
-            final long upperBound = timeoutInSeconds + errorBand;
+            final long lowerBound = timeoutInSeconds
+                    - Math.max(1L, timeoutInSeconds / 5L); // 20%
+            final long upperBound = timeoutInSeconds * 3; // 300%
             final long duration = finish - start;
             Assert.assertTrue(String.format("Expected %d <= %d <= %d",
                     lowerBound, duration, upperBound), lowerBound <= duration
@@ -198,7 +198,7 @@ public class LoopingTesterTest extends LoopingTester {
         final Counter counter = new Counter();
         Assert.assertEquals(0L, counter.get());
 
-        LOOPS = 25; // don't run so long
+        LOOPS = 256; // don't run so long
         final int poolSize = 5;
         final Set<Long> threadIds = new HashSet<Long>(poolSize);
         runInThreads(new Runnable() {
@@ -207,7 +207,7 @@ public class LoopingTesterTest extends LoopingTester {
                 threadIds.add(Thread.currentThread().getId());
                 try {
                     // delay a bit to better emulate a thread doing real work
-                    Thread.sleep(1000L);
+                    Thread.sleep(100L);
                 } catch (final InterruptedException ex) {
                     // ignore
                 }

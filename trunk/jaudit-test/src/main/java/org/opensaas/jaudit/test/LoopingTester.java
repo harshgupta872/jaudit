@@ -12,8 +12,8 @@
  */
 package org.opensaas.jaudit.test;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -89,10 +89,20 @@ public abstract class LoopingTester {
         Assert.assertTrue("poolSize must be positive; was " + poolSize,
                 poolSize > 0);
 
-        final ExecutorService executor = Executors.newFixedThreadPool(poolSize);
+        final long start = System.currentTimeMillis();
+        final ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors
+                .newFixedThreadPool(poolSize);
         for (int i = 0; i < LOOPS; ++i) {
             executor.execute(run);
         }
+        // wait for tasks to complete
+        while (System.currentTimeMillis() - start < timeoutInSeconds * 1000L) {
+            if (executor.getCompletedTaskCount() >= LOOPS) {
+                break;
+            }
+            Thread.sleep(1000);
+        }
+        // cleanup executor
         executor.shutdown();
         Assert.assertTrue(createUnexpectedTimeoutMessage(), executor
                 .awaitTermination(timeoutInSeconds, TimeUnit.SECONDS));
