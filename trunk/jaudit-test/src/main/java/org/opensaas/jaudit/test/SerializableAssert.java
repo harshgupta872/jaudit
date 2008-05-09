@@ -45,7 +45,6 @@ public final class SerializableAssert extends LoopingTester {
     public static void testSerialization(
             final ObjectFactory<? extends Serializable> factory)
             throws IOException, ClassNotFoundException {
-        checkLoops(LOGGER);
         testSerialization(factory.createEquivalent());
         for (int i = 0; i < LOOPS; ++i) {
             testSerialization(factory.createUnique());
@@ -95,5 +94,13 @@ public final class SerializableAssert extends LoopingTester {
         final InputStream in = new ByteArrayInputStream(bytes);
         final ObjectInputStream stream = new ObjectInputStream(in);
         return stream.readObject();
+    }
+
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    protected Logger getLogger() {
+        return LOGGER;
     }
 }

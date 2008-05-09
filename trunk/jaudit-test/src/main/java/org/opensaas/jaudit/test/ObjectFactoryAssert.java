@@ -41,7 +41,6 @@ public final class ObjectFactoryAssert extends LoopingTester {
      */
     public static void assertObjectFactoryContract(
             final ObjectFactory<?> factory) {
-        checkLoops(LOGGER);
         final boolean supportsEquiv = discoverEquivalenceSupport(factory);
         assertUniqueContract(factory, supportsEquiv);
         if (supportsEquiv) {
@@ -155,5 +154,13 @@ public final class ObjectFactoryAssert extends LoopingTester {
     /* package */ObjectFactoryAssert() {
         throw new UnsupportedOperationException(
                 "Cannot construct utility class.");
+    }
+
+    /**
+     * ${@inheritDoc}
+     */
+    @Override
+    protected Logger getLogger() {
+        return LOGGER;
     }
 }

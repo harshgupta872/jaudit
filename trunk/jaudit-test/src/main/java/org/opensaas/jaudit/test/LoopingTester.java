@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 
 /**
  * A base class useful for tests that need to do many iterations when executing.
@@ -48,22 +49,19 @@ public abstract class LoopingTester {
     /**
      * Verify that the number of loops is at a valid setting. In other words,
      * negative looping is bad!
-     * 
-     * @param logger
-     *            The logger to use for reporting status.
      */
-    protected static void checkLoops(final Logger logger) {
+    @Before
+    public void checkLoops() {
         Assert.assertTrue(createInvalidLoopCountMessage(), LOOPS > 0);
-        if (logger != null) {
-            if (LOOPS < MIN_LOOPS) {
-                logger
-                        .log(
-                                Level.WARNING,
-                                "Very few iterations for testing: {0}; test has questionable validity.",
-                                LOOPS);
-            } else {
-                logger.log(Level.FINEST, "Using {0} loops for testing.", LOOPS);
-            }
+        if (LOOPS < MIN_LOOPS) {
+            getLogger()
+                    .log(
+                            Level.WARNING,
+                            "Very few iterations for testing: {0}; test has questionable validity.",
+                            LOOPS);
+        } else {
+            getLogger()
+                    .log(Level.FINEST, "Using {0} loops for testing.", LOOPS);
         }
     }
 
@@ -81,7 +79,7 @@ public abstract class LoopingTester {
      * @throws InterruptedException
      *             if a thread is interrupted.
      */
-    protected static void runInThreads(final Runnable run,
+    protected void runInThreads(final Runnable run,
             final long timeoutInSeconds, final int poolSize)
             throws InterruptedException {
         Assert.assertTrue("timeout must be positive; was " + timeoutInSeconds,
@@ -104,9 +102,20 @@ public abstract class LoopingTester {
         }
         // cleanup executor
         executor.shutdown();
-        Assert.assertTrue(createUnexpectedTimeoutMessage(), executor
-                .awaitTermination(timeoutInSeconds, TimeUnit.SECONDS));
+        executor.awaitTermination(timeoutInSeconds, TimeUnit.SECONDS);
+        Assert.assertTrue(String.format(
+                "%s: Only %d of %d executions completed",
+                createUnexpectedTimeoutMessage(), executor
+                        .getCompletedTaskCount(), LOOPS), executor
+                .getCompletedTaskCount() >= LOOPS);
     }
+
+    /**
+     * Return the logger to use for posting messages. Should not return null.
+     * 
+     * @return a Logger.
+     */
+    protected abstract Logger getLogger();
 
     /* package */static String createUnexpectedTimeoutMessage() {
         return "Unexpected timeout";
