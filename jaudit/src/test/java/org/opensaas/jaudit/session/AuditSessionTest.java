@@ -167,6 +167,7 @@ public class AuditSessionTest extends LoopingTester {
         final Set<String> strings = new HashSet<String>();
 
         // create a bunch of sessions in multiple threads
+        LOOPS = Math.max(10, LOOPS / 10);
         runInThreads(new Runnable() {
             public void run() {
                 final AuditSession session = AuditSession
@@ -174,7 +175,7 @@ public class AuditSessionTest extends LoopingTester {
                 strings.add(session.toString());
                 AuditSession.removeAuditSession();
             }
-        }, 300L, 25);
+        }, 300L, Math.max(LOOPS / 20, 5));
 
         // all session strings should be unique, so...
         Assert.assertEquals(LOOPS, strings.size());
