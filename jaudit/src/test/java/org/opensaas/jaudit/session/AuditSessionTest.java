@@ -46,56 +46,56 @@ public class AuditSessionTest extends LoopingTester {
         private final String id = STRING_FACTORY.createUnique();
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public Date getEndedTs() {
             return null;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public String getId() {
             return id;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public ResponsibleInformation getResponsibleInformation() {
             return null;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public String getSessionId() {
             return null;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public Date getStartedTs() {
             return null;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public AuditSubject getSystem() {
             return null;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public String getSystemAddress() {
             return null;
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         @Override
         public String toString() {
@@ -103,7 +103,7 @@ public class AuditSessionTest extends LoopingTester {
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         @Override
         public int hashCode() {
@@ -111,7 +111,7 @@ public class AuditSessionTest extends LoopingTester {
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         @Override
         public boolean equals(final Object obj) {
@@ -133,14 +133,14 @@ public class AuditSessionTest extends LoopingTester {
         private SessionRecord equiv = new TestSessionRecord();
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public AuditSession createEquivalent() {
             return new AuditSession(equiv);
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public AuditSession createUnique() {
             return new AuditSession(new TestSessionRecord());
@@ -275,7 +275,7 @@ public class AuditSessionTest extends LoopingTester {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     protected Logger getLogger() {

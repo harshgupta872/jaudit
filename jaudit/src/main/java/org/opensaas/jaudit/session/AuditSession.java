@@ -102,7 +102,7 @@ final public class AuditSession implements Serializable {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public int hashCode() {
@@ -111,7 +111,7 @@ final public class AuditSession implements Serializable {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(final Object obj) {
