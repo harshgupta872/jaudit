@@ -26,7 +26,7 @@ import org.opensaas.jaudit.dao.SessionRecordDao;
  *            the specific type of {@link SessionRecordMutable} in use.
  */
 public class SessionRecordDaoHibernate<T extends SessionRecordMutable> extends
-        GenericDaoHibernate<T, Long> implements SessionRecordDao<T> {
+        GenericDaoHibernate<T, String> implements SessionRecordDao<T> {
 
     /**
      * Required constructor.
