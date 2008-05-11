@@ -19,8 +19,6 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -40,7 +38,7 @@ public class SessionRecordVO implements SessionRecordMutable {
 
     private Date _endedTs;
 
-    private long _id;
+    private String _id;
 
     private Date _startedTs;
 
@@ -71,8 +69,7 @@ public class SessionRecordVO implements SessionRecordMutable {
      * {@inheritDoc}
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long getId() {
+    public String getId() {
         return _id;
     }
 
@@ -83,7 +80,7 @@ public class SessionRecordVO implements SessionRecordMutable {
      * 
      * @param id
      */
-    public void setId(final long id) {
+    public void setId(String id) {
         _id = id;
     }
 
