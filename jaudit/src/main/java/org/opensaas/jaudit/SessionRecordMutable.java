@@ -24,6 +24,14 @@ import java.util.Date;
 public interface SessionRecordMutable extends SessionRecord {
 
     /**
+     * Sets the required id.
+     * 
+     * @param id
+     *            String globally unique id.
+     */
+    void setId(String id);
+
+    /**
      * Sets the optional session Id.
      * 
      * @see SessionRecord#getSessionId()

@@ -14,6 +14,7 @@ package org.opensaas.jaudit;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * A session record is a record of a new session within the system. Most often,
@@ -29,16 +30,14 @@ public interface SessionRecord extends Serializable {
      * creators of a SessionRecord should take care to try to ensure uniqueness
      * of this ID.
      * 
-     * Required.
+     * The default implementation of ids provided by the jaudit project are
+     * based on Java's default {@link UUID#randomUUID()}.
      * 
-     * TODO: Document some strategies for GUID/Unique id generation. Should
-     * include the max length and content of the id. Maybe UUID? TODO: Had to
-     * change this from a String to a long to make JPA and MySQL happy. Get
-     * someone smarter than me to figure this out.
+     * Required.
      * 
      * @return a globally unique id for this session record.
      */
-    long getId();
+    String getId();
 
     /**
      * Returns the session implementation's specific id for this session. For

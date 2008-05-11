@@ -13,6 +13,7 @@
 package org.opensaas.jaudit;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * This is the basic component for the jaudit libraries. An audit event is the
@@ -33,10 +34,10 @@ public interface AuditEvent {
      * creators of an AuditEvent should take care to try to ensure uniqueness of
      * this ID.
      * 
-     * Required.
+     * The default implementation of ids provided by the jaudit project are
+     * based on Java's default {@link UUID#randomUUID()}.
      * 
-     * TODO: Document some strategies for GUID/Unique id generation. Should
-     * include the max length and content of the id. Maybe UUID?
+     * Required.
      * 
      * @return a globally unique id for this audit log.
      */
