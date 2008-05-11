@@ -56,7 +56,7 @@ public class GenericDaoHibernateTest
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public <V, K extends Serializable> Session getSession(
                 final GenericDaoHibernate<V, K> hibernateDao) {
@@ -64,7 +64,7 @@ public class GenericDaoHibernateTest
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         @Override
         public int hashCode() {
@@ -72,7 +72,7 @@ public class GenericDaoHibernateTest
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         @Override
         public boolean equals(final Object obj) {
@@ -91,7 +91,7 @@ public class GenericDaoHibernateTest
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public ObjectFactory<GenericDaoHibernate<String, Integer>> getDAOFactory() {
@@ -99,7 +99,7 @@ public class GenericDaoHibernateTest
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public ObjectFactory<Integer> getPKFactory() {
@@ -107,7 +107,7 @@ public class GenericDaoHibernateTest
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public ObjectFactory<String> getVOFactory() {

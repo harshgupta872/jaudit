@@ -39,10 +39,16 @@ public class SessionRecordDaoHibernateTest
 
     private static final ObjectFactory<SessionRecordDaoHibernate<SimpleSessionRecord>> DAO_FACTORY = new ObjectFactory<SessionRecordDaoHibernate<SimpleSessionRecord>>() {
 
+        /**
+         * {@inheritDoc}
+         */
         public SessionRecordDaoHibernate<SimpleSessionRecord> createEquivalent() {
             throw new UnsupportedOperationException();
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public SessionRecordDaoHibernate<SimpleSessionRecord> createUnique() {
             return new SessionRecordDaoHibernate<SimpleSessionRecord>(
                     SimpleSessionRecord.class);
@@ -51,17 +57,23 @@ public class SessionRecordDaoHibernateTest
 
     private static final ObjectFactory<SimpleSessionRecord> VO_FACTORY = new ObjectFactory<SimpleSessionRecord>() {
 
+        /**
+         * {@inheritDoc}
+         */
         public SimpleSessionRecord createEquivalent() {
             return new SimpleSessionRecord(STRING_FACTORY.createEquivalent());
         }
 
+        /**
+         * {@inheritDoc}
+         */
         public SimpleSessionRecord createUnique() {
             return new SimpleSessionRecord(STRING_FACTORY.createUnique());
         }
     };
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public ObjectFactory<SessionRecordDaoHibernate<SimpleSessionRecord>> getDAOFactory() {
@@ -69,7 +81,7 @@ public class SessionRecordDaoHibernateTest
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public ObjectFactory<String> getPKFactory() {
@@ -77,7 +89,7 @@ public class SessionRecordDaoHibernateTest
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public ObjectFactory<SimpleSessionRecord> getVOFactory() {
