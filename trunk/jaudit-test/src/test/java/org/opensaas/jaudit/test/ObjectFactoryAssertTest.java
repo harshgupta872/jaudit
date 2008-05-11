@@ -47,7 +47,7 @@ public class ObjectFactoryAssertTest {
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public String createEquivalent() {
             ++equivCalls;
@@ -55,7 +55,7 @@ public class ObjectFactoryAssertTest {
         }
 
         /**
-         * ${@inheritDoc}
+         * {@inheritDoc}
          */
         public String createUnique() {
             counter = counter.add(BigInteger.ONE);

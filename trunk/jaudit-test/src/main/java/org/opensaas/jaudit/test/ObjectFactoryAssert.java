@@ -157,7 +157,7 @@ public final class ObjectFactoryAssert extends LoopingTester {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     protected Logger getLogger() {

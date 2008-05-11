@@ -222,7 +222,7 @@ public class LoopingTesterTest extends LoopingTester {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     protected Logger getLogger() {

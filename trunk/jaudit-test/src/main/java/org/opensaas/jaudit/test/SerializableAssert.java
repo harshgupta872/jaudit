@@ -97,7 +97,7 @@ public final class SerializableAssert extends LoopingTester {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     protected Logger getLogger() {
