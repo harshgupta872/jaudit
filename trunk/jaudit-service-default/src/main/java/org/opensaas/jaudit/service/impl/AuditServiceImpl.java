@@ -16,10 +16,12 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.opensaas.jaudit.AuditEvent;
 import org.opensaas.jaudit.AuditSubject;
 import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
 import org.opensaas.jaudit.SessionRecordMutable;
+import org.opensaas.jaudit.TransactionRecord;
 import org.opensaas.jaudit.dao.SessionRecordDao;
 import org.opensaas.jaudit.service.AuditService;
 import org.springframework.beans.factory.ObjectFactory;
@@ -49,6 +51,17 @@ public class AuditServiceImpl implements AuditService {
     private ObjectFactory _sessionRecordFactory;
 
     /**
+     * Will return new globally unique id objects represented by a
+     * {@link String}.
+     * 
+     * @see AuditEvent#getId()
+     * @see TransactionRecord#getId()
+     * @see SessionRecord#getId()
+     * 
+     */
+    private ObjectFactory _guidFactory;
+
+    /**
      * Will be used to fill in new session records.
      */
     private AuditSubject _auditSystem;
@@ -75,13 +88,14 @@ public class AuditServiceImpl implements AuditService {
         final SessionRecordMutable sessionRecord = (SessionRecordMutable) _sessionRecordFactory
                 .getObject();
 
+        sessionRecord.setId((String) _guidFactory.getObject());
         sessionRecord.setSessionId(sessionId);
         sessionRecord.setResponsibleInformation(responsibleInformation);
         sessionRecord.setStartedTs(new Date());
         sessionRecord.setSystem(_auditSystem);
         sessionRecord.setSystemAddress(_auditSystemAddress);
 
-        final long id = _sessionRecordDao.create(sessionRecord);
+        final String id = _sessionRecordDao.create(sessionRecord);
         LOGGER.log(Level.FINE, "Created new session record with id {0}.", id);
         return sessionRecord;
     }
@@ -143,6 +157,18 @@ public class AuditServiceImpl implements AuditService {
     @Required
     public void setSessionRecordFactory(final ObjectFactory sessionRecordFactory) {
         _sessionRecordFactory = sessionRecordFactory;
+    }
+
+    /**
+     * Sets the required guid factory which returns globally unique ids of type
+     * String.
+     * 
+     * @param guidFactory
+     *            the guidFactory to set.
+     */
+    @Required
+    public void setGuidFactory(final ObjectFactory guidFactory) {
+        _guidFactory = guidFactory;
     }
 
     /**
