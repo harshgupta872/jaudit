@@ -40,9 +40,10 @@ public class AuditSessionTest extends LoopingTester {
 
     @SuppressWarnings("serial")
     private static class TestSessionRecord implements SessionRecord {
-        private static DefaultFactories.LongFactory LONG_FACTORY = new DefaultFactories.LongFactory();
 
-        private final long id = LONG_FACTORY.createUnique();
+        private static final ObjectFactory<String> STRING_FACTORY = new DefaultFactories.StringFactory();
+
+        private final String id = STRING_FACTORY.createUnique();
 
         /**
          * ${@inheritDoc}
@@ -54,7 +55,7 @@ public class AuditSessionTest extends LoopingTester {
         /**
          * ${@inheritDoc}
          */
-        public long getId() {
+        public String getId() {
             return id;
         }
 
@@ -98,7 +99,7 @@ public class AuditSessionTest extends LoopingTester {
          */
         @Override
         public String toString() {
-            return String.format("TestSessionRecord[id=%d]", id);
+            return String.format("TestSessionRecord[id=%s]", id);
         }
 
         /**
@@ -106,7 +107,7 @@ public class AuditSessionTest extends LoopingTester {
          */
         @Override
         public int hashCode() {
-            return 41 * (int) id;
+            return id.hashCode();
         }
 
         /**
@@ -124,7 +125,7 @@ public class AuditSessionTest extends LoopingTester {
                 return false;
             }
             final TestSessionRecord other = (TestSessionRecord) obj;
-            return id == other.id;
+            return id.equals(other.id);
         }
     }
 
