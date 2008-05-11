@@ -225,7 +225,7 @@ public final class ObjectAssert extends LoopingTester {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     protected Logger getLogger() {
