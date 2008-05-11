@@ -25,7 +25,7 @@ import org.opensaas.jaudit.SessionRecordMutable;
  *            the specific type of {@link SessionRecordMutable} in use.
  */
 public interface SessionRecordDao<T extends SessionRecordMutable> extends
-        GenericDao<T, Long> {
+        GenericDao<T, String> {
 
     /**
      * Updates the session record's ended time stamp to that passed in.
