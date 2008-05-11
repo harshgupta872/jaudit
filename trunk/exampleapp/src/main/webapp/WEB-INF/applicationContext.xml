@@ -8,34 +8,40 @@
   <!-- =================================================================== -->
   <!-- AOP: Configuration and Aspects                                      -->
   <!-- =================================================================== -->
-  <bean id="auditExecutor" class="org.opensaas.exampleapp.audit.AuditExecutor">
+  <!--  Commented out until executor is checked in.    
+    <bean id="auditExecutor"
+    class="org.opensaas.exampleapp.audit.AuditExecutor">
     <property name="auditService" ref="auditService" />
-  </bean>
+    </bean>
+  -->
 
   <aop:config>
     <aop:advisor id="jauditTx" advice-ref="txAdvice"
       pointcut="execution(* *..jaudit.service.*Service.*(..))"
       order="3" />
 
-    <aop:aspect id="auditSaveAspect" ref="auditExecutor">
+    <!-- Commented out until executor is checked in.
+      <aop:aspect id="auditSaveAspect" ref="auditExecutor">
       <aop:after-returning pointcut="args(foobar) &amp;&amp; @annotation(annotation))" method="recordSave" />
-    </aop:aspect>
-    <aop:aspect id="auditDeleteAspect" ref="auditExecutor">
+      </aop:aspect>
+      <aop:aspect id="auditDeleteAspect" ref="auditExecutor">
       <aop:after-returning pointcut="args(id) &amp;&amp; @annotation(annotation))" method="recordDelete" />
-    </aop:aspect>
+      </aop:aspect> 
+    -->
   </aop:config>
 
   <!-- Add new DAOs here -->
-  <bean id="fooBarDao" class="org.appfuse.dao.hibernate.GenericDaoHibernate">
-    <constructor-arg value="org.opensaas.exampleapp.model.FooBar"/> 
-    <property name="sessionFactory" ref="sessionFactory"/>
-  </bean> 
+  <bean id="fooBarDao"
+    class="org.appfuse.dao.hibernate.GenericDaoHibernate">
+    <constructor-arg value="org.opensaas.exampleapp.model.FooBar" />
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 
 
   <!-- Add new Managers here -->
   <bean id="fooBarManager"
     class="org.opensaas.exampleapp.manager.FooBarManagerImpl">
-    <constructor-arg ref="fooBarDao"/>
+    <constructor-arg ref="fooBarDao" />
   </bean>
 
   <bean id="systemInetAddress"
@@ -69,6 +75,9 @@
   <bean id="auditService"
     class="org.opensaas.jaudit.service.impl.AuditServiceImpl"
     autowire="byName">
+    <property name="guidFactory">
+      <bean class="org.opensaas.jaudit.service.impl.UUIDStringFactory" />
+    </property>
     <property name="sessionRecordDao">
       <bean
         class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
