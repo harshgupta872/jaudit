@@ -22,7 +22,7 @@ import org.opensaas.jaudit.SessionRecordMutable;
 /* package */class SimpleSessionRecord implements SessionRecordMutable {
     private Date _endedTs;
 
-    private final long _id;
+    private String _id;
 
     private Date _startedTs;
 
@@ -40,7 +40,7 @@ import org.opensaas.jaudit.SessionRecordMutable;
      * @param id
      *            the unique identifier.
      */
-    public SimpleSessionRecord(final Long id) {
+    public SimpleSessionRecord(final String id) {
         if (id == null) {
             throw new IllegalArgumentException("Id is required.");
         }
@@ -64,7 +64,7 @@ import org.opensaas.jaudit.SessionRecordMutable;
     /**
      * {@inheritDoc}
      */
-    public long getId() {
+    public String getId() {
         return _id;
     }
 
@@ -140,15 +140,15 @@ import org.opensaas.jaudit.SessionRecordMutable;
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public int hashCode() {
-        return 31 * (int) _id;
+        return _id.hashCode();
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(final Object obj) {
@@ -162,7 +162,14 @@ import org.opensaas.jaudit.SessionRecordMutable;
             return false;
         }
         final SimpleSessionRecord other = (SimpleSessionRecord) obj;
-        return _id == other._id;
+        return _id.equals(other._id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setId(String id) {
+        _id = id;
     }
 
 }

@@ -30,12 +30,12 @@ import org.opensaas.jaudit.test.ObjectFactoryAssert;
  */
 public class SessionRecordDaoHibernateTest
         extends
-        GenericDaoHibernateTestBase<SimpleSessionRecord, Long, SessionRecordDaoHibernate<SimpleSessionRecord>> {
+        GenericDaoHibernateTestBase<SimpleSessionRecord, String, SessionRecordDaoHibernate<SimpleSessionRecord>> {
     @SuppressWarnings("unused")
     private static final Logger LOGGER = Logger
             .getLogger(SessionRecordDaoHibernateTest.class.getName());
 
-    private static final ObjectFactory<Long> LONG_FACTORY = new DefaultFactories.LongFactory();
+    private static final ObjectFactory<String> STRING_FACTORY = new DefaultFactories.StringFactory();
 
     private static final ObjectFactory<SessionRecordDaoHibernate<SimpleSessionRecord>> DAO_FACTORY = new ObjectFactory<SessionRecordDaoHibernate<SimpleSessionRecord>>() {
 
@@ -52,11 +52,11 @@ public class SessionRecordDaoHibernateTest
     private static final ObjectFactory<SimpleSessionRecord> VO_FACTORY = new ObjectFactory<SimpleSessionRecord>() {
 
         public SimpleSessionRecord createEquivalent() {
-            return new SimpleSessionRecord(LONG_FACTORY.createEquivalent());
+            return new SimpleSessionRecord(STRING_FACTORY.createEquivalent());
         }
 
         public SimpleSessionRecord createUnique() {
-            return new SimpleSessionRecord(LONG_FACTORY.createUnique());
+            return new SimpleSessionRecord(STRING_FACTORY.createUnique());
         }
     };
 
@@ -72,8 +72,8 @@ public class SessionRecordDaoHibernateTest
      * ${@inheritDoc}
      */
     @Override
-    public ObjectFactory<Long> getPKFactory() {
-        return LONG_FACTORY;
+    public ObjectFactory<String> getPKFactory() {
+        return STRING_FACTORY;
     }
 
     /**
