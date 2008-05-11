@@ -62,7 +62,7 @@ public class FooBar extends BaseObject {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public int hashCode() {
@@ -71,7 +71,7 @@ public class FooBar extends BaseObject {
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(final Object obj) {

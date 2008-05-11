@@ -86,6 +86,7 @@
           value="org.opensaas.jaudit.SessionRecordVO" />
       </bean>
     </property>
+    <property name="auditSystemAddress" ref="systemAddress"/>
 
     <property name="auditSystem">
       <bean class="org.opensaas.jaudit.AuditSubject">

@@ -36,7 +36,7 @@ public class FooBarManagerImpl extends GenericManagerImpl<FooBar, Long>
     }
 
     /**
-     * ${@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     @LifeCycleAudit(type = LifeCycleType.SAVE)
