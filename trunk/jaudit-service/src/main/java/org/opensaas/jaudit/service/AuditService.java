@@ -12,6 +12,9 @@
  */
 package org.opensaas.jaudit.service;
 
+import org.opensaas.jaudit.AuditSubject;
+import org.opensaas.jaudit.LifeCycleAuditEvent;
+import org.opensaas.jaudit.LifeCycleType;
 import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
 
@@ -54,7 +57,7 @@ public interface AuditService {
      * The audit service will handle finishing the session information. Mainly
      * the ended timestamp.
      * 
-     * @param sessionRecord=
+     * @param sessionRecord
      * 
      */
     SessionRecord sessionEnded(SessionRecord sessionRecord);
@@ -68,4 +71,17 @@ public interface AuditService {
     SessionRecord updateResponsible(SessionRecord sessionRecord,
             ResponsibleInformation responsibleInformation);
 
+    /**
+     * Creates and saves a new instance of a {@link LifeCycleAuditEvent}.
+     * 
+     * @param type
+     *            The life cycle stage this event represents.
+     * @param target
+     *            The object whose life cycle is being affected.
+     * @param description
+     *            A description of the change.
+     * @return The generated event.
+     */
+    LifeCycleAuditEvent createLifeCycleAuditEvent(LifeCycleType type,
+            AuditSubject target, String description);
 }

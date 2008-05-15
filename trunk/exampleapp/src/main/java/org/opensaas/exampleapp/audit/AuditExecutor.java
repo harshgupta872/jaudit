@@ -12,14 +12,16 @@
  */
 package org.opensaas.exampleapp.audit;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.opensaas.exampleapp.model.FooBar;
+import org.opensaas.jaudit.AuditSubject;
 import org.opensaas.jaudit.LifeCycleAudit;
 import org.opensaas.jaudit.LifeCycleType;
 import org.opensaas.jaudit.service.AuditService;
-import org.opensaas.jaudit.session.AuditSession;
 
 /**
  * AuditExecutor is used...
@@ -32,33 +34,44 @@ public class AuditExecutor {
     private AuditService auditService;
 
     /**
-     * Create an audit record detailing that a save operation has taken place.
+     * Create an audit record detailing that a particular operation has taken
+     * place.
      * 
+     * @param jp
+     *            The join point currently being fired.
      * @param annotation
      *            The required annotation that triggers this join point.
-     * @param foobar
-     *            The object being saved.
+     * @return The result of executing the method wrapped by this join point.
+     * @throws Throwable
+     *             When there is an error.
      */
-    public void recordSave(final LifeCycleAudit annotation, final FooBar foobar) {
-        if (annotation.type().equals(LifeCycleType.SAVE)) {
-            LOGGER.log(Level.INFO, "==========SAVE! obj={0} session={1}",
-                    new Object[] { foobar, getAuditSession() });
-        }
-    }
+    public Object recordAction(final ProceedingJoinPoint jp,
+            final LifeCycleAudit annotation) throws Throwable {
+        LOGGER.log(Level.FINE, "joinpoint={0}, target={2}, args={1}",
+                new Object[] { jp.getSignature().toLongString(),
+                        Arrays.toString(jp.getArgs()), jp.getTarget() });
 
-    /**
-     * Create an audit record detailing that a delete operation has taken place.
-     * 
-     * @param annotation
-     *            The required annotation that triggers this join point.
-     * @param id
-     *            The id of the object being deleted.
-     */
-    public void recordDelete(final LifeCycleAudit annotation, final Long id) {
-        if (annotation.type().equals(LifeCycleType.DELETE)) {
-            LOGGER.log(Level.INFO, "==========DELETE! id={0} session={1}",
-                    new Object[] { id, getAuditSession() });
+        // make the call
+        final Object retval = jp.proceed();
+
+        switch (annotation.type()) {
+        case SAVE:
+            // we know for a save we are dealing with FooBars
+            final FooBar before = (FooBar) jp.getArgs()[0];
+            final FooBar after = (FooBar) retval;
+            recordSave(before.getId() == null, after);
+        break;
+
+        case DELETE:
+            recordDelete((Long) jp.getArgs()[0]);
+        break;
+
+        default:
+            throw new UnsupportedOperationException("Unexpected type:"
+                    + annotation.type());
         }
+
+        return retval;
     }
 
     /**
@@ -80,7 +93,19 @@ public class AuditExecutor {
         this.auditService = auditService;
     }
 
-    private AuditSession getAuditSession() {
-        return AuditSession.getAuditSession();
+    private void recordDelete(final Long id) {
+        final AuditSubject target = new AuditSubject();
+        target.setSubjectType(FooBar.class.getName());
+        target.setSubjectId(id.toString());
+        auditService.createLifeCycleAuditEvent(LifeCycleType.DELETE, target,
+                null);
+    }
+
+    private void recordSave(final boolean isCreate, final FooBar foobar) {
+        final AuditSubject target = new AuditSubject();
+        target.setSubjectType(FooBar.class.getName());
+        target.setSubjectId(foobar.getId().toString());
+        auditService.createLifeCycleAuditEvent(isCreate ? LifeCycleType.CREATE
+                : LifeCycleType.UPDATE, target, foobar.toString());
     }
 }

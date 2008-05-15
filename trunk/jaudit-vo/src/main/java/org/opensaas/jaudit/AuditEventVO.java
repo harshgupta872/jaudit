@@ -28,7 +28,7 @@ import javax.persistence.MappedSuperclass;
  * 
  */
 @MappedSuperclass
-public class AuditEventVO implements AuditEvent {
+public class AuditEventVO implements AuditEventMutable {
 
     private String _id;
 
@@ -65,7 +65,7 @@ public class AuditEventVO implements AuditEvent {
      * @param id
      *            required id to set.
      */
-    public void setId(String id) {
+    public void setId(final String id) {
         _id = id;
     }
 
@@ -87,7 +87,7 @@ public class AuditEventVO implements AuditEvent {
      * @param target
      *            Subject target to set.
      */
-    public void setTarget(AuditSubject target) {
+    public void setTarget(final AuditSubject target) {
         _target = target;
     }
 
@@ -108,7 +108,7 @@ public class AuditEventVO implements AuditEvent {
      * @param transaction
      *            transaction record to set.
      */
-    public void setTransactionRecord(TransactionRecord transaction) {
+    public void setTransactionRecord(final TransactionRecord transaction) {
         _transactionRecord = transaction;
     }
 
@@ -128,7 +128,7 @@ public class AuditEventVO implements AuditEvent {
      * @param ts
      *            the required date.
      */
-    public void setTs(Date ts) {
+    public void setTs(final Date ts) {
         _ts = ts;
     }
 
@@ -147,7 +147,7 @@ public class AuditEventVO implements AuditEvent {
      * 
      * @param description
      */
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         _description = description;
     }
 
@@ -168,13 +168,14 @@ public class AuditEventVO implements AuditEvent {
      * @param sessionRecord
      *            the sessionRecord to set
      */
-    public void setSessionRecord(SessionRecord sessionRecord) {
+    public void setSessionRecord(final SessionRecord sessionRecord) {
         _sessionRecord = sessionRecord;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         if (_id == null) {
             return super.hashCode();
@@ -185,7 +186,8 @@ public class AuditEventVO implements AuditEvent {
     /**
      * {@inheritDoc}
      */
-    public boolean equals(Object o) {
+    @Override
+    public boolean equals(final Object o) {
         if (o == this) {
             return true;
         }
@@ -193,7 +195,7 @@ public class AuditEventVO implements AuditEvent {
             return false;
         }
 
-        AuditEvent ae = (AuditEvent) o;
+        final AuditEvent ae = (AuditEvent) o;
 
         if (_id == null || ae.getId() == null) {
             return false;
@@ -205,6 +207,7 @@ public class AuditEventVO implements AuditEvent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         final StringBuilder buff = new StringBuilder(255);
         buff.append(getClass().getSimpleName());

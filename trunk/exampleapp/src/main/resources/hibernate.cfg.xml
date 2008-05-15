@@ -7,5 +7,8 @@
         <mapping class="org.appfuse.model.Role"/>
         <mapping class="org.opensaas.exampleapp.model.FooBar"/>
         <mapping class="org.opensaas.jaudit.SessionRecordVO"/>
+        <mapping class="org.opensaas.jaudit.TransactionRecordVO"/>
+        <mapping class="org.opensaas.jaudit.PropertyValueChangeVO"/>
+        <mapping class="org.opensaas.jaudit.LifeCycleAuditEventVO"/>
     </session-factory>
 </hibernate-configuration>
