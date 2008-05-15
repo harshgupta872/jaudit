@@ -167,7 +167,7 @@ public class AuditSessionTest extends LoopingTester {
     public void testCreateAuditSession() throws Exception {
         final Set<String> strings = new HashSet<String>();
 
-        // create a bunch of sessions in multiple threads
+        // create sessions in multiple threads
         LOOPS = 10;
         runInThreads(new Runnable() {
             public void run() {

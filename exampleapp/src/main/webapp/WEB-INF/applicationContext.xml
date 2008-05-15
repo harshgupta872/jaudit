@@ -8,26 +8,20 @@
   <!-- =================================================================== -->
   <!-- AOP: Configuration and Aspects                                      -->
   <!-- =================================================================== -->
-  <!--  Commented out until executor is checked in.    
-    <bean id="auditExecutor"
+  <bean id="auditExecutor"
     class="org.opensaas.exampleapp.audit.AuditExecutor">
     <property name="auditService" ref="auditService" />
-    </bean>
-  -->
+  </bean>
 
   <aop:config>
     <aop:advisor id="jauditTx" advice-ref="txAdvice"
       pointcut="execution(* *..jaudit.service.*Service.*(..))"
       order="3" />
 
-    <!-- Commented out until executor is checked in.
-      <aop:aspect id="auditSaveAspect" ref="auditExecutor">
-      <aop:after-returning pointcut="args(foobar) &amp;&amp; @annotation(annotation))" method="recordSave" />
+      <aop:aspect id="auditAspect" ref="auditExecutor">
+        <!-- use aop:around instead of aop:after-returning so we can use the result of the underlying method -->
+        <aop:around pointcut="@annotation(annotation))" method="recordAction" />
       </aop:aspect>
-      <aop:aspect id="auditDeleteAspect" ref="auditExecutor">
-      <aop:after-returning pointcut="args(id) &amp;&amp; @annotation(annotation))" method="recordDelete" />
-      </aop:aspect> 
-    -->
   </aop:config>
 
   <!-- Add new DAOs here -->
@@ -71,6 +65,8 @@
     scope="prototype" />
   <bean id="sessionRecordPrototype"
     class="org.opensaas.jaudit.SessionRecordVO" scope="prototype" />
+  <bean id="lifeCycleAuditEventPrototype"
+    class="org.opensaas.jaudit.LifeCycleAuditEventVO" scope="prototype" />
 
   <bean id="auditService"
     class="org.opensaas.jaudit.service.impl.AuditServiceImpl"
@@ -78,6 +74,7 @@
     <property name="guidFactory">
       <bean class="org.opensaas.jaudit.service.impl.UUIDStringFactory" />
     </property>
+    
     <property name="sessionRecordDao">
       <bean
         class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
@@ -86,6 +83,16 @@
           value="org.opensaas.jaudit.SessionRecordVO" />
       </bean>
     </property>
+
+    <property name="lifeCycleAuditEventDao">
+      <bean
+        class="org.opensaas.jaudit.dao.hibernate.LifeCycleAuditEventDaoHibernate"
+        autowire="byName">
+        <constructor-arg type="java.lang.Class"
+          value="org.opensaas.jaudit.LifeCycleAuditEventVO" />
+      </bean>
+    </property>
+
     <property name="auditSystemAddress" ref="systemAddress"/>
 
     <property name="auditSystem">
@@ -95,6 +102,7 @@
         <property name="subjectDiscriminator" value="org.opensass" />
       </bean>
     </property>
+    
     <property name="responsibleInformationFactory">
       <bean
         class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
@@ -103,11 +111,21 @@
         </property>
       </bean>
     </property>
+    
     <property name="sessionRecordFactory">
       <bean
         class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
         <property name="targetBeanName">
           <idref local="sessionRecordPrototype" />
+        </property>
+      </bean>
+    </property>
+
+    <property name="lifeCycleAuditEventFactory">
+      <bean
+        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+          <idref local="lifeCycleAuditEventPrototype" />
         </property>
       </bean>
     </property>

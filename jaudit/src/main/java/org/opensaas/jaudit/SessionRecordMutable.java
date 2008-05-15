@@ -19,7 +19,6 @@ import java.util.Date;
  * a session is created when a user or entity authenticates to a system. All
  * work done by that user or entity is this executed as part of the session
  * record.
- * 
  */
 public interface SessionRecordMutable extends SessionRecord {
 
@@ -81,7 +80,7 @@ public interface SessionRecordMutable extends SessionRecord {
     void setSystemAddress(String systemAddress);
 
     /**
-     * Sets the optional reponsible information for this session record.
+     * Sets the optional responsible information for this session record.
      * 
      * @see SessionRecord#getResponsibleInformation()
      * 

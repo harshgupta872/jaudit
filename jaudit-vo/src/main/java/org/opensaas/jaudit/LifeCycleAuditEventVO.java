@@ -12,8 +12,8 @@
  */
 package org.opensaas.jaudit;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,11 +30,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "life_cycle_audit_events")
 public class LifeCycleAuditEventVO extends AuditEventVO implements
-        LifeCycleAuditEvent {
+        LifeCycleAuditEventMutable {
 
     private LifeCycleType _lifeCycleEventType;
 
-    private Collection<PropertyValueChange> _propertyValueChanges = new ArrayList<PropertyValueChange>();
+    private Collection<PropertyValueChange> _propertyValueChanges = new LinkedList<PropertyValueChange>();
 
     /**
      * {@inheritDoc}
@@ -53,7 +53,7 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
      * @param lifeCycleEventType
      *            the required type.
      */
-    public void setLifeCycleEventType(LifeCycleType lifeCycleEventType) {
+    public void setLifeCycleEventType(final LifeCycleType lifeCycleEventType) {
         _lifeCycleEventType = lifeCycleEventType;
     }
 
@@ -62,7 +62,8 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
      */
     @OneToMany(mappedBy = "lifeCycleAuditEvent", targetEntity = PropertyValueChangeVO.class)
     public Collection<PropertyValueChange> getPropertyValueChanges() {
-        return (Collection<PropertyValueChange>) _propertyValueChanges;
+        // TODO: return unmodifyable collection instead
+        return _propertyValueChanges;
     }
 
     /**
@@ -73,20 +74,21 @@ public class LifeCycleAuditEventVO extends AuditEventVO implements
      * @param propertyValueChanges
      */
     public void setPropertyValueChanges(
-            Collection<PropertyValueChange> propertyValueChanges) {
+            final Collection<PropertyValueChange> propertyValueChanges) {
 
         if (propertyValueChanges == null) {
             try {
                 _propertyValueChanges.clear();
-            } catch (UnsupportedOperationException e) {
-                _propertyValueChanges = new ArrayList<PropertyValueChange>();
+            } catch (final UnsupportedOperationException e) {
+                _propertyValueChanges = new LinkedList<PropertyValueChange>();
             }
         } else {
-            for (PropertyValueChange pvc : propertyValueChanges) {
+            for (final PropertyValueChange pvc : propertyValueChanges) {
                 if (pvc instanceof PropertyValueChangeVO) {
                     ((PropertyValueChangeVO) pvc).setLifeCycleAuditEvent(this);
                 }
             }
+            // TODO: copy the incoming collection instead of sharing ownership
             _propertyValueChanges = propertyValueChanges;
         }
 

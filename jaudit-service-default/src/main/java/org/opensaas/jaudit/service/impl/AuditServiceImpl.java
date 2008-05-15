@@ -18,12 +18,17 @@ import java.util.logging.Logger;
 
 import org.opensaas.jaudit.AuditEvent;
 import org.opensaas.jaudit.AuditSubject;
+import org.opensaas.jaudit.LifeCycleAuditEvent;
+import org.opensaas.jaudit.LifeCycleAuditEventMutable;
+import org.opensaas.jaudit.LifeCycleType;
 import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
 import org.opensaas.jaudit.SessionRecordMutable;
 import org.opensaas.jaudit.TransactionRecord;
+import org.opensaas.jaudit.dao.LifeCycleAuditEventDao;
 import org.opensaas.jaudit.dao.SessionRecordDao;
 import org.opensaas.jaudit.service.AuditService;
+import org.opensaas.jaudit.session.AuditSession;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -40,6 +45,8 @@ public class AuditServiceImpl implements AuditService {
      */
     private SessionRecordDao<SessionRecordMutable> _sessionRecordDao;
 
+    private LifeCycleAuditEventDao<LifeCycleAuditEventMutable> _lifeCycleAuditEventDao;
+
     /**
      * Will return new {@link ResponsibleInformation} objects.
      */
@@ -49,6 +56,8 @@ public class AuditServiceImpl implements AuditService {
      * Will return new {@link SessionRecord} objects.
      */
     private ObjectFactory _sessionRecordFactory;
+
+    private ObjectFactory _lifeCycleAuditEventFactory;
 
     /**
      * Will return new globally unique id objects represented by a
@@ -148,6 +157,19 @@ public class AuditServiceImpl implements AuditService {
     }
 
     /**
+     * Sets the required life cycle event dao which allows us to complete our
+     * work.
+     * 
+     * @param dao
+     *            Dao to set.
+     */
+    @Required
+    public void setLifeCycleAuditEventDao(
+            final LifeCycleAuditEventDao<LifeCycleAuditEventMutable> dao) {
+        _lifeCycleAuditEventDao = dao;
+    }
+
+    /**
      * Sets the required sessionRecordFactory which will give us new
      * SessionRecord objects.
      * 
@@ -157,6 +179,19 @@ public class AuditServiceImpl implements AuditService {
     @Required
     public void setSessionRecordFactory(final ObjectFactory sessionRecordFactory) {
         _sessionRecordFactory = sessionRecordFactory;
+    }
+
+    /**
+     * Sets the required lifeCycleAuditEventFactory which will give us new
+     * LifeCycleAuditEvent objects.
+     * 
+     * @param lifeCycleAuditEventFactory
+     *            LifeCycleAuditEventFactory to set.
+     */
+    @Required
+    public void setLifeCycleAuditEventFactory(
+            final ObjectFactory lifeCycleAuditEventFactory) {
+        _lifeCycleAuditEventFactory = lifeCycleAuditEventFactory;
     }
 
     /**
@@ -189,4 +224,26 @@ public class AuditServiceImpl implements AuditService {
         _auditSystemAddress = auditSystemAddress;
     }
 
+    /**
+     * ${@inheritDoc}
+     */
+    public LifeCycleAuditEvent createLifeCycleAuditEvent(
+            final LifeCycleType type, final AuditSubject target,
+            final String description) {
+        final LifeCycleAuditEventMutable event = (LifeCycleAuditEventMutable) _lifeCycleAuditEventFactory
+                .getObject();
+
+        event.setId((String) _guidFactory.getObject());
+        event.setDescription(description);
+        event.setLifeCycleEventType(type);
+        event.setTarget(target);
+        event.setTs(new Date());
+        event.setSessionRecord(AuditSession.getAuditSession()
+                .getSessionRecord());
+
+        final String id = _lifeCycleAuditEventDao.create(event);
+        LOGGER.log(Level.FINE,
+                "Created new life cycle audit event with id {0}.", id);
+        return event;
+    }
 }

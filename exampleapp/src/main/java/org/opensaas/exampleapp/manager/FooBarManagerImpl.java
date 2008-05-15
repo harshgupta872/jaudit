@@ -21,18 +21,24 @@ import org.opensaas.jaudit.AuditTargetId;
 import org.opensaas.jaudit.LifeCycleAudit;
 import org.opensaas.jaudit.LifeCycleType;
 
+/**
+ * FooBarManagerImpl adds only the annotations needed for auditing to the
+ * behavior of {@link org.appfuse.service.impl.GenericManagerImpl}.
+ */
 public class FooBarManagerImpl extends GenericManagerImpl<FooBar, Long>
         implements FooBarManager {
     @SuppressWarnings("unused")
     private static final Logger LOGGER = Logger
             .getLogger(FooBarManagerImpl.class.getName());
 
-    @SuppressWarnings("unused")
-    private final GenericDao<FooBar, Long> _fooBarDao;
-
+    /**
+     * Constructor.
+     * 
+     * @param genericDao
+     *            The DAO to use when persisting {@link FooBar}s.
+     */
     public FooBarManagerImpl(final GenericDao<FooBar, Long> genericDao) {
         super(genericDao);
-        _fooBarDao = genericDao;
     }
 
     /**

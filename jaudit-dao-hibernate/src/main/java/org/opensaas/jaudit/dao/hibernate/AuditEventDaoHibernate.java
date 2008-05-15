@@ -10,18 +10,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.opensaas.jaudit.dao;
+package org.opensaas.jaudit.dao.hibernate;
 
 import org.opensaas.jaudit.AuditEvent;
 import org.opensaas.jaudit.AuditEventMutable;
+import org.opensaas.jaudit.dao.AuditEventDao;
 
 /**
- * Dao interface for working with {@link AuditEvent}s.
+ * Default hibernate implementation of {@link AuditEventDao}.
  * 
  * @param <T>
- *            the specific type of {@link AuditEventMutable} in use.
+ *            the specific type of {@link AuditEvent} in use.
  */
-public interface AuditEventDao<T extends AuditEventMutable> extends
-        GenericDao<T, String> {
-    // no added behavior
+public class AuditEventDaoHibernate<T extends AuditEventMutable> extends
+        GenericDaoHibernate<T, String> implements AuditEventDao<T> {
+
+    /**
+     * Required constructor.
+     * 
+     * @param type
+     *            the type we are managing.
+     */
+    public AuditEventDaoHibernate(final Class<T> type) {
+        super(type);
+    }
 }

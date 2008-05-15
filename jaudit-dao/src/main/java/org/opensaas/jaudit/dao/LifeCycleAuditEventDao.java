@@ -12,16 +12,16 @@
  */
 package org.opensaas.jaudit.dao;
 
-import org.opensaas.jaudit.AuditEvent;
-import org.opensaas.jaudit.AuditEventMutable;
+import org.opensaas.jaudit.LifeCycleAuditEvent;
+import org.opensaas.jaudit.LifeCycleAuditEventMutable;
 
 /**
- * Dao interface for working with {@link AuditEvent}s.
+ * Dao interface for working with {@link LifeCycleAuditEvent}s.
  * 
  * @param <T>
- *            the specific type of {@link AuditEventMutable} in use.
+ *            the specific type of {@link LifeCycleAuditEventMutable} in use.
  */
-public interface AuditEventDao<T extends AuditEventMutable> extends
-        GenericDao<T, String> {
+public interface LifeCycleAuditEventDao<T extends LifeCycleAuditEventMutable>
+        extends AuditEventDao<T> {
     // no added behavior
 }
