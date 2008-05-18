@@ -17,10 +17,41 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to assign to methods to indicate a need to create life cycle audit
+ * events when the method is executed.
+ * 
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LifeCycleAudit {
 
+    /**
+     * The type of life cycle event that is occuring.
+     * 
+     * @return LifeCycleType
+     */
     LifeCycleType type();
+
+    /**
+     * When this is not left at its default, indicates which class is the
+     * subject's type. Useful for delete methods with a signature similar to
+     * <tt>public void delete( Long myObjPrimaryKeyId );</tt>
+     * 
+     * OPTIONAL
+     * 
+     * @return Class<?> type of the subject.
+     */
+    Class<?> subjectType() default Void.class;
+
+    /**
+     * Returns a description to append to the life cycle audit event being
+     * created.
+     * 
+     * OPTIONAL
+     * 
+     * @return String a description.
+     */
+    String description() default "";
 
 }
