@@ -12,22 +12,25 @@
  */
 package org.opensaas.exampleapp.audit;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Id;
+
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.opensaas.exampleapp.model.FooBar;
 import org.opensaas.jaudit.AuditSubject;
 import org.opensaas.jaudit.LifeCycleAudit;
-import org.opensaas.jaudit.LifeCycleType;
 import org.opensaas.jaudit.service.AuditService;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * AuditExecutor is used...
  */
 public class AuditExecutor {
-    @SuppressWarnings("unused")
+
     private static final Logger LOGGER = Logger.getLogger(AuditExecutor.class
             .getName());
 
@@ -54,33 +57,16 @@ public class AuditExecutor {
         // make the call
         final Object retval = jp.proceed();
 
-        switch (annotation.type()) {
-        case SAVE:
-            // we know for a save we are dealing with FooBars
-            final FooBar before = (FooBar) jp.getArgs()[0];
-            final FooBar after = (FooBar) retval;
-            recordSave(before.getId() == null, after);
-        break;
-
-        case DELETE:
-            recordDelete((Long) jp.getArgs()[0]);
-        break;
-
-        default:
-            throw new UnsupportedOperationException("Unexpected type:"
-                    + annotation.type());
+        final AuditSubject auditSubject = getAuditSubject(jp, annotation,
+                retval);
+        String description = annotation.description();
+        if (description == null || description.length() < 1) {
+            description = annotation.type().name();
         }
+        auditService.createLifeCycleAuditEvent(annotation.type(), auditSubject,
+                description);
 
         return retval;
-    }
-
-    /**
-     * Return the auditService.
-     * 
-     * @return the auditService.
-     */
-    public final AuditService getAuditService() {
-        return auditService;
     }
 
     /**
@@ -89,23 +75,120 @@ public class AuditExecutor {
      * @param auditService
      *            the auditService to set
      */
+    @Required
     public final void setAuditService(final AuditService auditService) {
         this.auditService = auditService;
     }
 
-    private void recordDelete(final Long id) {
-        final AuditSubject target = new AuditSubject();
-        target.setSubjectType(FooBar.class.getName());
-        target.setSubjectId(id.toString());
-        auditService.createLifeCycleAuditEvent(LifeCycleType.DELETE, target,
-                null);
-    }
+    private AuditSubject getAuditSubject(final JoinPoint jp,
+            final LifeCycleAudit lcAuditAnnotation, final Object returnValue) {
 
-    private void recordSave(final boolean isCreate, final FooBar foobar) {
-        final AuditSubject target = new AuditSubject();
-        target.setSubjectType(FooBar.class.getName());
-        target.setSubjectId(foobar.getId().toString());
-        auditService.createLifeCycleAuditEvent(isCreate ? LifeCycleType.CREATE
-                : LifeCycleType.UPDATE, target, foobar.toString());
+        final Object[] args = jp.getArgs();
+        if (args == null || args.length < 1) {
+            LOGGER
+                    .log(
+                            Level.WARNING,
+                            "JoinPoint has no arguments.  Cannot create a LifeCycle audit event without an argument.  jp={0}",
+                            jp);
+            return null;
+        }
+
+        final Object subject = args[0];
+        if (subject == null) {
+            LOGGER
+                    .log(
+                            Level.WARNING,
+                            "JoinPoint has a null subject.  Cannot create a LifeCycle audit event without a non-null subject.  jp={0}",
+                            jp);
+            return null;
+        }
+
+        final AuditSubject auditSubject = new AuditSubject();
+
+        if (lcAuditAnnotation.subjectType() != null
+                && !lcAuditAnnotation.subjectType().equals(Void.class)) {
+            auditSubject.setSubjectType(lcAuditAnnotation.subjectType()
+                    .toString());
+        } else {
+            auditSubject.setSubjectType(subject.getClass().getName());
+        }
+
+        final Method[] methods = subject.getClass().getMethods();
+
+        // First, try JPA annotations. In the future, we might try something
+        // else.
+
+        Method idMethod = null;
+
+        for (final Method m : methods) {
+            final Id annotation = m.getAnnotation(Id.class);
+            if (annotation != null) {
+                idMethod = m;
+                break;
+            }
+        }
+        if (idMethod == null) {
+            // try getId() next
+            for (final Method m : methods) {
+                if ("getId".equalsIgnoreCase(m.getName())
+                        && m.getParameterTypes().length == 0
+                        && !m.getReturnType().equals(Void.TYPE)) {
+                    idMethod = m;
+                }
+            }
+        }
+
+        if (idMethod == null || idMethod.getParameterTypes().length > 0
+                || idMethod.getReturnType().equals(Void.TYPE)) {
+            LOGGER
+                    .log(
+                            Level.WARNING,
+                            "Cannot determine an ID method for subject class of type {0}. Will default to hashcode id.",
+                            subject.getClass());
+            auditSubject.setSubjectId(Integer.toHexString(subject.hashCode()));
+            return auditSubject;
+        }
+
+        final boolean isAccessible = idMethod.isAccessible();
+        if (!isAccessible) {
+            idMethod.setAccessible(true);
+        }
+
+        try {
+            Object id = idMethod.invoke(subject);
+            if (id == null
+                    && returnValue != null
+                    && returnValue.getClass().isAssignableFrom(
+                            subject.getClass())) {
+                id = idMethod.invoke(returnValue);
+            }
+            if (id != null) {
+                auditSubject.setSubjectId(id.toString());
+            } else {
+                LOGGER
+                        .log(
+                                Level.WARNING,
+                                "Cannot uniquely identify subject {0} as the id returned by method {1} is null.  Will default to hashcode id.",
+                                new Object[] { subject, idMethod });
+                auditSubject.setSubjectId(Integer.toHexString(subject
+                        .hashCode()));
+            }
+        } catch (Exception e) {
+            LOGGER
+                    .log(
+                            Level.WARNING,
+                            "Cannot execute ID method {0} on subject {1}.  Message={2}  Will default to hashcode id.",
+                            new Object[] { idMethod, subject, e.getMessage() });
+            LOGGER
+                    .log(Level.WARNING, "Cannot execute id method (CONTINUED)",
+                            e);
+            auditSubject.setSubjectId(Integer.toHexString(subject.hashCode()));
+        } finally {
+            if (!isAccessible) {
+                idMethod.setAccessible(false);
+            }
+        }
+
+        return auditSubject;
     }
 }
