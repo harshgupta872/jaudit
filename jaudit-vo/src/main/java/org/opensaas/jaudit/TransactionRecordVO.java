@@ -28,7 +28,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "transaction_records")
-public class TransactionRecordVO implements TransactionRecord {
+public class TransactionRecordVO implements TransactionRecordMutable {
 
     private Date _endedTs;
 
