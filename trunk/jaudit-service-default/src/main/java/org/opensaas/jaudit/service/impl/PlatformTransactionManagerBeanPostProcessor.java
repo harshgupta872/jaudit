@@ -59,12 +59,17 @@ public class PlatformTransactionManagerBeanPostProcessor implements
             final Class<?>[] interfaces = clazz.getInterfaces();
 
             final ArrayList<Class<?>> filteredInterfaces = new ArrayList<Class<?>>(
-                    interfaces.length);
+                    interfaces.length + 1);
+
+            boolean ptmInterfaceIncluded = false;
             for (final Class<?> interfaceClass : interfaces) {
                 if (PlatformTransactionManager.class.equals(interfaceClass)) {
-                    continue;
+                    ptmInterfaceIncluded = true;
                 }
                 filteredInterfaces.add(interfaceClass);
+            }
+            if (!ptmInterfaceIncluded) {
+                filteredInterfaces.add(PlatformTransactionManager.class);
             }
 
             final Object returnBean = Proxy.newProxyInstance(bean.getClass()
