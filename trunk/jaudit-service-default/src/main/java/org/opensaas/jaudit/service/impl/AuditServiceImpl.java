@@ -45,6 +45,9 @@ public class AuditServiceImpl implements AuditService {
      */
     private SessionRecordDao<SessionRecordMutable> _sessionRecordDao;
 
+    /**
+     * The DAO for working with LifeCycleAuditEvent objects.
+     */
     private LifeCycleAuditEventDao<LifeCycleAuditEventMutable> _lifeCycleAuditEventDao;
 
     /**
@@ -57,7 +60,15 @@ public class AuditServiceImpl implements AuditService {
      */
     private ObjectFactory _sessionRecordFactory;
 
+    /**
+     * Will return new {@link LifeCycleAuditEventMutable} objects.
+     */
     private ObjectFactory _lifeCycleAuditEventFactory;
+
+    /**
+     * Used for retrieving transaction information.
+     */
+    private TransactionRecordService _transactionRecordService;
 
     /**
      * Will return new globally unique id objects represented by a
@@ -130,6 +141,35 @@ public class AuditServiceImpl implements AuditService {
             final ResponsibleInformation responsibleInformation) {
         return _sessionRecordDao.updateResponsibleInformation(sessionRecord,
                 responsibleInformation);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public LifeCycleAuditEvent createLifeCycleAuditEvent(
+            final LifeCycleType type, final AuditSubject target,
+            final String description) {
+        final LifeCycleAuditEventMutable event = (LifeCycleAuditEventMutable) _lifeCycleAuditEventFactory
+                .getObject();
+
+        event.setId((String) _guidFactory.getObject());
+        event.setDescription(description);
+        event.setLifeCycleEventType(type);
+        event.setTarget(target);
+        event.setTs(new Date());
+        event.setSessionRecord(AuditSession.getAuditSession()
+                .getSessionRecord());
+
+        if (_transactionRecordService != null) {
+            event.setTransactionRecord(_transactionRecordService
+                    .getTransactionRecord(event.getSessionRecord()));
+
+        }
+
+        final String id = _lifeCycleAuditEventDao.create(event);
+        LOGGER.log(Level.FINE,
+                "Created new life cycle audit event with id {0}.", id);
+        return event;
     }
 
     /**
@@ -225,25 +265,14 @@ public class AuditServiceImpl implements AuditService {
     }
 
     /**
-     * ${@inheritDoc}
+     * Sets the optional transaction record service.
+     * 
+     * @param transactionRecordService
+     *            the transactionRecordService to set
      */
-    public LifeCycleAuditEvent createLifeCycleAuditEvent(
-            final LifeCycleType type, final AuditSubject target,
-            final String description) {
-        final LifeCycleAuditEventMutable event = (LifeCycleAuditEventMutable) _lifeCycleAuditEventFactory
-                .getObject();
-
-        event.setId((String) _guidFactory.getObject());
-        event.setDescription(description);
-        event.setLifeCycleEventType(type);
-        event.setTarget(target);
-        event.setTs(new Date());
-        event.setSessionRecord(AuditSession.getAuditSession()
-                .getSessionRecord());
-
-        final String id = _lifeCycleAuditEventDao.create(event);
-        LOGGER.log(Level.FINE,
-                "Created new life cycle audit event with id {0}.", id);
-        return event;
+    public void setTransactionRecordService(
+            TransactionRecordService transactionRecordService) {
+        _transactionRecordService = transactionRecordService;
     }
+
 }
