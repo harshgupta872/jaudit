@@ -9,12 +9,17 @@ framework.
 
 To get started, please complete the following steps:
 
-1. Download and install a MySQL 5.x database from 
-   http://dev.mysql.com/downloads/mysql/5.0.html#downloads.
+1. Download and install your favorite database.  MySQL is the default for appfuse 
+   projects but we're doing our testing for PostgreSQL. Note that with
+   PostgreSQL, you'll need a database called "exampleapp" owned by a 
+   postgres user.
 
-2. Run "mvn jetty:run-war" and view the application at http://localhost:8080.
+2. Run "mvn jetty:run-war" and view the application at http://localhost:8080.  For
+   PostgreSQL run "mvn jetty:run-war -Ppostgresql"
 
 3. More information can be found at:
 
    http://appfuse.org/display/APF/QuickStart+Guide
+
+4.  You can now login with admin/admin or user/user
 
