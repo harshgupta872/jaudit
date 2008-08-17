@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.opensaas.jaudit.service.impl;
+package org.opensaas.jaudit.service;
 
 import java.util.Date;
 import java.util.logging.Level;
@@ -25,12 +25,14 @@ import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
 import org.opensaas.jaudit.SessionRecordMutable;
 import org.opensaas.jaudit.TransactionRecord;
+import org.opensaas.jaudit.TransactionRecordMutable;
+import org.opensaas.jaudit.TransactionCompletionStatus;
 import org.opensaas.jaudit.dao.LifeCycleAuditEventDao;
 import org.opensaas.jaudit.dao.SessionRecordDao;
+import org.opensaas.jaudit.dao.TransactionRecordDao;
 import org.opensaas.jaudit.service.AuditService;
+import org.opensaas.jaudit.service.ObjectFactory;
 import org.opensaas.jaudit.session.AuditSession;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Required;
 
 /**
  * The default implementation of {@link AuditService}.
@@ -46,6 +48,11 @@ public class AuditServiceImpl implements AuditService {
     private SessionRecordDao<SessionRecordMutable> _sessionRecordDao;
 
     /**
+     * For interacting with the persistence layer.
+     */
+    private TransactionRecordDao<TransactionRecordMutable> _transactionRecordDao;
+
+    /**
      * The DAO for working with LifeCycleAuditEvent objects.
      */
     private LifeCycleAuditEventDao<LifeCycleAuditEventMutable> _lifeCycleAuditEventDao;
@@ -53,22 +60,22 @@ public class AuditServiceImpl implements AuditService {
     /**
      * Will return new {@link ResponsibleInformation} objects.
      */
-    private ObjectFactory _responsibleInformationFactory;
+    private ObjectFactory<ResponsibleInformation> _responsibleInformationFactory;
 
     /**
      * Will return new {@link SessionRecord} objects.
      */
-    private ObjectFactory _sessionRecordFactory;
+    private ObjectFactory<SessionRecord> _sessionRecordFactory;
 
     /**
      * Will return new {@link LifeCycleAuditEventMutable} objects.
      */
-    private ObjectFactory _lifeCycleAuditEventFactory;
+    private ObjectFactory<LifeCycleAuditEventMutable> _lifeCycleAuditEventFactory;
 
     /**
-     * Used for retrieving transaction information.
+     * Will return new {@link TransactionRecordMutable} objects.
      */
-    private TransactionRecordService _transactionRecordService;
+    private ObjectFactory<TransactionRecordMutable> _transactionRecordFactory;
 
     /**
      * Will return new globally unique id objects represented by a
@@ -79,7 +86,7 @@ public class AuditServiceImpl implements AuditService {
      * @see SessionRecord#getId()
      * 
      */
-    private ObjectFactory _guidFactory;
+    private ObjectFactory<String> _guidFactory;
 
     /**
      * Will be used to fill in new session records.
@@ -87,10 +94,22 @@ public class AuditServiceImpl implements AuditService {
     private AuditSubject _auditSystem;
 
     /**
-     * Sets the audit system address that will be filled in on new session
-     * records.
+     * The audit system address that will be filled in on new session records.
      */
     private String _auditSystemAddress;
+    
+    public AuditServiceImpl() {
+        super();
+    }
+
+    /**
+     * To be called to check on the viability of our properites.
+     */
+    public void afterPropertiesSet() {
+
+        // TODO: Check
+
+    }
 
     /**
      * {@inheritDoc}
@@ -98,6 +117,29 @@ public class AuditServiceImpl implements AuditService {
     public ResponsibleInformation newResponsibleInformation() {
         return (ResponsibleInformation) _responsibleInformationFactory
                 .getObject();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public TransactionRecord createTransactionRecord(
+            final String transactionId, final SessionRecord sessionRecord) {
+        if (transactionId == null) {
+            throw new IllegalArgumentException("Transaction id is required.");
+        }
+        final TransactionRecordMutable trm = (TransactionRecordMutable) _transactionRecordFactory
+                .getObject();
+        trm.setId((String) _guidFactory.getObject());
+        trm.setStartedTs(new Date());
+        trm.setTransactionId(transactionId);
+        trm.setSessionRecord(sessionRecord);
+
+        final String id = _transactionRecordDao.create(trm);
+
+        LOGGER.log(Level.FINE, "Created new transaction record with id {0}.",
+                id);
+
+        return trm;
     }
 
     /**
@@ -130,8 +172,35 @@ public class AuditServiceImpl implements AuditService {
     /**
      * {@inheritDoc}
      */
-    public SessionRecord sessionEnded(final SessionRecord sessionRecord) {
-        return _sessionRecordDao.updateEndedTs(sessionRecord, new Date());
+    public SessionRecord updateSessionEnded(final SessionRecord sessionRecord) {
+
+        final SessionRecord sr = _sessionRecordDao.updateEndedTs(sessionRecord,
+                new Date());
+        return sr;
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public TransactionRecord updateTransactionEnded(
+            final TransactionRecord transactionRecord,
+            final TransactionCompletionStatus transactionStatus, final Date endedTs) {
+
+        final TransactionRecord tr = _transactionRecordDao.transactionEnded(
+                transactionRecord, transactionStatus, endedTs);
+
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER
+                    .log(
+                            Level.FINE,
+                            "Updated transaction record with id {0}.  New status={1}, endedTs={2}",
+                            new Object[] { tr.getId(), transactionStatus,
+                                    endedTs });
+        }
+
+        return tr;
+
     }
 
     /**
@@ -139,8 +208,13 @@ public class AuditServiceImpl implements AuditService {
      */
     public SessionRecord updateResponsible(final SessionRecord sessionRecord,
             final ResponsibleInformation responsibleInformation) {
-        return _sessionRecordDao.updateResponsibleInformation(sessionRecord,
-                responsibleInformation);
+
+        final SessionRecord sr = _sessionRecordDao
+                .updateResponsibleInformation(sessionRecord,
+                        responsibleInformation);
+
+        return sr;
+
     }
 
     /**
@@ -160,12 +234,6 @@ public class AuditServiceImpl implements AuditService {
         event.setSessionRecord(AuditSession.getAuditSession()
                 .getSessionRecord());
 
-        if (_transactionRecordService != null) {
-            event.setTransactionRecord(_transactionRecordService
-                    .getTransactionRecord(event.getSessionRecord()));
-
-        }
-
         final String id = _lifeCycleAuditEventDao.create(event);
         LOGGER.log(Level.FINE,
                 "Created new life cycle audit event with id {0}.", id);
@@ -177,9 +245,8 @@ public class AuditServiceImpl implements AuditService {
      * 
      * @param responsibleInformationFactory
      */
-    @Required
     public void setResponsibleInformationFactory(
-            final ObjectFactory responsibleInformationFactory) {
+            final ObjectFactory<ResponsibleInformation> responsibleInformationFactory) {
         _responsibleInformationFactory = responsibleInformationFactory;
     }
 
@@ -190,7 +257,6 @@ public class AuditServiceImpl implements AuditService {
      * @param sessionRecordDao
      *            SessionRecordDao to set.
      */
-    @Required
     public void setSessionRecordDao(
             final SessionRecordDao<SessionRecordMutable> sessionRecordDao) {
         _sessionRecordDao = sessionRecordDao;
@@ -203,7 +269,6 @@ public class AuditServiceImpl implements AuditService {
      * @param dao
      *            Dao to set.
      */
-    @Required
     public void setLifeCycleAuditEventDao(
             final LifeCycleAuditEventDao<LifeCycleAuditEventMutable> dao) {
         _lifeCycleAuditEventDao = dao;
@@ -216,8 +281,8 @@ public class AuditServiceImpl implements AuditService {
      * @param sessionRecordFactory
      *            SessionRecordFactory to set.
      */
-    @Required
-    public void setSessionRecordFactory(final ObjectFactory sessionRecordFactory) {
+    public void setSessionRecordFactory(
+            final ObjectFactory<SessionRecord> sessionRecordFactory) {
         _sessionRecordFactory = sessionRecordFactory;
     }
 
@@ -228,9 +293,8 @@ public class AuditServiceImpl implements AuditService {
      * @param lifeCycleAuditEventFactory
      *            LifeCycleAuditEventFactory to set.
      */
-    @Required
     public void setLifeCycleAuditEventFactory(
-            final ObjectFactory lifeCycleAuditEventFactory) {
+            final ObjectFactory<LifeCycleAuditEventMutable> lifeCycleAuditEventFactory) {
         _lifeCycleAuditEventFactory = lifeCycleAuditEventFactory;
     }
 
@@ -241,8 +305,7 @@ public class AuditServiceImpl implements AuditService {
      * @param guidFactory
      *            the guidFactory to set.
      */
-    @Required
-    public void setGuidFactory(final ObjectFactory guidFactory) {
+    public void setGuidFactory(final ObjectFactory<String> guidFactory) {
         _guidFactory = guidFactory;
     }
 
@@ -265,14 +328,24 @@ public class AuditServiceImpl implements AuditService {
     }
 
     /**
-     * Sets the optional transaction record service.
+     * Sets the required transaction record factory that will create
+     * {@link TransactionRecordMutable}.
      * 
-     * @param transactionRecordService
-     *            the transactionRecordService to set
+     * @param transactionRecordFactory
      */
-    public void setTransactionRecordService(
-            TransactionRecordService transactionRecordService) {
-        _transactionRecordService = transactionRecordService;
+    public void setTransactionRecordFactory(
+            final ObjectFactory<TransactionRecordMutable> transactionRecordFactory) {
+        _transactionRecordFactory = transactionRecordFactory;
+    }
+
+    /**
+     * Sets the required transaction record dao.
+     * 
+     * @param transactionRecordDao
+     */
+    public void setTransactionRecordDao(
+            final TransactionRecordDao<TransactionRecordMutable> transactionRecordDao) {
+        _transactionRecordDao = transactionRecordDao;
     }
 
 }

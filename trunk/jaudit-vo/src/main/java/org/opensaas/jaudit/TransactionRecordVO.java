@@ -16,6 +16,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,6 +41,8 @@ public class TransactionRecordVO implements TransactionRecordMutable {
     private Date _startedTs;
 
     private String _transactionId;
+
+    private TransactionCompletionStatus _transactionStatus;
 
     /**
      * {@inheritDoc}
@@ -98,7 +102,7 @@ public class TransactionRecordVO implements TransactionRecordMutable {
      * @param sessionRecord
      *            required session record.
      */
-    public void setSessionRecord(SessionRecord sessionRecord) {
+    public void setSessionRecord(final SessionRecord sessionRecord) {
         _sessionRecord = sessionRecord;
     }
 
@@ -118,7 +122,7 @@ public class TransactionRecordVO implements TransactionRecordMutable {
      * @param startedTs
      *            the optional started date.
      */
-    public void setStartedTs(Date startedTs) {
+    public void setStartedTs(final Date startedTs) {
         _startedTs = startedTs;
     }
 
@@ -138,8 +142,29 @@ public class TransactionRecordVO implements TransactionRecordMutable {
      * @param transactionId
      *            the required id of the transaction.
      */
-    public void setTransactionId(String transactionId) {
+    public void setTransactionId(final String transactionId) {
         _transactionId = transactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Column(name = "transaction_status", length = 256)
+    @Enumerated(EnumType.STRING)
+    public TransactionCompletionStatus getTransactionCompletionStatus() {
+        return _transactionStatus;
+    }
+
+    /**
+     * Sets the optional transaction status.
+     * 
+     * @see #getTransactionCompletionStatus()
+     * 
+     * @param transactionStatus
+     *            the required transaction status.
+     */
+    public void setTransactionCompletionStatus(final TransactionCompletionStatus transactionStatus) {
+        _transactionStatus = transactionStatus;
     }
 
     /**

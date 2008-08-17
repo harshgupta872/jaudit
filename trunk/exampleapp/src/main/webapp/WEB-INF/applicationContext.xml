@@ -1,44 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
   xmlns:aop="http://www.springframework.org/schema/aop"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd"
   default-lazy-init="true">
 
   <!-- =================================================================== -->
   <!-- AOP: Configuration and Aspects                                      -->
   <!-- =================================================================== -->
-  <bean id="auditExecutor"
-    class="org.opensaas.exampleapp.audit.AuditExecutor">
-    <property name="auditService" ref="auditService" />
+  <bean
+    id="auditExecutor"
+    class="org.opensaas.jaudit.service.spring.AuditExecutor">
+    <property
+      name="auditService"
+      ref="auditService" />
   </bean>
 
-  <aop:config>
-    <aop:advisor id="jauditTx" advice-ref="txAdvice"
-      pointcut="execution(* *..jaudit.service.*Service.*(..))"
-      order="3" />
+  <bean
+    id="transactionEventsBridge"
+    class="org.opensaas.jaudit.service.spring.TransactionEventBridge" />
 
-      <aop:aspect id="auditAspect" ref="auditExecutor">
-        <!-- use aop:around instead of aop:after-returning so we can use the result of the underlying method -->
-        <aop:around pointcut="@annotation(annotation))" method="recordAction" />
-      </aop:aspect>
+  <bean
+    id="transactionsAuditor"
+    class="org.opensaas.jaudit.service.spring.TransactionAuditor"
+    autowire="byName" />
+
+  <aop:config>
+    <aop:aspect
+      id="transactionEventsAspect"
+      ref="transactionEventsBridge">
+      <!-- use aop:around instead of aop:after-returning so we can use the result of the underlying method -->
+      <aop:around
+        pointcut="execution(* org.springframework.transaction.PlatformTransactionManager.getTransaction(..))"
+        method="recordAction" />
+    </aop:aspect>
+
+    <aop:aspect
+      id="auditAspect"
+      ref="auditExecutor">
+      <!-- use aop:around instead of aop:after-returning so we can use the result of the underlying method -->
+      <aop:around
+        pointcut="@annotation(annotation))"
+        method="recordAction" />
+    </aop:aspect>
   </aop:config>
 
   <!-- Add new DAOs here -->
-  <bean id="fooBarDao"
+  <bean
+    id="fooBarDao"
     class="org.appfuse.dao.hibernate.GenericDaoHibernate">
     <constructor-arg value="org.opensaas.exampleapp.model.FooBar" />
-    <property name="sessionFactory" ref="sessionFactory" />
+    <property
+      name="sessionFactory"
+      ref="sessionFactory" />
   </bean>
 
 
   <!-- Add new Managers here -->
-  <bean id="fooBarManager"
+  <bean
+    id="fooBarManager"
     class="org.opensaas.exampleapp.manager.FooBarManagerImpl">
     <constructor-arg ref="fooBarDao" />
   </bean>
 
-  <bean id="systemInetAddress"
+  <bean
+    id="systemInetAddress"
     class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
     <property name="targetClass">
       <value>java.net.InetAddress</value>
@@ -48,7 +79,8 @@
     </property>
   </bean>
 
-  <bean id="systemAddress"
+  <bean
+    id="systemAddress"
     class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
     <property name="targetObject">
       <ref local="systemInetAddress" />
@@ -60,78 +92,132 @@
 
 
   <!--  Auditing  -->
-  <bean id="responsibleInformationPrototype"
+  <bean
+    id="responsibleInformationPrototype"
     class="org.opensaas.jaudit.ResponsibleInformation"
     scope="prototype" />
-  <bean id="sessionRecordPrototype"
-    class="org.opensaas.jaudit.SessionRecordVO" scope="prototype" />
-  <bean id="lifeCycleAuditEventPrototype"
-    class="org.opensaas.jaudit.LifeCycleAuditEventVO" scope="prototype" />
+  <bean
+    id="sessionRecordPrototype"
+    class="org.opensaas.jaudit.SessionRecordVO"
+    scope="prototype" />
+  <bean
+    id="transactionRecordPrototype"
+    class="org.opensaas.jaudit.TransactionRecordVO"
+    scope="prototype" />
+  <bean
+    id="lifeCycleAuditEventPrototype"
+    class="org.opensaas.jaudit.LifeCycleAuditEventVO"
+    scope="prototype" />
 
-  <bean id="auditService"
-    class="org.opensaas.jaudit.service.impl.AuditServiceImpl"
-    autowire="byName">
-    <property name="guidFactory">
-      <bean class="org.opensaas.jaudit.service.impl.UUIDStringFactory" />
+  <!-- The audit service declares some spring transaction annotations.  Make sure
+    that either the tx:annotation-driven is declared as a bean or that the AuditServiceImpl
+    methods are transactional appropriately with aspects. -->
+
+  <bean
+    class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+    id="auditService">
+    <property
+      name="transactionManager"
+      ref="transactionManager" />
+    <property name="transactionAttributes">
+      <props>
+        <prop key="updateTransaction*">PROPAGATION_REQUIRES_NEW</prop>
+        <prop key="*">PROPAGATION_REQUIRED</prop>
+      </props>
     </property>
-    
-    <property name="sessionRecordDao">
+    <property name="target">
       <bean
-        class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
+        class="org.opensaas.jaudit.service.AuditServiceImpl"
         autowire="byName">
-        <constructor-arg type="java.lang.Class"
-          value="org.opensaas.jaudit.SessionRecordVO" />
-      </bean>
-    </property>
-
-    <property name="lifeCycleAuditEventDao">
-      <bean
-        class="org.opensaas.jaudit.dao.hibernate.LifeCycleAuditEventDaoHibernate"
-        autowire="byName">
-        <constructor-arg type="java.lang.Class"
-          value="org.opensaas.jaudit.LifeCycleAuditEventVO" />
-      </bean>
-    </property>
-
-    <property name="auditSystemAddress" ref="systemAddress"/>
-
-    <property name="auditSystem">
-      <bean class="org.opensaas.jaudit.AuditSubject">
-        <property name="subjectType" value="exampleapp" />
-        <property name="subjectId" ref="systemAddress" />
-        <property name="subjectDiscriminator" value="org.opensass" />
-      </bean>
-    </property>
-    
-    <property name="responsibleInformationFactory">
-      <bean
-        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-        <property name="targetBeanName">
-          <idref local="responsibleInformationPrototype" />
+        <property name="guidFactory">
+          <bean class="org.opensaas.jaudit.service.UUIDStringFactory" />
         </property>
-      </bean>
-    </property>
-    
-    <property name="sessionRecordFactory">
-      <bean
-        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-        <property name="targetBeanName">
-          <idref local="sessionRecordPrototype" />
-        </property>
-      </bean>
-    </property>
 
-    <property name="lifeCycleAuditEventFactory">
-      <bean
-        class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-        <property name="targetBeanName">
-          <idref local="lifeCycleAuditEventPrototype" />
+        <property name="sessionRecordDao">
+          <bean
+            class="org.opensaas.jaudit.dao.hibernate.SessionRecordDaoHibernate"
+            autowire="byName">
+            <constructor-arg
+              type="java.lang.Class"
+              value="org.opensaas.jaudit.SessionRecordVO" />
+          </bean>
+        </property>
+
+        <property name="transactionRecordDao">
+          <bean
+            class="org.opensaas.jaudit.dao.hibernate.TransactionRecordDaoHibernate"
+            autowire="byName">
+            <constructor-arg
+              type="java.lang.Class"
+              value="org.opensaas.jaudit.TransactionRecordVO" />
+          </bean>
+        </property>
+
+        <property name="lifeCycleAuditEventDao">
+          <bean
+            class="org.opensaas.jaudit.dao.hibernate.LifeCycleAuditEventDaoHibernate"
+            autowire="byName">
+            <constructor-arg
+              type="java.lang.Class"
+              value="org.opensaas.jaudit.LifeCycleAuditEventVO" />
+          </bean>
+        </property>
+
+        <property
+          name="auditSystemAddress"
+          ref="systemAddress" />
+
+        <property name="auditSystem">
+          <bean class="org.opensaas.jaudit.AuditSubject">
+            <property
+              name="subjectType"
+              value="exampleapp" />
+            <property
+              name="subjectId"
+              ref="systemAddress" />
+            <property
+              name="subjectDiscriminator"
+              value="org.opensass" />
+          </bean>
+        </property>
+
+        <property name="responsibleInformationFactory">
+          <bean class="org.opensaas.jaudit.service.spring.ObjectFactoryCreatingFactoryBean">
+            <property name="targetBeanName">
+              <idref local="responsibleInformationPrototype" />
+            </property>
+          </bean>
+        </property>
+
+        <property name="sessionRecordFactory">
+          <bean class="org.opensaas.jaudit.service.spring.ObjectFactoryCreatingFactoryBean">
+            <property name="targetBeanName">
+              <idref local="sessionRecordPrototype" />
+            </property>
+          </bean>
+        </property>
+
+        <property name="transactionRecordFactory">
+          <bean class="org.opensaas.jaudit.service.spring.ObjectFactoryCreatingFactoryBean">
+            <property name="targetBeanName">
+              <idref local="transactionRecordPrototype" />
+            </property>
+          </bean>
+        </property>
+
+        <property name="lifeCycleAuditEventFactory">
+          <bean class="org.opensaas.jaudit.service.spring.ObjectFactoryCreatingFactoryBean">
+            <property name="targetBeanName">
+              <idref local="lifeCycleAuditEventPrototype" />
+            </property>
+          </bean>
         </property>
       </bean>
     </property>
   </bean>
 
-  <bean id="responsibleFactory"
+  <bean
+    id="responsibleFactory"
     class="org.opensaas.exampleapp.AcegiResponsibleFactory" />
 
 

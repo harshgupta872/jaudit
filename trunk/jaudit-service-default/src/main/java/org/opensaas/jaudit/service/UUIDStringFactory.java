@@ -10,19 +10,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.opensaas.jaudit.service.impl;
+package org.opensaas.jaudit.service;
 
 import java.util.UUID;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.ObjectFactory;
+import org.opensaas.jaudit.service.ObjectFactory;
 
 /**
  * A default implementation of {@link ObjectFactory} which return String
  * representations of UUID suitable to be used by
  * {@link AuditServiceImpl#setGuidFactory(ObjectFactory)}.
  */
-public class UUIDStringFactory implements ObjectFactory {
+public class UUIDStringFactory implements ObjectFactory<String> {
 
     /**
      * Default required constructor.
@@ -34,7 +33,7 @@ public class UUIDStringFactory implements ObjectFactory {
     /**
      * {@inheritDoc}
      */
-    public Object getObject() throws BeansException {
+    public String getObject() {
         return UUID.randomUUID().toString();
     }
 

@@ -82,7 +82,7 @@ public class AuditSessionFilter extends OncePerRequestFilter {
         if (request.getRequestURI().endsWith("/logout.jsp")) {
             // logging out; end session
             if (sessionRecord != null) {
-                auditService.sessionEnded(sessionRecord);
+                auditService.updateSessionEnded(sessionRecord);
                 session.removeAttribute(_sessionRecordName);
                 sessionRecord = null;
             }

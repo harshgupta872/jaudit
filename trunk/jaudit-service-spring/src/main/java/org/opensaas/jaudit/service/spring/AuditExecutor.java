@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.opensaas.exampleapp.audit;
+package org.opensaas.jaudit.service.spring;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -24,7 +24,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.opensaas.jaudit.AuditSubject;
 import org.opensaas.jaudit.LifeCycleAudit;
 import org.opensaas.jaudit.service.AuditService;
-import org.springframework.beans.factory.annotation.Required;
 
 /**
  * AuditExecutor is used...
@@ -75,7 +74,6 @@ public class AuditExecutor {
      * @param auditService
      *            the auditService to set
      */
-    @Required
     public final void setAuditService(final AuditService auditService) {
         this.auditService = auditService;
     }
