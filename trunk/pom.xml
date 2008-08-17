@@ -82,6 +82,7 @@
     <module>jaudit-dao-hibernate</module>
     <module>jaudit-service</module>
     <module>jaudit-service-default</module>
+    <module>jaudit-service-spring</module>
     <module>jaudit-webapp</module>
   </modules>
 
