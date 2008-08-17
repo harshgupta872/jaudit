@@ -73,4 +73,13 @@ public interface TransactionRecord {
      */
     Date getEndedTs();
 
+    /**
+     * Returns the last status of the transaction record.
+     * 
+     * Optional.
+     * 
+     * @return TransactionCompletionStatus associated with this record.
+     */
+    TransactionCompletionStatus getTransactionCompletionStatus();
+
 }

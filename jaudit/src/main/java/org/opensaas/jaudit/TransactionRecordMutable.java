@@ -70,4 +70,12 @@ public interface TransactionRecordMutable extends TransactionRecord {
      */
     void setEndedTs(final Date endedTs);
 
+    /**
+     * Sets the optional transaction status for this record.
+     * 
+     * @see #getTransactionCompletionStatus()
+     * @param transactionStatus
+     */
+    void setTransactionCompletionStatus(final TransactionCompletionStatus transactionStatus);
+
 }

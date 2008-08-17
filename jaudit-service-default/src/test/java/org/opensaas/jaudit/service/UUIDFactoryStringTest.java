@@ -10,11 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.opensaas.jaudit.service.impl;
+package org.opensaas.jaudit.service;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.opensaas.jaudit.service.UUIDStringFactory;
 
 /**
  * Default test for {@link UUIDStringFactory}.

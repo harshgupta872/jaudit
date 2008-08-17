@@ -12,11 +12,15 @@
  */
 package org.opensaas.jaudit.service;
 
+import java.util.Date;
+
 import org.opensaas.jaudit.AuditSubject;
 import org.opensaas.jaudit.LifeCycleAuditEvent;
 import org.opensaas.jaudit.LifeCycleType;
 import org.opensaas.jaudit.ResponsibleInformation;
 import org.opensaas.jaudit.SessionRecord;
+import org.opensaas.jaudit.TransactionRecord;
+import org.opensaas.jaudit.TransactionCompletionStatus;
 
 /**
  * The default interface for working with the audit framework.
@@ -31,6 +35,31 @@ public interface AuditService {
      * @return ResponsibleInformationMutable
      */
     ResponsibleInformation newResponsibleInformation();
+
+    /**
+     * Creates and saves a new instance of a TransactionRecord. This instance
+     * will be filled by the implementation of {@link AuditService}.
+     * 
+     * @param transactionId
+     *            required transaction id.
+     * @param sessionRecord
+     *            the optional session record to associate with the transaction
+     *            record.
+     * @return newly created Transaction Record.
+     */
+    TransactionRecord createTransactionRecord(String transactionId,
+            SessionRecord sessionRecord);
+
+    /**
+     * Mark the passed transaction record as ended at the passed time with the
+     * passed status.
+     * 
+     * @param transactionRecord
+     * @param endedTs
+     * @return
+     */
+    TransactionRecord updateTransactionEnded(TransactionRecord transactionRecord,
+            TransactionCompletionStatus transactionStatus, Date endedTs);
 
     /**
      * Creates and saves a new instance of a SessionRecord. This instance will
@@ -60,7 +89,7 @@ public interface AuditService {
      * @param sessionRecord
      * 
      */
-    SessionRecord sessionEnded(SessionRecord sessionRecord);
+    SessionRecord updateSessionEnded(SessionRecord sessionRecord);
 
     /**
      * Updates the SessionRecord with a new responsible subject.
